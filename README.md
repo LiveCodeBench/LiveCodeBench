@@ -47,7 +47,7 @@ Particularly, models that perform well on HumanEval do not necessarily perform w
 In the scatterplot above, we find the models get clustered into two groups, shaded in red and green. 
 The red group contains models that perform well on HumanEval but poorly on LiveCodeBench, while the green group contains models that perform well on both.
 
-For more details, please refer to our paper at [url](https://livecodebench.github.io/pdfs/paper.pdf)
+For more details, please refer to our paper at this [url](https://livecodebench.github.io/pdfs/paper.pdf).
 
 ## Citation
 
