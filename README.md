@@ -25,24 +25,27 @@ We provide a benchmark for different code capability scenarios
 LiveCodeBench can be used to evaluate performance of LLMs on different time-windows (using problem release date to filter the models). 
 Thus we can detect and prevent potential contamination in the evaluation process and evaluate LLMs on _new_ problems.
 
-<div class="columns is-centered" style="align-items: center;">
+<div style="text-align: center;">
     <img src="./assets/images/contamination1.png" alt="Code Generation Live Evaluation" class="teaser-image"
-    width="40%" class="center" />
+    width="40%" />
     <img src="./assets/images/contamination2.png" alt="Test Output Prediction Live Evaluation" class="teaser-image"
-    width="40%" class="center" />
+    width="40%" />
 </div>
 
 Next, we evaluate models on different code capabilities and find that relative performances of models do change over tasks (left). 
 Thus, it highlights the need for holistic evaluation of LLMs for code.
 
-<div class="columns is-centered" style="align-items: center;">
+<div style="text-align: center;">
     <img src="./assets/images/tasks_radar.png" alt="Code Generation Live Evaluation" class="teaser-image"
-    width="36%" class="center" />
+    width="36%" width="40%"/>
     <img src="./assets/images/lcb_vs_he.png" alt="Test Output Prediction Live Evaluation" class="teaser-image"
-    width="46%" class="center" />
+    width="46%" width="40%" />
 </div>
 
-We also find evidence of possible overfitting on HumanEval (right). Particularly, models that perform well on HumanEval do not necessarily perform well on LiveCodeBench.
+We also find evidence of possible overfitting on HumanEval (right). 
+Particularly, models that perform well on HumanEval do not necessarily perform well on LiveCodeBench. 
+In the scatterplot above, we find the models get clustered into two groups, shaded in red and green. 
+The red group contains models that perform well on HumanEval but poorly on LiveCodeBench, while the green group contains models that perform well on both.
 
 For more details, please refer to our paper at [url](https://livecodebench.github.io/pdfs/paper.pdf)
 
