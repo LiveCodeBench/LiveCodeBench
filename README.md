@@ -12,7 +12,7 @@ LiveCodeBench is a comprehensive and contamination-free evaluation of LLMs for c
 Distinctly, LiveCodeBench also focuses on a broader range of code-related capabilities, such as self-repair, code execution, and test output prediction, beyond just code generation. 
 Currently, LiveCodeBench hosts four hundred high-quality coding problems that were published between May 2023 and February 2024.
 
-<img src="./images/LCB_holistic_tasks.png" alt="Teaser" class="teaser-image center" width="80%" />
+<img src="./images/lcb.png" alt="Teaser" class="teaser-image center" width="80%" />
 
 
 ## Data
