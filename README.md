@@ -12,14 +12,34 @@ LiveCodeBench is a comprehensive and contamination-free evaluation of LLMs for c
 Distinctly, LiveCodeBench also focuses on a broader range of code-related capabilities, such as self-repair, code execution, and test output prediction, beyond just code generation. 
 Currently, LiveCodeBench hosts four hundred high-quality coding problems that were published between May 2023 and February 2024.
 
-<img src="./assets/images/lcb.png" alt="Teaser" class="teaser-image center" width="80%" />
+<img src="./assets/images/lcb.png" alt="Teaser" class="teaser-image center" width="70%" style="display: block; margin-left: auto; margin-right: auto; background-color: #f5f5f5; padding: 10px; border-radius: 10px;"/>
 
+## Installation
+You can install the dependencies using pip:
+```bash
+pip install -U pebble datasets # primary dependencies
+pip install -U vllm google-generativeai anthropic openai mistralai # optional dependencies depending on models
+```
+
+Or alternatively you can use the `requirements.txt` file:
+```bash
+pip install -r requirements.txt
+```
 
 ## Data
 We provide a benchmark for different code capability scenarios
 - [Code Generation](https://huggingface.co/datasets/livecodebench/code_generation)
 - [Code Execution](https://huggingface.co/datasets/livecodebench/execution)
 - [Test Output Prediction](https://huggingface.co/datasets/livecodebench/test_generation)
+
+## Inference
+
+For running inference on existing supporting models, please use the following command. (under development 🚧🚧🚧)
+```bash
+python -m lcb_runner.runner.main --model {model_name} --scenario {scenario}
+```
+
+To add support for a new model, please add appropriate entries in `lcb_runner/lm_style.py` and `lcb_runner/prompts/*.py`. (under development 🚧🚧🚧)
 
 ## Results
 LiveCodeBench can be used to evaluate performance of LLMs on different time-windows (using problem release date to filter the models). 
@@ -36,10 +56,10 @@ Next, we evaluate models on different code capabilities and find that relative p
 Thus, it highlights the need for holistic evaluation of LLMs for code.
 
 <div style="text-align: center;">
-    <img src="./assets/images/tasks_radar.png" alt="Code Generation Live Evaluation" class="teaser-image"
-    width="36%" width="40%"/>
-    <img src="./assets/images/lcb_vs_he.png" alt="Test Output Prediction Live Evaluation" class="teaser-image"
-    width="46%" width="40%" />
+    <img src="./assets/images/tasks_radar.png" alt="Holistic Tasks Evaluation" class="teaser-image"
+    width="36.1%" />
+    <img src="./assets/images/lcb_vs_he.png" alt="Comparing LCB vs HumanEval" class="teaser-image"
+    width="46%" />
 </div>
 
 We also find evidence of possible overfitting on HumanEval (right). 
