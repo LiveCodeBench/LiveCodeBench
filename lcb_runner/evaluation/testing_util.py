@@ -275,7 +275,6 @@ def run_test(sample, test=None, debug=False, timeout=6):
                     )
             elif which_type == CODE_TYPE.standard_input:  # Standard input
                 faulthandler.enable()
-                signal.alarm(timeout)
                 passed = False
 
                 if isinstance(inputs, list):
@@ -283,6 +282,7 @@ def run_test(sample, test=None, debug=False, timeout=6):
                 if isinstance(in_outs["outputs"][index], list):
                     in_outs["outputs"][index] = "\n".join(in_outs["outputs"][index])
 
+                signal.alarm(timeout)
                 with Capturing() as output:
                     try:
                         call_method(method, inputs)

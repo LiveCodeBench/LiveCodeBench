@@ -40,7 +40,7 @@ We use `vllm` for inference using local models.
 For running the inference, please use the following command. 
 
 ```bash
-python -m lcb_runner.runner.main --model {model_name} --scenario {scenario}
+python -m lcb_runner.runner.main --model {model_name} --scenario generation
 ```
 
 We compute `pass@1` and `pass@5` metrics for each model. 
@@ -48,14 +48,13 @@ We use a modified version of the checker released with the `apps` benchmark to c
 Particularly, we identified some unhandled edge cases in the original checker and fixed them and additionally simplified the checker based on our collected dataset.
 
 ```bash
-python -m lcb_runner.runner.main --model {model_name} --scenario {scenario} --evaluate
+python -m lcb_runner.runner.main --model {model_name} --scenario generation --evaluate
 ```
 
 Note that time limits can cause a slight  `< 0.3` points of variation in the computation of the `pass@1` and `pass@5` metrics.
-If you observe a significant variation in performance, adjust the `--num_process_evaluate` flag to a lower value or increase the `--timeout` flag. Additionally, feel free to report an issue here.
+If you observe a significant variation in performance, adjust the `--num_process_evaluate` flag to a lower value or increase the `--timeout` flag. Please report particular issues caused by improper timeouts here.
 
-### 
-
+The Leaderboard uses [ExecEval](https://github.com/ntunlp/ExecEval) which is a more comprehensive evaluation script using docker for evaluation of the generated programs. We will release an alternative evaluation script soon. 
 
 ## Adding Support for New Models
 

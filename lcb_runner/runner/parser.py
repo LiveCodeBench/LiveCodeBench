@@ -1,13 +1,7 @@
 import os
 import argparse
-from enum import Enum
 
-
-class Scenario(Enum):
-    generation = "generation"
-    repair = "repair"
-    testoutput = "testoutput"
-    execution = "execution"
+from lcb_runner.utils.scenarios import Scenario
 
 
 def get_args():
@@ -55,7 +49,7 @@ def get_args():
     parser.add_argument(
         "--num_process_evaluate",
         type=int,
-        default=16,
+        default=12,
         help="Number of processes to use for evaluation",
     )
     parser.add_argument("--timeout", type=int, default=6, help="Timeout for evaluation")

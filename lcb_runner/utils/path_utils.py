@@ -1,6 +1,7 @@
 import pathlib
 
 from lcb_runner.lm_styles import LanguageModel, LMStyle
+from lcb_runner.utils.scenarios import Scenario
 
 
 def ensure_dir(path: str, is_file=True):
@@ -26,6 +27,9 @@ def get_output_path(model: LanguageModel, args) -> str:
     scenario = args.scenario
     n = args.n
     temperature = args.temperature
-    path = f"output/{model_repr}/{scenario}_{n}_{temperature}.json"
+    if args.scenario == Scenario.generation:
+        path = f"output/{model_repr}/{scenario}_{n}_{temperature}.json"
+    else:
+        raise ValueError(f"Scenario {args.scenario} not implemented")
     ensure_dir(path)
     return path

@@ -1,9 +1,10 @@
 import json
 
+from lcb_runner.runner.parser import get_args
+from lcb_runner.utils.scenarios import Scenario
 from lcb_runner.evaluation import codegen_metrics
 from lcb_runner.runner.vllm_runner import VLLMRunner
 from lcb_runner.utils.path_utils import get_output_path
-from lcb_runner.runner.parser import Scenario, get_args
 from lcb_runner.prompts import format_prompt_generation
 from lcb_runner.lm_styles import LanguageModel, LanguageModelStore, LMStyle
 from lcb_runner.benchmarks import CodeGenerationProblem, load_generation_dataset
@@ -49,16 +50,18 @@ def main():
         json.dump(save_results, f, indent=4)
 
     if args.evaluate:
-        eval_samples = [instance.get_evaluation_sample() for instance in benchmark]
-        generations = [extracted for _, extracted in combined_results]
-        metrics = codegen_metrics(
-            eval_samples,
-            generations,
-            num_process_evaluate=args.num_process_evaluate,
-            timeout=args.timeout,
-        )
+        if args.scenario == Scenario.generation:
+            eval_samples = [instance.get_evaluation_sample() for instance in benchmark]
+            generations = [extracted for _, extracted in combined_results]
+            metrics = codegen_metrics(
+                eval_samples,
+                generations,
+                num_process_evaluate=args.num_process_evaluate,
+                timeout=args.timeout,
+            )
 
-        print(metrics[0]["pass@1"])
+            print(metrics[0]["pass@1"])
+
         with open(output_path.replace(".json", "_eval.json"), "w") as f:
             json.dump(metrics, f, indent=4)
 
