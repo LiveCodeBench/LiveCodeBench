@@ -12,16 +12,13 @@ from concurrent.futures import ProcessPoolExecutor, as_completed
 from tqdm import tqdm
 
 
-TIMEOUT = 7
-
-
 def check_correctness(sample, generation, timeout, debug=True):
     """Check correctness of code generation with a global timeout.
     The global timeout is to catch some extreme/rare cases not handled by the timeouts
     inside `run_test`"""
 
     def _temp_run(sample, generation, debug, result):
-        result.append(run_test(sample, test=generation, debug=debug))
+        result.append(run_test(sample, test=generation, debug=debug, timeout=timeout))
 
     manager = multiprocessing.Manager()
     result = manager.list()
@@ -47,13 +44,13 @@ def evaluate_generations_by_problem(args):
     problem_generations: list[str] = args[0]
     sample = args[1]
     debug: bool = args[2]
-    verbose: bool = debug
+    timeout: int = args[3]
 
     res = []
     for o_idx, o in enumerate(problem_generations):
         curr_res = [-2]
         try:
-            curr_res = check_correctness(sample, o, timeout=TIMEOUT, debug=debug)
+            curr_res = check_correctness(sample, o, timeout=timeout, debug=debug)
             if debug:
                 print(f"\nSuccessful compilation of task {o_idx}!")
             fixed = []
@@ -74,7 +71,7 @@ def evaluate_generations_by_problem(args):
         finally:
             assert isinstance(curr_res, list)
             res.append(curr_res)
-    if verbose:
+    if debug:
         for i, r in enumerate(problem_generations):
             print("Sample\n")
             print(r)
@@ -90,6 +87,7 @@ def evaluate_generations(
     generations_list: list[list[str]],
     debug: bool = False,
     num_process_evaluate: int = 16,
+    timeout=6,
 ):
     """We take the list of code generations and try to compile them
      and the run their corresponding unit tests which are retrieved from the APPS dataset.
@@ -106,7 +104,7 @@ def evaluate_generations(
     # generations are code generations in the same order of the dataset
 
     inputs = [
-        [(generations_list[index], samples_list[index], debug), index]
+        [(generations_list[index], samples_list[index], debug, timeout), index]
         for index in range(len(generations_list))
     ]
 
@@ -185,15 +183,20 @@ def compute_metrics_from_results(results, k_list=[1, 5]):
     return pass_at_k
 
 
-def compute_metrics(
+def codegen_metrics(
     samples,
     generations,
     k_list=[1, 5],
     num_process_evaluate=16,
+    timeout=6,
     debug=False,
 ):
     results = evaluate_generations(
-        samples, generations, debug=debug, num_process_evaluate=num_process_evaluate
+        samples,
+        generations,
+        debug=debug,
+        num_process_evaluate=num_process_evaluate,
+        timeout=timeout,
     )
     metrics = compute_metrics_from_results(results, k_list=k_list)
     return metrics, results

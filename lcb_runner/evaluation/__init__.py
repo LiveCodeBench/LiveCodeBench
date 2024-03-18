@@ -1,1 +1,1 @@
-from lcb_runner.evaluation.compute_metrics_utils import compute_metrics
+from lcb_runner.evaluation.compute_code_generation_metrics import codegen_metrics

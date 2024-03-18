@@ -40,7 +40,7 @@ def timeout_handler(signum, frame):
 
 
 signal.signal(signal.SIGALRM, timeout_handler)
-timeout = 6  # seconds
+# timeout = 6  # seconds
 
 
 # used to capture stdout as a list
@@ -72,7 +72,7 @@ def combined_int_check(val):
     return only_int_check(val) or string_int_check(val)
 
 
-def run_test(sample, test=None, debug=False):
+def run_test(sample, test=None, debug=False, timeout=6):
     """
     if test(generated_code) is not None it'll try to run the code.
     otherwise it'll just return an input and output pair.

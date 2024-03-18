@@ -19,13 +19,13 @@ def get_args():
     parser.add_argument("--top_p", type=float, default=0.95)
     parser.add_argument("--max_tokens", type=int, default=1200)
     parser.add_argument("--multiprocess", default=0, type=int)
-    parser.add_argument("--timeout", default=60, type=int)
     parser.add_argument("--stop", default="###", type=str)
     parser.add_argument("--continue_existing", action="store_true")
     parser.add_argument("--use_cache", action="store_true")
     parser.add_argument("--debug", action="store_true")
     parser.add_argument("--evaluate", action="store_true")
-    parser.add_argument("--num_process_evaluate", action="store_true")
+    parser.add_argument("--num_process_evaluate", type=int, default=16)
+    parser.add_argument("--timeout", type=int, default=6)
 
     args = parser.parse_args()
 
