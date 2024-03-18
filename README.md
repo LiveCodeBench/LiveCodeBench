@@ -34,6 +34,8 @@ We provide a benchmark for different code capability scenarios
 
 ## Inference and Evaluation
 
+### Code Generation
+
 We use `vllm` for inference using local models.
 For running the inference, please use the following command. 
 
@@ -42,14 +44,18 @@ python -m lcb_runner.runner.main --model {model_name} --scenario {scenario}
 ```
 
 We compute `pass@1` and `pass@5` metrics for each model. 
-Currently, the metrics are computed using an extension of the evaluation scripts used for running the `apps` benchmark which offers a quicker but less accurate evaluation. 
-Internally, we have found more stable and accurate results using [ExecEval](https://github.com/ntunlp/ExecEval) grader.
-The results from `apps` grader can be 1 point lower than the results from `ExecEval` grader.
-We are working on releasing a modified version of the grader for the community soon!
+We use a modified version of the checker released with the `apps` benchmark to compute the metrics. 
+Particularly, we identified some unhandled edge cases in the original checker and fixed them and additionally simplified the checker based on our collected dataset.
 
 ```bash
 python -m lcb_runner.runner.main --model {model_name} --scenario {scenario} --evaluate
 ```
+
+Note that time limits can cause a slight  `< 0.3` points of variation in the computation of the `pass@1` and `pass@5` metrics.
+If you observe a significant variation in performance, adjust the `--num_process_evaluate` flag to a lower value or increase the `--timeout` flag. Additionally, feel free to report an issue here.
+
+### 
+
 
 ## Adding Support for New Models
 

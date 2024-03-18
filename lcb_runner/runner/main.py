@@ -6,7 +6,7 @@ from lcb_runner.utils.path_utils import get_output_path
 from lcb_runner.runner.parser import Scenario, get_args
 from lcb_runner.prompts import format_prompt_generation
 from lcb_runner.lm_styles import LanguageModel, LanguageModelStore, LMStyle
-from lcb_runner.benchmarks import GenerationProblem, load_generation_dataset
+from lcb_runner.benchmarks import CodeGenerationProblem, load_generation_dataset
 
 from lcb_runner.utils.extraction_utils import extract_code
 
@@ -15,7 +15,7 @@ def main():
     args = get_args()
 
     if args.scenario == Scenario.generation:
-        benchmark: list[GenerationProblem] = load_generation_dataset()
+        benchmark: list[CodeGenerationProblem] = load_generation_dataset()
         format_prompt = format_prompt_generation
     else:
         raise ValueError(f"Scenario {args.scenario} not implemented")

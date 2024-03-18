@@ -37,7 +37,7 @@ class Test:
 
 
 @dataclass
-class GenerationProblem:
+class CodeGenerationProblem:
     question_title: str
     question_content: str
     platform: Platform
@@ -94,9 +94,9 @@ class GenerationProblem:
         }
 
 
-def load_generation_dataset() -> list[GenerationProblem]:
+def load_generation_dataset() -> list[CodeGenerationProblem]:
     dataset = load_dataset("livecodebench/code_generation", split="test")
-    dataset = [GenerationProblem(**p) for p in dataset]
+    dataset = [CodeGenerationProblem(**p) for p in dataset]
     print(f"Loaded {len(dataset)} problems")
     return dataset
 

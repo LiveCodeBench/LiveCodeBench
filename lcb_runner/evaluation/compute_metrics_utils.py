@@ -12,7 +12,7 @@ from concurrent.futures import ProcessPoolExecutor, as_completed
 from tqdm import tqdm
 
 
-TIMEOUT = 8
+TIMEOUT = 7
 
 
 def check_correctness(sample, generation, timeout, debug=True):
@@ -29,7 +29,9 @@ def check_correctness(sample, generation, timeout, debug=True):
         target=_temp_run, args=(sample, generation, debug, result)
     )
     p.start()
-    p.join(timeout=timeout + 1)
+    p.join(
+        timeout=(timeout + 1) * len(json.loads(sample["input_output"])["inputs"]) + 5
+    )
     if p.is_alive():
         p.kill()
     if not result:
@@ -64,7 +66,7 @@ def evaluate_generations_by_problem(args):
             curr_res = fixed
             if not np.all(curr_res):
                 if debug:
-                    print(f"Results were not True for all test cases")
+                    print(f"Results were not True for all test cases {curr_res=}\n")
         except Exception as e:
             if debug:
                 print(f"Compilation failed, test framework exception = {repr(e)}{e}\n")
@@ -87,6 +89,7 @@ def evaluate_generations(
     samples_list: list,
     generations_list: list[list[str]],
     debug: bool = False,
+    num_process_evaluate: int = 16,
 ):
     """We take the list of code generations and try to compile them
      and the run their corresponding unit tests which are retrieved from the APPS dataset.
@@ -108,7 +111,9 @@ def evaluate_generations(
     ]
 
     with tqdm(total=len(inputs)) as pbar:
-        with ProcessPoolExecutor(max_workers=1 if debug else None) as executor:
+        with ProcessPoolExecutor(
+            max_workers=1 if debug else num_process_evaluate
+        ) as executor:
             futures = {
                 executor.submit(evaluate_generations_by_problem, arg): index
                 for arg, index in inputs
@@ -184,8 +189,11 @@ def compute_metrics(
     samples,
     generations,
     k_list=[1, 5],
+    num_process_evaluate=16,
     debug=False,
 ):
-    results = evaluate_generations(samples, generations, debug=debug)
+    results = evaluate_generations(
+        samples, generations, debug=debug, num_process_evaluate=num_process_evaluate
+    )
     metrics = compute_metrics_from_results(results, k_list=k_list)
     return metrics, results

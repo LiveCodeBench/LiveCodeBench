@@ -7,7 +7,7 @@ except ImportError:
     AI_PROMPT = None
 
 from lcb_runner.lm_styles import LMStyle
-from lcb_runner.benchmarks.generation import GenerationProblem
+from lcb_runner.benchmarks.code_generation import CodeGenerationProblem
 
 
 class PromptConstants:
@@ -29,7 +29,7 @@ class PromptConstants:
     FORMATTING_WITHOUT_STARTER_CODE = "Read the inputs from stdin solve the problem and write the answer to stdout (do not directly test on the sample inputs). Enclose your code within delimiters as follows."
 
 
-def get_generic_question_template_answer(question: GenerationProblem):
+def get_generic_question_template_answer(question: CodeGenerationProblem):
     prompt = f"### Question:\n{question.question_content}\n\n"
     if question.starter_code:
         prompt += (
@@ -43,7 +43,7 @@ def get_generic_question_template_answer(question: GenerationProblem):
     return prompt
 
 
-def get_cllama_question_template_answer(question: GenerationProblem):
+def get_cllama_question_template_answer(question: CodeGenerationProblem):
     prompt = f"### Question\n{question.question_content}\n\n"
     if question.starter_code:
         prompt += f"{PromptConstants.FORMATTING_MESSAGE_WITH_STARTER_CODE}\n"
@@ -55,7 +55,7 @@ def get_cllama_question_template_answer(question: GenerationProblem):
     return prompt
 
 
-def get_deepseekcode_question_template_answer(question: GenerationProblem):
+def get_deepseekcode_question_template_answer(question: CodeGenerationProblem):
     prompt = f"### Instruction: You will be given a question (problem specification) and will generate a correct Python program that matches the specification and passes all tests. You will NOT return anything except for the program.\n\n"
     prompt += f"Question:\n{question.question_content}\n\n"
     if question.starter_code:
@@ -72,7 +72,7 @@ def get_deepseekcode_question_template_answer(question: GenerationProblem):
     return prompt
 
 
-def get_magicoder_question_template_answer(question: GenerationProblem):
+def get_magicoder_question_template_answer(question: CodeGenerationProblem):
     prompt = f"You will be given a question (problem specification) and will generate a correct Python program that matches the specification and passes all tests. You will NOT return anything except for the program.\n\n"
     prompt += f"Question:\n{question.question_content}\n\n"
     if question.starter_code:
@@ -85,7 +85,7 @@ def get_magicoder_question_template_answer(question: GenerationProblem):
     return prompt
 
 
-def get_wizard_question_template_answer(question: GenerationProblem):
+def get_wizard_question_template_answer(question: CodeGenerationProblem):
     prompt = f"""### Instruction: You will be given a question (problem specification) and will generate a correct Python program that matches the specification and passes all tests. You will NOT return anything except for the program. Put your fixed program within code delimiters, for example:
 ```python 
 # YOUR CODE HERE
@@ -102,7 +102,7 @@ def get_wizard_question_template_answer(question: GenerationProblem):
     return prompt
 
 
-def get_phind_question_template_answer(question: GenerationProblem):
+def get_phind_question_template_answer(question: CodeGenerationProblem):
     prompt = f"{question.question_content}\n\n"
     if question.starter_code:
         prompt += f"{PromptConstants.FORMATTING_MESSAGE_WITH_STARTER_CODE}\n"
@@ -121,7 +121,7 @@ with open("lcb_runner/prompts/few_shot_examples/generation/stdin.json") as f:
     stdin = json.load(f)
 
 
-def get_base_model_question_template_answer(question: GenerationProblem):
+def get_base_model_question_template_answer(question: CodeGenerationProblem):
     if question.starter_code:
         examples_json = func
     else:
@@ -155,7 +155,7 @@ def get_base_model_question_template_answer(question: GenerationProblem):
 
 
 def format_prompt_generation(
-    question: GenerationProblem, LanguageModelStyle: LMStyle
+    question: CodeGenerationProblem, LanguageModelStyle: LMStyle
 ) -> str:
     if LanguageModelStyle == LMStyle.OpenAIChat:
         chat_messages = [
@@ -258,7 +258,7 @@ def test():
     pathlib.Path(base_dir).mkdir(parents=True, exist_ok=True)
 
     for lmstyle in LMStyle:
-        generation_problem = GenerationProblem(
+        generation_problem = CodeGenerationProblem(
             "title",
             "question-content",
             "leetcode",

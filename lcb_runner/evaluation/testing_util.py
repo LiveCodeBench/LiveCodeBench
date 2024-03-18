@@ -40,7 +40,7 @@ def timeout_handler(signum, frame):
 
 
 signal.signal(signal.SIGALRM, timeout_handler)
-timeout = 8  # seconds
+timeout = 6  # seconds
 
 
 # used to capture stdout as a list
@@ -58,6 +58,18 @@ class Capturing(list):
         self.extend(self._stringio.getvalue().splitlines())
         del self._stringio  # free up some memory
         sys.stdout = self._stdout
+
+
+def only_int_check(val):
+    return isinstance(val, int)
+
+
+def string_int_check(val):
+    return isinstance(val, str) and val.isdigit()
+
+
+def combined_int_check(val):
+    return only_int_check(val) or string_int_check(val)
 
 
 def run_test(sample, test=None, debug=False):
@@ -369,16 +381,19 @@ def run_test(sample, test=None, debug=False):
                     nl = "\n"
                     if not isinstance(inputs, list):
                         print(
-                            f"output = {output}, test outputs = {in_outs['outputs'][index]}, inputs = {inputs.replace(nl,' new-line ')}, {type(inputs)}, {output == [in_outs['outputs'][index]]}"
+                            f"@1 output = {output}, test outputs = {in_outs['outputs'][index]}, inputs = {inputs.replace(nl,' new-line ')}, {type(inputs)}, {output == [in_outs['outputs'][index]]} {tmp_result=}"
                         )
                     else:
                         print(
-                            f"output = {output}, test outputs = {in_outs['outputs'][index]}, inputs = {inputs}, {type(inputs)}, {output == [in_outs['outputs'][index]]}"
+                            f"@1 output = {output}, test outputs = {in_outs['outputs'][index]}, inputs = {inputs}, {type(inputs)}, {output == [in_outs['outputs'][index]]} {tmp_result=}"
                         )
 
                 if tmp_result == True:
                     results.append(tmp_result)
                     continue
+
+                if debug:
+                    print(f"{tmp_result=} @a")
 
                 try:
                     tmp_result = output == [in_outs["outputs"][index]]
@@ -389,19 +404,24 @@ def run_test(sample, test=None, debug=False):
                         print(f"Failed check3 exception = {e}")
                     pass
 
+                if debug:
+                    print(f"{tmp_result=} @b")
+
                 try:
-                    output_float = [float(e) for e in output]
-                    gt_float = [float(e) for e in in_outs["outputs"][index]]
-                    tmp_result = tmp_result or (
-                        (len(output_float) == len(gt_float))
-                        and np.allclose(output_float, gt_float)
+                    all_ints = all(
+                        combined_int_check(e1) and combined_int_check(e2)
+                        for e1, e2 in zip(output, in_outs["outputs"][index])
                     )
-                except Exception as e:
-                    pass
-                try:
-                    if isinstance(output[0], list):
-                        output_float = [float(e) for e in output[0]]
-                        gt_float = [float(e) for e in in_outs["outputs"][index][0]]
+                    if not all_ints:
+                        if debug:
+                            print(
+                                [
+                                    combined_int_check(e1) and combined_int_check(e2)
+                                    for e1, e2 in zip(output, in_outs["outputs"][index])
+                                ]
+                            )
+                        output_float = [float(e) for e in output]
+                        gt_float = [float(e) for e in in_outs["outputs"][index]]
                         tmp_result = tmp_result or (
                             (len(output_float) == len(gt_float))
                             and np.allclose(output_float, gt_float)
@@ -409,16 +429,40 @@ def run_test(sample, test=None, debug=False):
                 except Exception as e:
                     pass
 
+                if debug:
+                    print(f"{tmp_result=} @c")
+
+                try:
+                    if isinstance(output[0], list):
+                        all_ints = all(
+                            combined_int_check(e1) and combined_int_check(e2)
+                            for e1, e2 in zip(output[0], in_outs["outputs"][index])
+                        )
+                        if not all_ints:
+                            output_float = [float(e) for e in output[0]]
+                            gt_float = [float(e) for e in in_outs["outputs"][index][0]]
+                            tmp_result = tmp_result or (
+                                (len(output_float) == len(gt_float))
+                                and np.allclose(output_float, gt_float)
+                            )
+                except Exception as e:
+                    pass
+
                 if tmp_result == True:
                     results.append(tmp_result)
                     continue
 
+                if debug:
+                    print(f"{tmp_result=} @d")
                 # try by converting the stuff into split up list
                 if isinstance(in_outs["outputs"][index], list):
                     for tmp_index, i in enumerate(in_outs["outputs"][index]):
                         in_outs["outputs"][index][tmp_index] = set(i.split())
                 else:
                     in_outs["outputs"][index] = set(in_outs["outputs"][index].split())
+
+                if debug:
+                    print(f"{tmp_result=} @e")
 
                 try:
                     tmp_result = output == in_outs["outputs"][index]
@@ -430,6 +474,9 @@ def run_test(sample, test=None, debug=False):
                 if tmp_result == True:
                     results.append(tmp_result)
                     continue
+
+                if debug:
+                    print(f"{tmp_result=} @f")
 
                 # try by converting the output into a split up list too
                 if isinstance(output, list):
@@ -443,6 +490,8 @@ def run_test(sample, test=None, debug=False):
                     output = list(filter(len, output))
                     output = set(output)
 
+                if debug:
+                    print(f"{tmp_result=} @g")
                 # try:
                 #     tmp_result = set(frozenset(s) for s in output) == set(
                 #         frozenset(s) for s in in_outs["outputs"][index]
@@ -452,17 +501,24 @@ def run_test(sample, test=None, debug=False):
                 #         print(f"Failed check5 exception = {e}")
 
                 # if they are all numbers, round so that similar numbers are treated as identical
-                try:
-                    tmp_result = tmp_result or (
-                        set(frozenset(round(float(t), 3) for t in s) for s in output)
-                        == set(
-                            frozenset(round(float(t), 3) for t in s)
-                            for s in in_outs["outputs"][index]
-                        )
-                    )
-                except Exception as e:
-                    if debug:
-                        print(f"Failed check6 exception = {e}")
+                # try:
+                #     all_ints = all(
+                #         combined_int_check(e1) and combined_int_check(e2)
+                #         for e1, e2 in zip(output, in_outs["outputs"][index])
+                #     )
+                #     tmp_result = tmp_result or (
+                #         set(frozenset(round(float(t), 3) for t in s) for s in output)
+                #         == set(
+                #             frozenset(round(float(t), 3) for t in s)
+                #             for s in in_outs["outputs"][index]
+                #         )
+                #     )
+                # except Exception as e:
+                #     if debug:
+                #         print(f"Failed check6 exception = {e}")
+
+                if debug:
+                    print(f"{tmp_result=} @h")
 
                 if tmp_result == True and debug:
                     print("PASSED")
@@ -475,11 +531,11 @@ def run_test(sample, test=None, debug=False):
                     nl = "\n"
                     if not isinstance(inputs, list):
                         print(
-                            f"output = {output}, test outputs = {in_outs['outputs'][index]}, inputs = {inputs.replace(nl,' new-line ')}, {type(inputs)}, {output == [in_outs['outputs'][index]]}"
+                            f"@2 output = {output}, test outputs = {in_outs['outputs'][index]}, inputs = {inputs.replace(nl,' new-line ')}, {type(inputs)}, {output == [in_outs['outputs'][index]]}"
                         )
                     else:
                         print(
-                            f"output = {output}, test outputs = {in_outs['outputs'][index]}, inputs = {inputs}, {type(inputs)}, {output == [in_outs['outputs'][index]]}"
+                            f"@2 output = {output}, test outputs = {in_outs['outputs'][index]}, inputs = {inputs}, {type(inputs)}, {output == [in_outs['outputs'][index]]}"
                         )
 
                     print(f"results = {results}")

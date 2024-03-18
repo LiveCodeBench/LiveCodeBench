@@ -25,6 +25,7 @@ def get_args():
     parser.add_argument("--use_cache", action="store_true")
     parser.add_argument("--debug", action="store_true")
     parser.add_argument("--evaluate", action="store_true")
+    parser.add_argument("--num_process_evaluate", action="store_true")
 
     args = parser.parse_args()
 
