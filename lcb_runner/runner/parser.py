@@ -2,6 +2,7 @@ import os
 import argparse
 from enum import Enum
 
+
 class Scenario(Enum):
     generation = "generation"
     repair = "repair"
@@ -21,7 +22,9 @@ def get_args():
     parser.add_argument("--timeout", default=60, type=int)
     parser.add_argument("--stop", default="###", type=str)
     parser.add_argument("--continue_existing", action="store_true")
+    parser.add_argument("--use_cache", action="store_true")
     parser.add_argument("--debug", action="store_true")
+    parser.add_argument("--evaluate", action="store_true")
 
     args = parser.parse_args()
 
@@ -30,14 +33,13 @@ def get_args():
     if args.multiprocess == -1:
         args.multiprocess = os.cpu_count()
 
-    output_path = f"output/{args.model}/{args.scenario}/output_{args.n}_{args.temperature}.json" 
-    args.output_path = output_path
-
     return args
+
 
 def test():
     args = get_args()
     print(args)
+
 
 if __name__ == "__main__":
     test()

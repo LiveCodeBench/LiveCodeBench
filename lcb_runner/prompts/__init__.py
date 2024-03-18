@@ -1,1 +1,1 @@
-import lcb_runner.prompts.generation as generation
+from lcb_runner.prompts.generation import format_prompt_generation

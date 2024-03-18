@@ -5,6 +5,7 @@ from dataclasses import dataclass
 
 from datasets import load_dataset
 
+
 class Platform(Enum):
     LEETCODE = "leetcode"
     CODEFORCES = "codeforces"
@@ -30,6 +31,10 @@ class Test:
 
     def __post_init__(self):
         self.testtype = TestType(self.testtype)
+        # if self.testtype == TestType.FUNCTIONAL:
+        #     self.input = json.loads(self.input)
+        #     self.output = json.loads(self.output)
+
 
 @dataclass
 class GenerationProblem:
@@ -57,7 +62,44 @@ class GenerationProblem:
 
         self.metadata = json.loads(self.metadata)
 
+    def insert_output(self, output_list: list[str], code_list: list[str]) -> dict:
+        return {
+            "question_title": self.question_title,
+            "question_content": self.question_content,
+            "platform": self.platform.value,
+            "question_id": self.question_id,
+            "contest_id": self.contest_id,
+            "contest_date": self.contest_date.isoformat(),
+            "starter_code": self.starter_code,
+            "difficulty": self.difficulty.value,
+            "output_list": output_list,
+            "code_list": code_list,
+        }
+
+    def get_evaluation_sample(self):
+        return {
+            "input_output": json.dumps(
+                {
+                    "inputs": [
+                        t.input
+                        for t in self.public_test_cases + self.private_test_cases
+                    ],
+                    "outputs": [
+                        t.output
+                        for t in self.public_test_cases + self.private_test_cases
+                    ],
+                    "fn_name": self.metadata.get("func_name", None),
+                }
+            ),
+        }
+
 
 def load_generation_dataset() -> list[GenerationProblem]:
     dataset = load_dataset("livecodebench/code_generation", split="test")
-    return [GenerationProblem(**p) for p in dataset]
+    dataset = [GenerationProblem(**p) for p in dataset]
+    print(f"Loaded {len(dataset)} problems")
+    return dataset
+
+
+if __name__ == "__main__":
+    dataset = load_generation_dataset()

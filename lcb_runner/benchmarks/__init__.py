@@ -1,1 +1,1 @@
-import lcb_runner.benchmarks.generation as generation
+from lcb_runner.benchmarks.generation import GenerationProblem, load_generation_dataset

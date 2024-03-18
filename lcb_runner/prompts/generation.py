@@ -32,7 +32,9 @@ class PromptConstants:
 def get_generic_question_template_answer(question: GenerationProblem):
     prompt = f"### Question:\n{question.question_content}\n\n"
     if question.starter_code:
-        prompt += f"### Format: {PromptConstants.FORMATTING_MESSAGE_WITH_STARTER_CODE}\n"
+        prompt += (
+            f"### Format: {PromptConstants.FORMATTING_MESSAGE_WITH_STARTER_CODE}\n"
+        )
         prompt += f"```python\n{question.starter_code}\n```\n\n"
     else:
         prompt += f"### Format: {PromptConstants.FORMATTING_WITHOUT_STARTER_CODE}\n"
@@ -57,7 +59,9 @@ def get_deepseekcode_question_template_answer(question: GenerationProblem):
     prompt = f"### Instruction: You will be given a question (problem specification) and will generate a correct Python program that matches the specification and passes all tests. You will NOT return anything except for the program.\n\n"
     prompt += f"Question:\n{question.question_content}\n\n"
     if question.starter_code:
-        prompt += f"### Instruction: {PromptConstants.FORMATTING_MESSAGE_WITH_STARTER_CODE}\n"
+        prompt += (
+            f"### Instruction: {PromptConstants.FORMATTING_MESSAGE_WITH_STARTER_CODE}\n"
+        )
         prompt += f"```python\n{question.starter_code}\n```\n\n"
     else:
         prompt += (
@@ -116,6 +120,7 @@ with open("lcb_runner/prompts/few_shot_examples/generation/func.json") as f:
 with open("lcb_runner/prompts/few_shot_examples/generation/stdin.json") as f:
     stdin = json.load(f)
 
+
 def get_base_model_question_template_answer(question: GenerationProblem):
     if question.starter_code:
         examples_json = func
@@ -149,7 +154,9 @@ def get_base_model_question_template_answer(question: GenerationProblem):
     return prompt
 
 
-def format_prompt_generation(question: GenerationProblem, LanguageModelStyle: LMStyle) -> str:
+def format_prompt_generation(
+    question: GenerationProblem, LanguageModelStyle: LMStyle
+) -> str:
     if LanguageModelStyle == LMStyle.OpenAIChat:
         chat_messages = [
             {
@@ -164,14 +171,14 @@ def format_prompt_generation(question: GenerationProblem, LanguageModelStyle: LM
             },
         ]
         return chat_messages
-    
+
     if LanguageModelStyle == LMStyle.Anthropic:
         prompt = f"{HUMAN_PROMPT}\n"
         prompt += f"{PromptConstants.SYSTEM_MESSAGE_GENERIC}\n\n"
         prompt += f"{get_generic_question_template_answer(question).rstrip()}\n"
         prompt += f"{AI_PROMPT}"
         return prompt
-    
+
     if LanguageModelStyle == LMStyle.AnthropicMessage:
         system = PromptConstants.SYSTEM_MESSAGE_GENERIC
         prompt = [
@@ -181,12 +188,12 @@ def format_prompt_generation(question: GenerationProblem, LanguageModelStyle: LM
             }
         ]
         return system, prompt
-    
+
     if LanguageModelStyle == LMStyle.Gemini:
         prompt = f"{PromptConstants.SYSTEM_MESSAGE_GENERIC}\n"
         prompt += f"{get_generic_question_template_answer(question)}"
         return prompt
-    
+
     if LanguageModelStyle == LMStyle.MistralWeb:
         chat_messages = [
             {
@@ -199,12 +206,12 @@ def format_prompt_generation(question: GenerationProblem, LanguageModelStyle: LM
             },
         ]
         return chat_messages
-    
+
     if LanguageModelStyle == LMStyle.DeepSeekCodeInstruct:
         prompt = f"{PromptConstants.SYSTEM_MESSAGE_DEEPSEEK}\n\n"
         prompt += f"{get_deepseekcode_question_template_answer(question)}"
         return prompt
-    
+
     if LanguageModelStyle == LMStyle.CodeLLaMaInstruct:
         prompt = f"[INST] <<SYS>>\n"
         prompt += f"{PromptConstants.SYSTEM_MESSAGE_GENERIC}\n"
@@ -212,25 +219,30 @@ def format_prompt_generation(question: GenerationProblem, LanguageModelStyle: LM
         prompt += f"{get_cllama_question_template_answer(question)}\n"
         prompt += f"[/INST]"
         return prompt
-    
+
     if LanguageModelStyle == LMStyle.MagiCoder:
         prompt = f"{PromptConstants.SYSTEM_MESSAGE_MAGIC}\n"
         prompt += f"{get_magicoder_question_template_answer(question)}"
         return prompt
-    
+
     if LanguageModelStyle == LMStyle.WizardCoder:
         prompt = f"{PromptConstants.SYSTEM_MESSAGE_WIZARD}\n\n"
         prompt += f"{get_wizard_question_template_answer(question)}"
         return prompt
-    
+
     if LanguageModelStyle == LMStyle.Phind:
         prompt = f"### System Prompt\n\n"
         prompt += f"{PromptConstants.SYSTEM_MESSAGE_PHIND}\n\n"
         prompt += f"### User Message\n\n"
         prompt += f"{get_phind_question_template_answer(question)}"
         return prompt
-    
-    if LanguageModelStyle in [LMStyle.DeepSeekBase, LMStyle.CodeLLaMaBase, LMStyle.StarCoder2Base]:
+
+    if LanguageModelStyle in [
+        LMStyle.DeepSeekBase,
+        LMStyle.CodeLLaMaBase,
+        LMStyle.StarCoder2Base,
+        LMStyle.StableCodeBase,
+    ]:
         prompt = get_base_model_question_template_answer(question)
         return prompt
 
@@ -239,48 +251,41 @@ def format_prompt_generation(question: GenerationProblem, LanguageModelStyle: LM
     )
 
 
-def extract_code(model_output: str, lmstyle: LMStyle):
-    outputlines = model_output.split("\n")
-    if lmstyle == LMStyle.CodeLLaMa:
-        indexlines = [i for i, line in enumerate(outputlines) if "PYTHON]" in line]
-        if len(indexlines) < 2:
-            indexlines = [i for i, line in enumerate(outputlines) if "```" in line]
-    elif lmstyle in [
-        LMStyle.CodeLLaMaBase,
-        LMStyle.DeepSeekBase,
-        LMStyle.StarCoderBase,
-    ]:
-        return model_output.strip()
-    else:
-        indexlines = [i for i, line in enumerate(outputlines) if "```" in line]
-    if len(indexlines) < 2:
-        return ""
-    return "\n".join(outputlines[indexlines[0] + 1 : indexlines[1]])
-
-
 def test():
     import pathlib
+
     base_dir = "logs/example_prompts/generation"
     pathlib.Path(base_dir).mkdir(parents=True, exist_ok=True)
 
     for lmstyle in LMStyle:
         generation_problem = GenerationProblem(
-            "title", "question-content", "leetcode", "question_id", "contest_id", "contest_date", "", "easy", "[]", "[]", "{}"
+            "title",
+            "question-content",
+            "leetcode",
+            "question_id",
+            "contest_id",
+            "contest_date",
+            "",
+            "easy",
+            "[]",
+            "[]",
+            "{}",
         )
-        prompt1 = format_prompt(generation_problem, lmstyle)
-        with open(f'{base_dir}/{lmstyle}_1.txt', 'w') as f:
+        prompt1 = format_prompt_generation(generation_problem, lmstyle)
+        with open(f"{base_dir}/{lmstyle}_1.txt", "w") as f:
             try:
                 f.write(prompt1)
             except TypeError:
                 f.write(json.dumps(prompt1))
-        
+
         generation_problem.starter_code = "starter code"
-        prompt2 = format_prompt(generation_problem, lmstyle)
-        with open(f'{base_dir}/{lmstyle}_2.txt', 'w') as f:
+        prompt2 = format_prompt_generation(generation_problem, lmstyle)
+        with open(f"{base_dir}/{lmstyle}_2.txt", "w") as f:
             try:
                 f.write(prompt2)
             except TypeError:
                 f.write(json.dumps(prompt2))
+
 
 if __name__ == "__main__":
     test()

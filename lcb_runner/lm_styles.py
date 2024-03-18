@@ -13,6 +13,7 @@ class LMStyle(Enum):
     DeepSeekBase = "DeepSeekBase"
     CodeLLaMaBase = "CodeLLaMaBase"
     StarCoder2Base = "StarCoder2Base"
+    StableCodeBase = "StableCodeBase"
 
     DeepSeekCodeInstruct = "DeepSeekCodeInstruct"
     CodeLLaMaInstruct = "CodeLLaMaInstruct"
@@ -20,6 +21,7 @@ class LMStyle(Enum):
     Phind = "Phind"
     WizardCoder = "WizardCoder"
     MagiCoder = "MagiCoder"
+    OC = "OC"
 
 
 @dataclass
@@ -244,6 +246,34 @@ LanguageModelList: list[LanguageModel] = [
         LMStyle.MistralWeb,
         datetime(2023, 1, 1),
         link="https://mistral.ai/news/mistral-large/",
+    ),
+    LanguageModel(
+        "m-a-p/OpenCodeInterpreter-DS-33B",
+        "OC-DS-33B",
+        LMStyle.OC,
+        datetime(2023, 1, 1),
+        link="https://huggingface.co/m-a-p/OpenCodeInterpreter-DS-33B/",
+    ),
+    LanguageModel(
+        "m-a-p/OpenCodeInterpreter-DS-6.7B",
+        "OC-DS-6.7B",
+        LMStyle.OC,
+        datetime(2023, 9, 1),
+        link="https://huggingface.co/m-a-p/OpenCodeInterpreter-DS-6.7B/",
+    ),
+    LanguageModel(
+        "m-a-p/OpenCodeInterpreter-DS-1.3B",
+        "OC-DS-1.3B",
+        LMStyle.OC,
+        datetime(2023, 9, 1),
+        link="https://huggingface.co/m-a-p/OpenCodeInterpreter-DS-1.3B/",
+    ),
+    LanguageModel(
+        "stabilityai/stable-code-3b",
+        "StableCode-3B",
+        LMStyle.StableCodeBase,
+        datetime(2023, 9, 1),
+        link="https://huggingface.co/stabilityai/stable-code-3b/",
     ),
 ]
 
