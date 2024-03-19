@@ -35,7 +35,8 @@ We provide a benchmark for different code capability scenarios
 
 ### Code Generation
 
-We use `vllm` for inference using local models. We use  `tensor_parallel_size=${num_gpus}` for running the inference on multiple GPUs and can be configured using the `--tensor_parallel_size` flag.
+We use `vllm` for inference using local models. By default, we use  `tensor_parallel_size=${num_gpus}` to parallelize inference across all available GPUs. It can be configued using the  `--tensor_parallel_size` flag as required. 
+
 For running the inference, please use the following command. 
 
 ```bash
