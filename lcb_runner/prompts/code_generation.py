@@ -237,6 +237,11 @@ def format_prompt_generation(
         prompt += f"{get_phind_question_template_answer(question)}"
         return prompt
 
+    if LanguageModelStyle == LMStyle.OC:
+        prompt = f"{PromptConstants.SYSTEM_MESSAGE_GENERIC}\n\n"
+        prompt += f"{get_generic_question_template_answer(question)}"
+        return prompt
+
     if LanguageModelStyle in [
         LMStyle.DeepSeekBase,
         LMStyle.CodeLLaMaBase,
