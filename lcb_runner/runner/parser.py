@@ -1,4 +1,5 @@
 import os
+import torch
 import argparse
 
 from lcb_runner.utils.scenarios import Scenario
@@ -56,7 +57,7 @@ def get_args():
     parser.add_argument(
         "--tensor_parallel_size",
         type=int,
-        default=8,
+        default=-1,
         help="Tensor parallel size for vllm",
     )
     parser.add_argument("--dtype", type=str, default="bfloat16", help="Dtype for vllm")
@@ -64,6 +65,9 @@ def get_args():
     args = parser.parse_args()
 
     args.stop = args.stop.split(",")
+
+    if args.tensor_parallel_size == -1:
+        args.tensor_parallel_size = torch.cuda.device_count()
 
     if args.multiprocess == -1:
         args.multiprocess = os.cpu_count()
