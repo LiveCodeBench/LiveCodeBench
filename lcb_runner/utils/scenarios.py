@@ -2,7 +2,7 @@ from enum import Enum
 
 
 class Scenario(Enum):
-    generation = "generation"
-    repair = "repair"
-    testoutput = "testoutput"
-    execution = "execution"
+    codegeneration = "codegeneration"
+    selfrepair = "selfrepair"
+    testoutputprediction = "testoutputprediction"
+    codeexecution = "codeexecution"

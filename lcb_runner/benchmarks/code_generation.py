@@ -94,7 +94,7 @@ class CodeGenerationProblem:
         }
 
 
-def load_generation_dataset() -> list[CodeGenerationProblem]:
+def load_code_generation_dataset() -> list[CodeGenerationProblem]:
     dataset = load_dataset("livecodebench/code_generation", split="test")
     dataset = [CodeGenerationProblem(**p) for p in dataset]
     print(f"Loaded {len(dataset)} problems")
@@ -102,4 +102,4 @@ def load_generation_dataset() -> list[CodeGenerationProblem]:
 
 
 if __name__ == "__main__":
-    dataset = load_generation_dataset()
+    dataset = load_code_generation_dataset()

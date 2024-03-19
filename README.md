@@ -12,7 +12,6 @@ LiveCodeBench is a comprehensive and contamination-free evaluation of LLMs for c
 Distinctly, LiveCodeBench also focuses on a broader range of code-related capabilities, such as self-repair, code execution, and test output prediction, beyond just code generation. 
 Currently, LiveCodeBench hosts four hundred high-quality coding problems that were published between May 2023 and February 2024.
 
-<img src="./assets/images/lcb.png" alt="Teaser" class="teaser-image center" width="70%" style="display: block; margin-left: auto; margin-right: auto; background-color: #f5f5f5; padding: 10px; border-radius: 10px;"/>
 
 ## Installation
 You can install the dependencies using pip:
@@ -40,7 +39,7 @@ We use `vllm` for inference using local models.
 For running the inference, please use the following command. 
 
 ```bash
-python -m lcb_runner.runner.main --model {model_name} --scenario generation
+python -m lcb_runner.runner.main --model {model_name} --scenario codegeneration
 ```
 
 We compute `pass@1` and `pass@5` metrics for each model. 
@@ -48,13 +47,21 @@ We use a modified version of the checker released with the `apps` benchmark to c
 Particularly, we identified some unhandled edge cases in the original checker and fixed them and additionally simplified the checker based on our collected dataset.
 
 ```bash
-python -m lcb_runner.runner.main --model {model_name} --scenario generation --evaluate
+python -m lcb_runner.runner.main --model {model_name} --scenario codegeneration --evaluate
 ```
 
-Note that time limits can cause a slight  `< 0.3` points of variation in the computation of the `pass@1` and `pass@5` metrics.
-If you observe a significant variation in performance, adjust the `--num_process_evaluate` flag to a lower value or increase the `--timeout` flag. Please report particular issues caused by improper timeouts here.
+Note that time limits can cause a slight ( `< 0.3`) points of variation in the computation of the `pass@1` and `pass@5` metrics.
+If you observe a significant variation in performance, adjust the `--num_process_evaluate` flag to a lower value or increase the `--timeout` flag. Please report particular issues caused by improper timeouts here. 
 
 The Leaderboard uses [ExecEval](https://github.com/ntunlp/ExecEval) which is a more comprehensive evaluation script using docker for evaluation of the generated programs. We will release an alternative evaluation script soon. 
+
+### Test Output Prediction
+For running the test output prediction scenario you can simply run
+
+```bash
+python -m lcb_runner.runner.main --model {model_name} --scenario testoutputprediction --evaluate
+```
+
 
 ## Adding Support for New Models
 

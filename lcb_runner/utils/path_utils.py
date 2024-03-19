@@ -27,9 +27,6 @@ def get_output_path(model: LanguageModel, args) -> str:
     scenario = args.scenario
     n = args.n
     temperature = args.temperature
-    if args.scenario == Scenario.generation:
-        path = f"output/{model_repr}/{scenario}_{n}_{temperature}.json"
-    else:
-        raise ValueError(f"Scenario {args.scenario} not implemented")
+    path = f"output/{model_repr}/{scenario}_{n}_{temperature}.json"
     ensure_dir(path)
     return path

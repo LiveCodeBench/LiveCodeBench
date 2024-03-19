@@ -15,7 +15,7 @@ def get_args():
     parser.add_argument(
         "--scenario",
         type=Scenario,
-        default=Scenario.generation,
+        default=Scenario.codegeneration,
         help="Type of scenario to run",
     )
     parser.add_argument(
