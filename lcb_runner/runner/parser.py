@@ -53,6 +53,13 @@ def get_args():
         help="Number of processes to use for evaluation",
     )
     parser.add_argument("--timeout", type=int, default=6, help="Timeout for evaluation")
+    parser.add_argument(
+        "--tensor_parallel_size",
+        type=int,
+        default=8,
+        help="Tensor parallel size for vllm",
+    )
+    parser.add_argument("--dtype", type=str, default="bfloat16", help="Dtype for vllm")
 
     args = parser.parse_args()
 

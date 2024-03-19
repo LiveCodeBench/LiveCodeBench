@@ -11,8 +11,8 @@ class VLLMRunner(BaseRunner):
         super().__init__(args, model)
         self.llm = LLM(
             model.model_name,
-            tensor_parallel_size=8,
-            dtype="bfloat16",
+            tensor_parallel_size=args.tensor_parallel_size,
+            dtype=args.dtype,
             enforce_eager=True,
             max_model_len=4096,
         )
