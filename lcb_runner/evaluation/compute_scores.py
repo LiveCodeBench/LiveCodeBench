@@ -65,17 +65,13 @@ def compute_scores(args):
     if args.start_date is not None:
         args.start_date = datetime.strptime(args.start_date, "%Y-%m-%d")
         results = [
-            result
-            for result in results
-            if args.start_date <= result["contest_date"] <= args.end_date
+            result for result in results if args.start_date <= result["contest_date"]
         ]
 
     if args.end_date is not None:
         args.end_date = datetime.strptime(args.end_date, "%Y-%m-%d")
         results = [
-            result
-            for result in results
-            if args.start_date <= result["contest_date"] <= args.end_date
+            result for result in results if result["contest_date"] <= args.end_date
         ]
 
     pass_1_list = [result["pass@1"] for result in results]
