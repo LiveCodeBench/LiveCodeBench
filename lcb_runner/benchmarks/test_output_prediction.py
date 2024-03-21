@@ -44,6 +44,14 @@ class TestOutputPredictionProblem:
             "starter_code": self.starter_code,
         }
 
+    def insert_output_evaluation(
+        self, output_list: list[str], code_list: list[str], graded_list: list[bool]
+    ) -> dict:
+        output = self.insert_output(output_list, code_list)
+        output["graded_list"] = graded_list
+        output["pass@1"] = graded_list.count(True) / len(graded_list)
+        return output
+
     def get_evaluation_sample(self) -> dict:
         return {
             "input": self.question_content,

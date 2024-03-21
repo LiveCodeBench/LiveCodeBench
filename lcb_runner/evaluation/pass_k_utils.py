@@ -51,3 +51,16 @@ def compute_metrics_from_results(results, k_list=[1, 5]):
     detail_metrics = {k: dict(zip(task_ids, v)) for k, v in detail_pass_at_k.items()}
     pass_at_k["detail"] = detail_metrics
     return pass_at_k
+
+
+def extract_instance_results(results):
+    instance_wise_grades = {}
+    for task_id, res in results.items():
+        instance_wise_grades[task_id] = []
+        for generation in res:
+            instance_wise_grades[task_id].append(all([g > 0 for g in generation]))
+
+    instance_wise_grades = [
+        v for _, v in sorted(instance_wise_grades.items(), key=lambda item: item[0])
+    ]
+    return instance_wise_grades
