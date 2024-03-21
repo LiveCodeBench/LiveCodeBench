@@ -30,3 +30,12 @@ def get_output_path(model: LanguageModel, args) -> str:
     path = f"output/{model_repr}/{scenario}_{n}_{temperature}.json"
     ensure_dir(path)
     return path
+
+
+def get_eval_all_output_path(model: LanguageModel, args) -> str:
+    model_repr = model.model_repr
+    scenario = args.scenario
+    n = args.n
+    temperature = args.temperature
+    path = f"output/{model_repr}/{scenario}_{n}_{temperature}_eval_all.json"
+    return path
