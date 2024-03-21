@@ -41,7 +41,7 @@ def main():
             if instance.question_id not in old_save_results_question_ids
         ]
         print(
-            f"Found {len(old_save_results)} existing results, continuing with {len(remaining_benchmark)} remaining"
+            f"Found {len(old_save_results)} existing generations, continuing with {len(remaining_benchmark)} remaining"
         )
     else:
         old_save_results = []
@@ -71,6 +71,7 @@ def main():
         json.dump(save_results, f, indent=4)
 
     if args.evaluate:
+        # TODO: we can add --continue_existing_evaluation flag to continue from existing evaluation
         metrics = get_metrics(args.scenario, args, benchmark, combined_results)
         graded = extract_instance_results(metrics[1])
 
