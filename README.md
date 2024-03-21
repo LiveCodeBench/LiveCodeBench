@@ -43,9 +43,12 @@ For running the inference, please use the following command.
 python -m lcb_runner.runner.main --model {model_name} --scenario codegeneration
 ```
 
-We compute `pass@1` and `pass@5` metrics for each model. 
+Additionally, `--use_cache` flag can be used to cache the generated outputs and `--continue_existing` flag can be used to use the existing dumbed results.
+
+We compute `pass@1` and `pass@5` metrics for model evaluations.
 We use a modified version of the checker released with the `apps` benchmark to compute the metrics. 
-Particularly, we identified some unhandled edge cases in the original checker and fixed them and additionally simplified the checker based on our collected dataset.
+Particularly, we identified some unhandled edge cases in the original checker and fixed them and additionally simplified the checker based on our collected dataset. To run the evaluation, you can use the following command:
+
 
 ```bash
 python -m lcb_runner.runner.main --model {model_name} --scenario codegeneration --evaluate
@@ -54,7 +57,14 @@ python -m lcb_runner.runner.main --model {model_name} --scenario codegeneration 
 Note that time limits can cause a slight ( `< 0.3`) points of variation in the computation of the `pass@1` and `pass@5` metrics.
 If you observe a significant variation in performance, adjust the `--num_process_evaluate` flag to a lower value or increase the `--timeout` flag. Please report particular issues caused by improper timeouts here. 
 
-The Leaderboard uses [ExecEval](https://github.com/ntunlp/ExecEval) which is a more comprehensive evaluation script using docker for evaluation of the generated programs. We will release an alternative evaluation script soon. 
+Finally, to get scores over different time windows, you can use [./lcb_runner/evaluation/compute_scores.py](./lcb_runner/evaluation/compute_scores.py) file. 
+Particularly, you can provide `--start_date` and `--end_date` flags (using the `YYYY-MM-DD` format) to get scores over the specified time window. In our paper, to counter contamination in the DeepSeek models, we only report results on problems released after August 2023. You can replicate those evaluations using:
+
+```bash
+python -m lcb_runner.evaluation.compute_scores --eval_all_file {saved_eval_all_file} --start_date 2023-09-01
+```
+
+Finally, our Leaderboard uses [ExecEval](https://github.com/ntunlp/ExecEval) which is a more comprehensive evaluation script using docker for evaluation of the generated programs. We will release an alternative evaluation script soon. 
 
 ### Test Output Prediction
 For running the test output prediction scenario you can simply run
