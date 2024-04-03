@@ -50,4 +50,7 @@ class VLLMRunner(BaseRunner):
                     ]
                     outputs[index] = [o.text for o in output.outputs]
                 self.save_cache()
+            else:
+                for index, output in zip(remaining_indices, outputs):
+                    outputs[index] = [o.text for o in output.outputs]
         return outputs
