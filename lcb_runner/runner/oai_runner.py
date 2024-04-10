@@ -5,7 +5,8 @@ try:
     import openai
     from openai import OpenAI
 except ImportError as e:
-    print("Cannot import openai")
+    # print("Cannot import openai")
+    pass
 
 from lcb_runner.runner.base_runner import BaseRunner
 

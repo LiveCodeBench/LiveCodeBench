@@ -1,7 +1,8 @@
 try:
     from vllm import LLM, SamplingParams
-except ImportError:
-    print("Cannot import vllm")
+except ImportError as e:
+    # print("Cannot import vllm")
+    pass
 
 from lcb_runner.runner.base_runner import BaseRunner
 
@@ -26,10 +27,6 @@ class VLLMRunner(BaseRunner):
             stop=self.args.stop,
         )
 
-    def _run_single(self, prompt: str) -> list[str]:
-        outputs = self.llm.generate([prompt], self.sampling_params)
-        return [o.text for o in outputs[0].output.outputs]
-
     def run_batch(self, prompts: list[str]) -> list[list[str]]:
         outputs = [None for _ in prompts]
         remaining_prompts = []
@@ -49,5 +46,4 @@ class VLLMRunner(BaseRunner):
                         o.text for o in output.outputs
                     ]
                     outputs[index] = [o.text for o in output.outputs]
-                self.save_cache()
         return outputs
