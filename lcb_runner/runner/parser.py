@@ -55,6 +55,9 @@ def get_args():
     )
     parser.add_argument("--timeout", type=int, default=6, help="Timeout for evaluation")
     parser.add_argument(
+        "--openai_timeout", type=int, default=45, help="Timeout for requests to OpenAI"
+    )
+    parser.add_argument(
         "--tensor_parallel_size",
         type=int,
         default=-1,

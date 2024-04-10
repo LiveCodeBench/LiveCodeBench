@@ -18,7 +18,7 @@ BenchMarkType = list[Union[CodeGenerationProblem, TestOutputPredictionProblem]]
 
 def build_prompt_benchmark(
     scenario: Scenario,
-) -> tuple[list[CodeGenerationProblem | TestOutputPredictionProblem], callable]:
+) -> tuple[list[CodeGenerationProblem] | list[TestOutputPredictionProblem], callable]:
     if scenario == Scenario.codegeneration:
         benchmark = load_code_generation_dataset()
         benchmark = sorted(benchmark, key=lambda x: x.question_id)
