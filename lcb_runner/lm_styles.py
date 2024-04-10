@@ -119,7 +119,7 @@ LanguageModelList: list[LanguageModel] = [
         "GPT-4-0613",
         LMStyle.OpenAIChat,
         datetime(2021, 10, 1),
-        link="https://openai.com/blog/new-models-and-developer-products-announced-at-devday",
+        link="https://platform.openai.com/docs/models/gpt-4-turbo-and-gpt-4",
     ),
     LanguageModel(
         "gpt-4-1106-preview",
@@ -127,6 +127,13 @@ LanguageModelList: list[LanguageModel] = [
         LMStyle.OpenAIChat,
         datetime(2023, 4, 30),
         link="https://openai.com/blog/new-models-and-developer-products-announced-at-devday",
+    ),
+    LanguageModel(
+        "gpt-4-turbo-2024-04-09",
+        "GPT-4-Turbo-2024-04-09",
+        LMStyle.OpenAIChat,
+        datetime(2023, 4, 30),
+        link="https://platform.openai.com/docs/models/gpt-4-turbo-and-gpt-4",
     ),
     LanguageModel(
         "claude-2",

@@ -46,4 +46,7 @@ class VLLMRunner(BaseRunner):
                         o.text for o in output.outputs
                     ]
                     outputs[index] = [o.text for o in output.outputs]
+            else:
+                for index, output in zip(remaining_indices, outputs):
+                    outputs[index] = [o.text for o in output.outputs]
         return outputs
