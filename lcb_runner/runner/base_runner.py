@@ -13,6 +13,7 @@ class BaseRunner(ABC):
     def __init__(self, args, model: LanguageModel):
         self.args = args
         self.model = model
+        self.client_kwargs: dict[str | str] = {}
 
         if self.args.use_cache:
             self.cache_path = get_cache_path(model, args)
@@ -31,39 +32,68 @@ class BaseRunner(ABC):
                 json.dump(self.cache, f, indent=4)
 
     @abstractmethod
-    def _run_single(self, prompt: str) -> str:
+    def _run_single(self, prompt: str | list[dict[str, str]]) -> list[str]:
         pass
 
-    def run_single(self, prompt: str) -> str:
-        if self.args.use_cache:
-            try:
-                with open(self.cache_path, "r") as f:
-                    cache = json.load(f)
-            except FileNotFoundError:
-                pass
+    @staticmethod
+    def run_single(combined_args) -> str:
+        """
+        Run the model for a single prompt and return the output
+        Static method to be used in multiprocessing
+        Calls the _run_single method with the combined arguments
+        """
+        prompt: str | list[dict[str, str]]
+        cache: dict[str, str]
+        call_method: callable
+        prompt, cache, args, call_method = combined_args
 
-            cached_values = cache["data"]
+        if isinstance(prompt, list):
+            prompt_cache = json.dumps(prompt)
+        if cache is not None and prompt_cache in cache:
+            if len(cache[prompt_cache]) == args.n:
+                return cache[prompt_cache]
 
-            if prompt in cache:
-                cache_result = cache[prompt]
-                if len(cache_result) == self.args.n:
-                    return cache_result
+        result = call_method(prompt)
+        assert len(result) == args.n
 
-        result = self._run_single(prompt)
+        return result
 
-        if self.args.use_cache:
-            cache[prompt] = result
-
-    def run_batch(self, prompts: list[str]) -> list[str]:
-        if self.args.multiprocess > 1:
-            return run_tasks_in_parallel(
-                self.run_single,
-                prompts,
-                self.args.multiprocess,
-                self.args.timeout,
-                True,
+    def run_batch(self, prompts: list[str | list[dict[str, str]]]) -> list[str]:
+        outputs = []
+        arguments = [
+            (
+                prompt,
+                self.cache,  ## pass the cache as argument for cache check
+                self.args,  ## pass the args as argument for cache check
+                self._run_single,  ## pass the _run_single method as argument because of multiprocessing
             )
-        return [self.run_single(prompt) for prompt in tqdm(prompts)]
+            for prompt in prompts
+        ]
+        if self.args.multiprocess > 1:
+            parallel_outputs = run_tasks_in_parallel(
+                self.run_single,
+                arguments,
+                self.args.multiprocess,
+                use_progress_bar=True,
+            )
+            for output in parallel_outputs:
+                if output.is_success():
+                    outputs.append(output.result)
+                else:
+                    print("Failed to run the model for some prompts")
+                    print(output.status)
+                    print(output.exception_tb)
+                    outputs.extend([""] * self.args.n)
+        else:
+            outputs = [self.run_single(argument) for argument in tqdm(arguments)]
+
+        if self.args.use_cache:
+            for prompt, output in zip(prompts, outputs):
+                if isinstance(prompt, list):
+                    prompt_cache = json.dumps(prompt)
+                self.cache[prompt_cache] = output  ## save the output to cache
+
+        return outputs
 
     def run_main(self, benchmark: list, format_prompt: callable) -> list:
         prompts = [
