@@ -43,7 +43,7 @@ For running the inference, please use the following command.
 python -m lcb_runner.runner.main --model {model_name} --scenario codegeneration
 ```
 
-Additionally, `--use_cache` flag can be used to cache the generated outputs and `--continue_existing` flag can be used to use the existing dumbed results.
+Additionally, `--use_cache` flag can be used to cache the generated outputs and `--continue_existing` flag can be used to use the existing dumbed results. Additionally, `--multiprocess` flag can be used to parallelize queries to API servers (adjustable according to rate limits).
 
 We compute `pass@1` and `pass@5` metrics for model evaluations.
 We use a modified version of the checker released with the `apps` benchmark to compute the metrics. 
