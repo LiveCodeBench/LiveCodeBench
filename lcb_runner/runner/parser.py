@@ -20,6 +20,11 @@ def get_args():
         help="Type of scenario to run",
     )
     parser.add_argument(
+        "--cot_code_execution",
+        action="store_true",
+        help="whether to use CoT in code execution scenario"
+    )
+    parser.add_argument(
         "--n", type=int, default=10, help="Number of samples to generate"
     )
     parser.add_argument(
