@@ -23,6 +23,9 @@ class LMStyle(Enum):
     MagiCoder = "MagiCoder"
     OC = "OC"
 
+    Qwen1point5 = "Qwen1point5"
+    Smaug2 = "Smaug2"
+
 
 @dataclass
 class LanguageModel:
@@ -281,6 +284,20 @@ LanguageModelList: list[LanguageModel] = [
         LMStyle.StableCodeBase,
         datetime(2023, 9, 1),
         link="https://huggingface.co/stabilityai/stable-code-3b/",
+    ),
+    LanguageModel(
+        "/abacus/models/Qwen1.5-72B-Chat/",
+        "Qwen-1.5-72B-Chat ",
+        LMStyle.Qwen1point5,
+        datetime(2024, 3, 31),
+        link="https://huggingface.co/qwen/Qwen1.5-72B-Chat/",
+    ),
+    LanguageModel(
+        "/abacus/models/Smaug-2-72B/",
+        "Smaug-2-72B ",
+        LMStyle.Smaug2,
+        datetime(2024, 3, 31),
+        link="https://huggingface.co/abacusai/Smaug-2-72B/",
     ),
 ]
 

@@ -27,6 +27,9 @@ class VLLMRunner(BaseRunner):
             stop=self.args.stop,
         )
 
+    def _run_single(self, prompt: str) -> list[str]:
+        pass
+
     def run_batch(self, prompts: list[str]) -> list[list[str]]:
         outputs = [None for _ in prompts]
         remaining_prompts = []

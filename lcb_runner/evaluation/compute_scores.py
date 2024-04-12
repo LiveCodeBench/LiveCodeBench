@@ -2,6 +2,7 @@ import json
 import argparse
 from datetime import datetime
 
+from lcb_runner.lm_styles import LanguageModelStore
 from lcb_runner.utils.scenarios import Scenario
 from lcb_runner.utils.path_utils import get_eval_all_output_path
 
@@ -50,7 +51,8 @@ def get_parser():
     args = parser.parse_args()
 
     if args.eval_all_file is None:
-        args.eval_all_file = get_eval_all_output_path(args.model, args)
+        model = LanguageModelStore[args.model]
+        args.eval_all_file = get_eval_all_output_path(model, args)
 
     return args
 
