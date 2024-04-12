@@ -72,6 +72,30 @@ def get_deepseekcode_question_template_answer(question: CodeGenerationProblem):
     return prompt
 
 
+def get_qwen_question_template_answer(question: CodeGenerationProblem):
+    from transformers import AutoTokenizer
+    tokenizer = AutoTokenizer.from_pretrained(
+        "/abacus/models/Qwen1.5-72B-Chat/",
+        padding_side="left",
+        use_fast=False
+    )
+    prompt = "You will be given a question (problem specification) and will generate a correct Python program that matches the specification and passes all tests. You will NOT return anything except for the program.\n\n"
+    prompt += f"Question:\n{question.question_content}\n\n"
+    if question.starter_code:
+        prompt += f"{PromptConstants.FORMATTING_MESSAGE_WITH_STARTER_CODE}\n"
+        prompt += f"```python\n{question.starter_code}\n```\n\n"
+    else:
+        prompt += f"{PromptConstants.FORMATTING_WITHOUT_STARTER_CODE}\n\n"
+        prompt += f"```python\n# YOUR CODE HERE\n```\n\n"
+
+    messages = [{'role': 'system', 'content': PromptConstants.SYSTEM_MESSAGE_GENERIC},
+                {'role': 'user', 'content': prompt}]
+    
+    prompt = tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True,
+                                           truncation=False, padding=False)
+    return prompt
+
+
 def get_magicoder_question_template_answer(question: CodeGenerationProblem):
     prompt = f"You will be given a question (problem specification) and will generate a correct Python program that matches the specification and passes all tests. You will NOT return anything except for the program.\n\n"
     prompt += f"Question:\n{question.question_content}\n\n"
@@ -240,6 +264,10 @@ def format_prompt_generation(
     if LanguageModelStyle == LMStyle.OC:
         prompt = f"{PromptConstants.SYSTEM_MESSAGE_GENERIC}\n\n"
         prompt += f"{get_generic_question_template_answer(question)}"
+        return prompt
+
+    if LanguageModelStyle == LMStyle.Smaug2 or LanguageModelStyle == LMStyle.Qwen1point5:
+        prompt = f"{get_qwen_question_template_answer(question)}"
         return prompt
 
     if LanguageModelStyle in [
