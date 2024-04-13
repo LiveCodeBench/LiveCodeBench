@@ -286,14 +286,14 @@ LanguageModelList: list[LanguageModel] = [
         link="https://huggingface.co/stabilityai/stable-code-3b/",
     ),
     LanguageModel(
-        "/abacus/models/Qwen1.5-72B-Chat/",
+        "qwen/Qwen1.5-72B-Chat",
         "Qwen-1.5-72B-Chat ",
         LMStyle.Qwen1point5,
         datetime(2024, 3, 31),
         link="https://huggingface.co/qwen/Qwen1.5-72B-Chat/",
     ),
     LanguageModel(
-        "/abacus/models/Smaug-2-72B/",
+        "abacusai/Smaug-2-72B",
         "Smaug-2-72B ",
         LMStyle.Smaug2,
         datetime(2024, 3, 31),
