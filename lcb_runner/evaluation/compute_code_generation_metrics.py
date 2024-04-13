@@ -21,11 +21,14 @@ def check_correctness(sample, generation, timeout, debug=True):
     The global timeout is to catch some extreme/rare cases not handled by the timeouts
     inside `run_test`"""
 
-    def _temp_run(sample, generation, debug, result):
-        result.append(run_test(sample, test=generation, debug=debug, timeout=timeout))
+    def _temp_run(sample, generation, debug, result,metadata_list):
+        res,metadata = run_test(sample, test=generation, debug=debug, timeout=45)
+        result.append(res)
+        metadata_list.append(metadata)
 
     manager = multiprocessing.Manager()
     result = manager.list()
+    metadata_list = manager.list()
     p = multiprocessing.Process(
         target=_temp_run, args=(sample, generation, debug, result)
     )
@@ -41,7 +44,7 @@ def check_correctness(sample, generation, timeout, debug=True):
         result = [[-1 for i in range(len(in_outs["inputs"]))]]
         if debug:
             print(f"global timeout")
-    return result[0]
+    return result[0],metadata_list[0]
 
 
 def evaluate_generations_by_problem(args):
@@ -51,10 +54,11 @@ def evaluate_generations_by_problem(args):
     timeout: int = args[3]
 
     res = []
+    metadata = []
     for o_idx, o in enumerate(problem_generations):
         curr_res = [-2]
         try:
-            curr_res = check_correctness(sample, o, timeout=timeout, debug=debug)
+            curr_res,curr_metadata = check_correctness(sample, o, timeout=timeout, debug=debug)
             if debug:
                 print(f"\nSuccessful compilation of task {o_idx}!")
             fixed = []
@@ -75,6 +79,7 @@ def evaluate_generations_by_problem(args):
         finally:
             assert isinstance(curr_res, list)
             res.append(curr_res)
+            metadata.append(curr_metadata)
     if debug:
         for i, r in enumerate(problem_generations):
             print("Sample\n")
@@ -83,7 +88,7 @@ def evaluate_generations_by_problem(args):
             print("Result\n")
             print(res[i])
             print("*" * 30 + "\n\n")
-    return res
+    return res,metadata
 
 
 def evaluate_generations(
@@ -122,9 +127,10 @@ def evaluate_generations(
             }
 
             results = {}
+            metadata = {}
             for future in as_completed(futures):
                 index = futures[future]
-                results[index] = future.result()
+                results[index], metadata[index] = future.result()
                 pbar.update(1)
 
     assert len(results) == len(
@@ -132,7 +138,7 @@ def evaluate_generations(
     ), f"results = {len(results)} inputs = {len(inputs)} {results=}"
     # results = {i: r for r, (_, i) in zip(results, inputs)}
 
-    return results
+    return results,metadata
 
 
 def codegen_metrics(
@@ -143,7 +149,7 @@ def codegen_metrics(
     timeout=6,
     debug=False,
 ):
-    results = evaluate_generations(
+    results, metadata = evaluate_generations(
         samples,
         generations,
         debug=debug,
@@ -151,4 +157,4 @@ def codegen_metrics(
         timeout=timeout,
     )
     metrics = compute_metrics_from_results(results, k_list=k_list)
-    return metrics, results
+    return metrics, results, metadata

@@ -85,6 +85,17 @@ def main():
             )
         ]
 
+        metadata = [] 
+        for key in metrics[2].keys():
+            metadata.append(metrics[2][key])
+        metrics_list = list(metrics)
+        del metrics_list[2]
+        metrics = tuple(metrics_list)
+        for i in range(len(save_eval_results)):
+            if type(metadata[i]) is not list:
+                metadata[i] = [metadata[i]]
+            save_eval_results[i]["metadata"] = [str(m) for m in metadata[i]]
+
         with open(output_path.replace(".json", "_eval.json"), "w") as f:
             json.dump(metrics, f, indent=4)
 

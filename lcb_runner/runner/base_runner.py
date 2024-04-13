@@ -96,9 +96,21 @@ class BaseRunner(ABC):
         return outputs
 
     def run_main(self, benchmark: list, format_prompt: callable) -> list:
-        prompts = [
-            format_prompt(problem, self.model.model_style) for problem in benchmark
-        ]
+        if self.args.scenario == "selfrepair":
+            with open(f"output/{self.model.model_repr}/Scenario.codegeneration_{self.args.n}_{self.args.temperature}_eval_all.json") as f:
+                check_metadata = json.load(f)[0]
+            checked_base_question_cotent = check_metadata["question_content"]
+            checked_base_codes = check_metadata["code_list"][0]
+            checked_base_results = check_metadata["graded_list"][0]
+            checked_base_metadata = check_metadata["metadata"][0]
+            prompts = [
+                format_prompt(checked_base_question_cotent, self.model,checked_base_codes,checked_base_results,checked_base_metadata)
+                for problem in benchmark
+            ]
+        else:
+            prompts = [
+                format_prompt(problem, self.model.model_style) for problem in benchmark
+            ]
         outputs = self.run_batch(prompts)
         self.save_cache()
         return outputs

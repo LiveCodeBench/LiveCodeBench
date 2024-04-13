@@ -99,7 +99,7 @@ def run_test(sample, test=None, debug=False, timeout=6):
         print(f"loaded input_output = {datetime.now().time()}")
 
     if test is None:
-        return in_outs
+        return in_outs, {"error":"no test code provided"}
     elif test is not None:
         results = []
         sol = "from string import *\nfrom re import *\nfrom datetime import *\nfrom collections import *\nfrom heapq import *\nfrom bisect import *\nfrom copy import *\nfrom math import *\nfrom random import *\nfrom statistics import *\nfrom itertools import *\nfrom functools import *\nfrom operator import *\nfrom io import *\nfrom sys import *\nfrom json import *\nfrom builtins import *\nfrom typing import *\nimport string\nimport re\nimport datetime\nimport collections\nimport heapq\nimport bisect\nimport copy\nimport math\nimport random\nimport statistics\nimport itertools\nimport functools\nimport operator\nimport io\nimport sys\nimport json\nsys.setrecursionlimit(6*10**5)\n"
@@ -124,7 +124,7 @@ def run_test(sample, test=None, debug=False, timeout=6):
                 if debug:
                     print(f"type 0 compilation error = {e}")
                 results.append(-2)
-                return results
+                return results, {"error":e, "error_code":-2}
             signal.alarm(0)
 
         elif which_type == CODE_TYPE.standard_input:
@@ -182,7 +182,7 @@ def run_test(sample, test=None, debug=False, timeout=6):
                 if debug:
                     print(f"type 1 compilation error = {e}")
                 results.append(-2)
-                return results
+                return results, {"error":e, "error_code":-2}
             signal.alarm(0)
         if debug:
             print(f"get method = {datetime.now().time()}")
@@ -194,7 +194,7 @@ def run_test(sample, test=None, debug=False, timeout=6):
             e = sys.exc_info()
             print(f"unable to get function error = {e}")
             results.append(-2)
-            return results
+            return results, {"error":e, "error_code":-2}
 
         for index, inputs in enumerate(in_outs["inputs"]):
             if which_type == CODE_TYPE.call_based:
@@ -255,7 +255,7 @@ def run_test(sample, test=None, debug=False, timeout=6):
                         True
                     results.append(tmp_result)
                     if tmp_result != True:
-                        return results
+                        return results, {"output":output,"expected":in_outs["outputs"][index],"inputs":inputs}
                     # reset the alarm
                     signal.alarm(0)
                 except Exception as e:
@@ -266,7 +266,7 @@ def run_test(sample, test=None, debug=False, timeout=6):
                             f"Standard input runtime error or time limit exceeded error = {e}"
                         )
                     results.append(-1)
-                    return results
+                    return results,  {"error":e, "error_code":-1}
                 faulthandler.disable()
                 signal.alarm(0)
                 if debug:
@@ -296,7 +296,7 @@ def run_test(sample, test=None, debug=False, timeout=6):
                             f"Call-based runtime error or time limit exceeded error = {repr(e)}{e}"
                         )
                         results.append(-1)
-                        return results
+                        return results,  {"error":e, "error_code":-1}
                     signal.alarm(0)
 
                 if not passed:
@@ -525,7 +525,7 @@ def run_test(sample, test=None, debug=False, timeout=6):
 
                 results.append(tmp_result)
                 if tmp_result != True:
-                    return results
+                    return results, {"output":output,"expected":in_outs["outputs"][index],"inputs":inputs}
 
                 if debug:
                     nl = "\n"
@@ -540,7 +540,7 @@ def run_test(sample, test=None, debug=False, timeout=6):
 
                     print(f"results = {results}")
 
-    return results
+    return results, {}
 
 
 def custom_compare_(output, ground_truth):
