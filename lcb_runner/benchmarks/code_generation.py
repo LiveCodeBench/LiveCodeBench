@@ -54,13 +54,13 @@ class CodeGenerationProblem:
         self.platform = Platform(self.platform)
         self.difficulty = Difficulty(self.difficulty)
 
-        self.public_test_cases = json.loads(self.public_test_cases)
+        self.public_test_cases = json.loads(self.public_test_cases)  # type: ignore
         self.public_test_cases = [Test(**t) for t in self.public_test_cases]
 
-        self.private_test_cases = json.loads(self.private_test_cases)
+        self.private_test_cases = json.loads(self.private_test_cases)  # type: ignore
         self.private_test_cases = [Test(**t) for t in self.private_test_cases]
 
-        self.metadata = json.loads(self.metadata)
+        self.metadata = json.loads(self.metadata)  # type: ignore
 
     def insert_output(self, output_list: list[str], code_list: list[str]) -> dict:
         return {
@@ -104,7 +104,7 @@ class CodeGenerationProblem:
 
 def load_code_generation_dataset() -> list[CodeGenerationProblem]:
     dataset = load_dataset("livecodebench/code_generation", split="test")
-    dataset = [CodeGenerationProblem(**p) for p in dataset]
+    dataset = [CodeGenerationProblem(**p) for p in dataset]  # type: ignore
     print(f"Loaded {len(dataset)} problems")
     return dataset
 
