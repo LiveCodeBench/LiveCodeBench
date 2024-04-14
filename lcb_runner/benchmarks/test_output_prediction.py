@@ -27,7 +27,7 @@ class TestOutputPredictionProblem:
     test_id: int
 
     def __post_init__(self):
-        self.test = [Test(**t) for t in json.loads(self.test)]
+        self.test = [Test(**t) for t in json.loads(self.test)]  # type: ignore
 
     def insert_output(self, output_list: list[str], pred_list: list[str]) -> dict:
         return {
@@ -60,8 +60,7 @@ class TestOutputPredictionProblem:
 
 
 def load_test_prediction_dataset() -> list[TestOutputPredictionProblem]:
-    dataset = load_dataset("livecodebench/test_generation", split="test")
-    print(dataset[0].keys())
+    dataset = load_dataset("livecodebench/test_generation", split="test")  # type: ignore
     dataset = [TestOutputPredictionProblem(**d) for d in dataset]
     print(f"Loaded {len(dataset)} prediction problems")
     return dataset
