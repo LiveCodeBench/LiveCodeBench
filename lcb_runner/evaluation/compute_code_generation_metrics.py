@@ -16,21 +16,20 @@ from lcb_runner.evaluation.testing_util import run_test
 from lcb_runner.evaluation.pass_k_utils import compute_metrics_from_results
 
 
+def _temp_run(sample, generation, debug, result,metadata_list):
+    res,metadata = run_test(sample, test=generation, debug=debug, timeout=45)
+    result.append(res)
+    metadata_list.append(metadata)
 def check_correctness(sample, generation, timeout, debug=True):
     """Check correctness of code generation with a global timeout.
     The global timeout is to catch some extreme/rare cases not handled by the timeouts
     inside `run_test`"""
 
-    def _temp_run(sample, generation, debug, result,metadata_list):
-        res,metadata = run_test(sample, test=generation, debug=debug, timeout=45)
-        result.append(res)
-        metadata_list.append(metadata)
-
     manager = multiprocessing.Manager()
     result = manager.list()
     metadata_list = manager.list()
     p = multiprocessing.Process(
-        target=_temp_run, args=(sample, generation, debug, result)
+        target=_temp_run, args=(sample, generation, debug, result,metadata_list)
     )
     p.start()
     p.join(
@@ -76,8 +75,10 @@ def evaluate_generations_by_problem(args):
             if debug:
                 print(f"Compilation failed, test framework exception = {repr(e)}{e}\n")
             # break
+            curr_metadata = {}
         finally:
             assert isinstance(curr_res, list)
+            assert isinstance(curr_metadata, dict)
             res.append(curr_res)
             metadata.append(curr_metadata)
     if debug:

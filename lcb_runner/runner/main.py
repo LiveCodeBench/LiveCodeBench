@@ -82,13 +82,6 @@ def main():
         metrics = get_metrics(args.scenario, args, benchmark, combined_results)
         graded = extract_instance_results(metrics[1])
 
-        save_eval_results = [
-            instance.insert_output_evaluation(outputs_list, extracted_list, graded_list)
-            for instance, (outputs_list, extracted_list), graded_list in zip(
-                benchmark, combined_results, graded
-            )
-        ]
-
         metadata = [] 
         for key in sorted(list(metrics[2].keys())):
             metadata.append(metrics[2][key])

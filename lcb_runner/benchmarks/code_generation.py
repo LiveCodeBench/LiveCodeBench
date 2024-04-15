@@ -77,11 +77,12 @@ class CodeGenerationProblem:
         }
 
     def insert_output_evaluation(
-        self, output_list: list[str], code_list: list[str], graded_list: list[bool]
+        self, output_list: list[str], code_list: list[str], graded_list: list[bool], metadata: dict
     ) -> dict:
         output = self.insert_output(output_list, code_list)
         output["graded_list"] = graded_list
         output["pass@1"] = graded_list.count(True) / len(graded_list)
+        output["metadata"] = metadata
         return output
 
     def get_evaluation_sample(self):

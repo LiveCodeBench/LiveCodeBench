@@ -7,6 +7,7 @@ from tqdm import tqdm
 from lcb_runner.lm_styles import LanguageModel
 from lcb_runner.utils.path_utils import get_cache_path
 from lcb_runner.utils.multiprocess import run_tasks_in_parallel
+from lcb_runner.runner.scenario_router import Scenario
 
 
 class BaseRunner(ABC):
@@ -96,7 +97,7 @@ class BaseRunner(ABC):
         return outputs
 
     def run_main(self, benchmark: list, format_prompt: callable) -> list:
-        if self.args.scenario == "selfrepair":
+        if self.args.scenario == Scenario.selfrepair:
             with open(f"output/{self.model.model_repr}/Scenario.codegeneration_10_{self.args.temperature}_eval_all.json") as f:
                 check_metadata = json.load(f)
             outputs = []
@@ -104,6 +105,7 @@ class BaseRunner(ABC):
                 output = []
                 checked_base_question_cotent = check["question_content"]
                 checked_base_codes = check["code_list"]
+                checked_output_codes = check["output_list"]
                 checked_base_results = check["graded_list"]
                 checked_base_metadata = check["metadata"]
                 for i in range(len(checked_base_codes)):
@@ -117,8 +119,9 @@ class BaseRunner(ABC):
                         )
                     )
                     if prompt == "" or type(prompt) is not list:
-                        output.append(checked_base_codes[i])
-                    output.append(self._run_single(prompt))
+                        output.append(checked_output_codes[i])
+                    else:
+                        output.append(self._run_single(prompt))
                 outputs.append(output)
             return outputs
         else:
