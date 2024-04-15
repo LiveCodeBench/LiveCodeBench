@@ -60,8 +60,8 @@ def combine_results(scenario: Scenario, results: list[list[str]], model: Languag
     elif scenario == Scenario.selfrepair:
         combined_results = [
             (
-                outputs_list,
-                [extract_code(output, model.model_style) for output in outputs_list],
+                [output[0] for output in outputs_list],
+                [extract_code(output[0], model.model_style) for output in outputs_list],
             )
             for outputs_list in results
         ]

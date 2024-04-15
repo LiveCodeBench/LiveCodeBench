@@ -21,6 +21,8 @@ class PromptConstants:
 
     FORMATTING_WITHOUT_STARTER_MESSAGE = "Read the inputs from stdin solve the problem and write the answer to stdout (do not directly test on the sample inputs). Enclose your code within delimiters as follows."
 
+    FORMATTING_WITHOUT_STARTER_CODE = "Read the inputs from stdin solve the problem and write the answer to stdout (do not directly test on the sample inputs). Enclose your code within delimiters as follows."
+
 def truncate_io(io):
     if len(str(io)) > 200:
         io = str(io)[:200] + "...."
@@ -42,13 +44,19 @@ def get_check_prompt(question: str, result,metadata):
 def get_generic_question_template_answer(question: str,code, result,metadata):
     prompt = f"### Question:\n{question}\n\n"
     prompt += f"### Answer:\n```python\n{code}\n```\n\n"
-    prompt += get_check_prompt(question, result,metadata)
+    prompt += get_check_prompt(question, result,metadata) + "\n"
+    prompt += f"### Format: {PromptConstants.FORMATTING_WITHOUT_STARTER_CODE}\n"
+    prompt += "```python\n# YOUR CODE HERE\n```\n\n"
+    prompt += f"### Answer: (use the provided format with backticks)\n\n"
     return prompt
 
 def get_cllama_question_template_answer(question: str, code, result,metadata):
     prompt = f"### Question\n{question}\n\n"
     prompt += f"### Answer\n```python\n{code}\n```\n\n"
     prompt += get_check_prompt(question, result,metadata)
+    prompt += f"### Format: {PromptConstants.FORMATTING_WITHOUT_STARTER_CODE}\n"
+    prompt += "```python\n# YOUR CODE HERE\n```\n\n"
+    prompt += f"### Answer: (use the provided format with backticks)\n\n"
     return prompt
 
 def get_deepseekcode_question_template_answer(question:str, code, result, metadata):
@@ -56,6 +64,9 @@ def get_deepseekcode_question_template_answer(question:str, code, result, metada
     prompt += f"Question:\n{question}\n\n"
     prompt += f"### Response:\n```python\n{code}\n```\n\n"
     prompt += get_check_prompt(question, result,metadata)
+    prompt += f"### Format: {PromptConstants.FORMATTING_WITHOUT_STARTER_CODE}\n"
+    prompt += "```python\n# YOUR CODE HERE\n```\n\n"
+    prompt += f"### Answer: (use the provided format with backticks)\n\n"
     return prompt
 
 def get_magicoder_question_template_answer(question: str, code, result, metadata):
@@ -63,6 +74,9 @@ def get_magicoder_question_template_answer(question: str, code, result, metadata
     prompt += f"Question:\n{question}\n\n"
     prompt += f"@@ Response \n```python\n{code}\n```\n\n"
     prompt += get_check_prompt(question, result,metadata)
+    prompt += f"### Format: {PromptConstants.FORMATTING_WITHOUT_STARTER_CODE}\n"
+    prompt += "```python\n# YOUR CODE HERE\n```\n\n"
+    prompt += f"### Answer: (use the provided format with backticks)\n\n"
     return prompt
 
 def get_mixtral_question_template_answer(question:str, code, result, metadata):
@@ -71,6 +85,9 @@ def get_mixtral_question_template_answer(question:str, code, result, metadata):
     prompt += f"Answer:\n\n"
     prompt += f"```python\n\n{code}\n``\n\n"
     prompt += get_check_prompt(question, result,metadata)
+    prompt += f"### Format: {PromptConstants.FORMATTING_WITHOUT_STARTER_CODE}\n"
+    prompt += "```python\n# YOUR CODE HERE\n```\n\n"
+    prompt += f"### Answer: (use the provided format with backticks)\n\n"
     return prompt
 
 def get_wizard_question_template_answer(question:str, code, result, metadata):
@@ -82,6 +99,9 @@ def get_wizard_question_template_answer(question:str, code, result, metadata):
     prompt += f"{question}\n\n"
     prompt += f"### Response:```python\n\n{code}\n```\n\n"
     prompt += get_check_prompt(question, result,metadata)
+    prompt += f"### Format: {PromptConstants.FORMATTING_WITHOUT_STARTER_CODE}\n"
+    prompt += "```python\n# YOUR CODE HERE\n```\n\n"
+    prompt += f"### Answer: (use the provided format with backticks)\n\n"
     return prompt
 
 def get_phind_question_template_answer(question: str, code, result, metadata):
@@ -89,13 +109,16 @@ def get_phind_question_template_answer(question: str, code, result, metadata):
     prompt += f'```python\n{code}\n``` \n\n'
     prompt += get_check_prompt(question, result,metadata)
     prompt += f"\n\n### Assistant"
+    prompt += f"### Format: {PromptConstants.FORMATTING_WITHOUT_STARTER_CODE}\n"
+    prompt += "```python\n# YOUR CODE HERE\n```\n\n"
+    prompt += f"### Answer: (use the provided format with backticks)\n\n"
     return prompt
 
 
 def format_prompt_self_repair(question: str, LanguageModelStyle: LMStyle, code, result,metadata) -> str:
     if result :
         # The code is accepted, no need to change anything.
-        return ""
+        return  ""
     if LanguageModelStyle == LMStyle.OpenAIChat:
         chat_messages = [
             {
