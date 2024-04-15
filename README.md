@@ -85,6 +85,26 @@ For running the test output prediction scenario you can simply run
 python -m lcb_runner.runner.main --model {model_name} --scenario testoutputprediction --evaluate
 ```
 
+### Code Execution
+For running the test output prediction scenario you can simply run
+
+```bash
+python -m lcb_runner.runner.main --model {model_name} --scenario codeexecution --evaluate
+```
+
+Additionally, we support the COT setting with
+
+```bash
+python -m lcb_runner.runner.main --model {model_name} --scenario codeexecution --cot_code_execution --evaluate
+```
+
+## Custom Evaluation
+Alternatively, you can using [`lcb_runner/runner/custom_evaluator.py`](./lcb_runner/runner/custom_evaluator.py) to directly evaluated model generations in a custom file. The file should contain a list of model outputs, appropirately formatted for evaluation in the order of benchmark problems. 
+
+```bash
+python -m lcb_runner.runner.custom_evaluator --custom_output_file {path_to_custom_outputs}
+```
+
 
 ## Adding Support for New Models
 
