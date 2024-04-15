@@ -4,25 +4,32 @@ Official repository for the paper "LiveCodeBench: Holistic and Contamination Fre
 <p align="center">
     <a href="https://livecodebench.github.io/">🏠 Home Page</a> •
     <a href="https://huggingface.co/datasets/livecodebench/">💻 Data </a> •
-    <a href="https://livecodebench.github.io/leaderboard.html">🏆 Leaderboard</a> •
+    <a href="https://livecodebench.github.io/leaderboard.html">🏆 Leaderboard</a> 
 </p>
 
 ## Introduction
-LiveCodeBench is a comprehensive and contamination-free evaluation of LLMs for code, which continuously collects new problems over time from contests across three competition platforms, namely LeetCode, AtCoder, and CodeForces.  
-Distinctly, LiveCodeBench also focuses on a broader range of code-related capabilities, such as self-repair, code execution, and test output prediction, beyond just code generation. 
-Currently, LiveCodeBench hosts four hundred high-quality coding problems that were published between May 2023 and February 2024.
+LiveCodeBench provides holistic and contamination-free evaluation of coding capabilities of LLMs.  Particularly, LiveCodeBench continuously collects new problems over time from contests across three competition platforms -- LeetCode, AtCoder, and CodeForces. Next, LiveCodeBench also focuses on a broader range of code-related capabilities, such as self-repair, code execution, and test output prediction, beyond just code generation. Currently, LiveCodeBench hosts four hundred high-quality coding problems that were published between May 2023 and March 2024.
 
 
 ## Installation
-You can install the dependencies using pip:
+You can clone the repository using the following command:
+
 ```bash
-pip install -U pebble datasets pyext # primary dependencies
-pip install -U vllm google-generativeai anthropic openai mistralai # optional dependencies depending on models
+git clone https://github.com/LiveCodeBench/LiveCodeBench.git
+cd LiveCodeBench
 ```
 
-Or alternatively you can use the `requirements.txt` file:
+We recommend using poetry for managing dependencies. You can install poetry and the dependencies using the following commands:
+
 ```bash
-pip install -r requirements.txt
+pip install poetry
+poetry install
+```
+
+The default setup does not install [`vllm`](https://vllm.ai/). To install `vllm` as well you can use:
+
+```bash
+poetry install --with with-gpu
 ```
 
 ## Data
@@ -35,18 +42,23 @@ We provide a benchmark for different code capability scenarios
 
 ### Code Generation
 
-We use `vllm` for inference using local models. By default, we use  `tensor_parallel_size=${num_gpus}` to parallelize inference across all available GPUs. It can be configued using the  `--tensor_parallel_size` flag as required. 
+We use `vllm` for inference using open models. By default, we use  `tensor_parallel_size=${num_gpus}` to parallelize inference across all available GPUs. It can be configued using the  `--tensor_parallel_size` flag as required. 
 
-For running the inference, please use the following command. 
+For running the inference, please provide the `model_name` based on the [./lcb_runner/lm_styles.py](./lcb_runner/lm_styles.py) file.
+The scenario (here `codegeneration`) can be used to specify the scenario for the model.
 
 ```bash
 python -m lcb_runner.runner.main --model {model_name} --scenario codegeneration
 ```
 
-Additionally, `--use_cache` flag can be used to cache the generated outputs and `--continue_existing` flag can be used to use the existing dumbed results. Additionally, `--multiprocess` flag can be used to parallelize queries to API servers (adjustable according to rate limits).
+Additionally, `--use_cache` flag can be used to cache the generated outputs and `--continue_existing` flag can be used to use the existing dumped results. In case you wish to use model from a local path, you can additionally provide `--local_model_path` flag with the path to the model. We use `n=10` and `temperature=0.2` for generation. Please check the [./lcb_runner/runner/parser.py](./lcb_runner/runner/parser.py) file for more details on the flags.
 
+For closed API models,  `--multiprocess` flag can be used to parallelize queries to API servers (adjustable according to rate limits).
+
+
+#### Evaluation
 We compute `pass@1` and `pass@5` metrics for model evaluations.
-We use a modified version of the checker released with the `apps` benchmark to compute the metrics. 
+We use a modified version of the checker released with the [`apps` benchmark](https://github.com/hendrycks/apps/blob/main/eval/testing_util.py) to compute the metrics. 
 Particularly, we identified some unhandled edge cases in the original checker and fixed them and additionally simplified the checker based on our collected dataset. To run the evaluation, you can use the following command:
 
 
@@ -54,7 +66,7 @@ Particularly, we identified some unhandled edge cases in the original checker an
 python -m lcb_runner.runner.main --model {model_name} --scenario codegeneration --evaluate
 ```
 
-Note that time limits can cause a slight ( `< 0.3`) points of variation in the computation of the `pass@1` and `pass@5` metrics.
+Note that time limits can cause a slight (`< 0.3`) points of variation in the computation of the `pass@1` and `pass@5` metrics.
 If you observe a significant variation in performance, adjust the `--num_process_evaluate` flag to a lower value or increase the `--timeout` flag. Please report particular issues caused by improper timeouts here. 
 
 Finally, to get scores over different time windows, you can use [./lcb_runner/evaluation/compute_scores.py](./lcb_runner/evaluation/compute_scores.py) file. 
@@ -84,6 +96,7 @@ Step 2: Since we use instruction tuned models, we allow configuring the instruct
 For example, the prompt for `DeepSeekCodeInstruct` family of models looks as follows
 
 ```python
+# ./lcb_runner/prompts/generation.py
 if LanguageModelStyle == LMStyle.DeepSeekCodeInstruct:
     prompt = f"{PromptConstants.SYSTEM_MESSAGE_DEEPSEEK}\n\n"
     prompt += f"{get_deepseekcode_question_template_answer(question)}"
@@ -116,7 +129,7 @@ Particularly, models that perform well on HumanEval do not necessarily perform w
 In the scatterplot above, we find the models get clustered into two groups, shaded in red and green. 
 The red group contains models that perform well on HumanEval but poorly on LiveCodeBench, while the green group contains models that perform well on both.
 
-For more details, please refer to our paper at this [url](https://livecodebench.github.io/pdfs/paper.pdf).
+For more details, please refer to our website at [livecodebench.github.io](https://livecodebench.github.io).
 
 ## Citation
 
