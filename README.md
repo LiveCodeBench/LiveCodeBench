@@ -103,6 +103,10 @@ if LanguageModelStyle == LMStyle.DeepSeekCodeInstruct:
     return prompt
 ```
 
+## Submit Models to Leaderboard
+To submit models to the leaderboard you can fill out [this form](https://forms.gle/h2abvAHh6UnhWzzd9). You will need to fill out model details and provide the generated evaluation file with model generations and pass@1 scores. We will review the submission and add the model to the leaderboard accordingly.
+
+
 ## Results
 LiveCodeBench can be used to evaluate performance of LLMs on different time-windows (using problem release date to filter the models). 
 Thus we can detect and prevent potential contamination in the evaluation process and evaluate LLMs on _new_ problems.
