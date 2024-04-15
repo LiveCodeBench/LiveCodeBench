@@ -11,7 +11,7 @@ url = 'https://pypi.org/simple'
 priority = 'primary'
 
 [tool.poetry.dependencies]
-python = ">=3.10 <3.11"
+python = ">=3.10 <4"
 pebble = "^5.0.7"
 datasets = "^2.18.0"
 google-generativeai = "^0.5.0"
@@ -19,6 +19,9 @@ anthropic = "^0.25.1"
 openai = "^1.17.1"
 mistralai = "^0.1.8"
 pyext = "0.7"
+
+[tool.poetry.group.with-gpu]
+optional = true
 
 [tool.poetry.group.with-gpu.dependencies]
 vllm = "^0.4.0.post1"
