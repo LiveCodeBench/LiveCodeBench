@@ -28,7 +28,7 @@ def get_args():
     parser.add_argument(
         "--cot_code_execution",
         action="store_true",
-        help="whether to use CoT in code execution scenario"
+        help="whether to use CoT in code execution scenario",
     )
     parser.add_argument(
         "--n", type=int, default=10, help="Number of samples to generate"
@@ -73,6 +73,12 @@ def get_args():
         type=int,
         default=-1,
         help="Tensor parallel size for vllm",
+    )
+    parser.add_argument(
+        "--custom_output_file",
+        type=str,
+        default=None,
+        help="Path to the custom output file used in `custom_evaluator.py`",
     )
     parser.add_argument("--dtype", type=str, default="bfloat16", help="Dtype for vllm")
 
