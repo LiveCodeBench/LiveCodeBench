@@ -20,6 +20,8 @@ openai = "^1.17.1"
 mistralai = "^0.1.8"
 pyext = "0.7"
 
+[tool.poetry.group.with-gpu.dependencies]
+vllm = "^0.4.0.post1"
 
 [build-system]
 requires = ["poetry-core"]
