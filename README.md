@@ -26,13 +26,11 @@ pip install poetry
 poetry install
 ```
 
-Alternatively, you can use pip to install the dependencies. 
+The default setup does not install [`vllm`](https://vllm.ai/). To install `vllm` as well you can use:
 
 ```bash
-pip install -U pebble datasets pyext # primary dependencies
-pip install -U vllm google-generativeai anthropic openai mistralai # optional dependencies depending on models
+poetry install --with with-gpu
 ```
-
 
 ## Data
 We provide a benchmark for different code capability scenarios
