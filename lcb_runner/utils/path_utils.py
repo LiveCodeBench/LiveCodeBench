@@ -17,7 +17,7 @@ def get_cache_path(model: LanguageModel, args) -> str:
     scenario: Scenario = args.scenario
     n = args.n
     temperature = args.temperature
-    path = f"cache/{model_repr}/{scenario.value}_{n}_{temperature}.json"
+    path = f"cache/{model_repr}/{scenario}_{n}_{temperature}.json"
     ensure_dir(path)
     return path
 
@@ -27,7 +27,8 @@ def get_output_path(model: LanguageModel, args) -> str:
     scenario: Scenario = args.scenario
     n = args.n
     temperature = args.temperature
-    path = f"output/{model_repr}/{scenario.value}_{n}_{temperature}.json"
+    cot_suffix = "_cot" if args.cot_code_execution else ""
+    path = f"output/{model_repr}/{scenario}_{n}_{temperature}{cot_suffix}.json"
     ensure_dir(path)
     return path
 
@@ -37,5 +38,6 @@ def get_eval_all_output_path(model: LanguageModel, args) -> str:
     scenario: Scenario = args.scenario
     n = args.n
     temperature = args.temperature
-    path = f"output/{model_repr}/{scenario.value}_{n}_{temperature}_eval_all.json"
+    cot_suffix = "_cot" if args.cot_code_execution else ""
+    path = f"output/{model_repr}/{scenario}_{n}_{temperature}{cot_suffix}_eval_all.json"
     return path

@@ -74,10 +74,9 @@ def get_deepseekcode_question_template_answer(question: CodeGenerationProblem):
 
 def get_qwen_question_template_answer(question: CodeGenerationProblem):
     from transformers import AutoTokenizer
+
     tokenizer = AutoTokenizer.from_pretrained(
-        "/abacus/models/Qwen1.5-72B-Chat/",
-        padding_side="left",
-        use_fast=False
+        "/abacus/models/Qwen1.5-72B-Chat/", padding_side="left", use_fast=False
     )
     prompt = "You will be given a question (problem specification) and will generate a correct Python program that matches the specification and passes all tests. You will NOT return anything except for the program.\n\n"
     prompt += f"Question:\n{question.question_content}\n\n"
@@ -88,11 +87,18 @@ def get_qwen_question_template_answer(question: CodeGenerationProblem):
         prompt += f"{PromptConstants.FORMATTING_WITHOUT_STARTER_CODE}\n\n"
         prompt += f"```python\n# YOUR CODE HERE\n```\n\n"
 
-    messages = [{'role': 'system', 'content': PromptConstants.SYSTEM_MESSAGE_GENERIC},
-                {'role': 'user', 'content': prompt}]
-    
-    prompt = tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True,
-                                           truncation=False, padding=False)
+    messages = [
+        {"role": "system", "content": PromptConstants.SYSTEM_MESSAGE_GENERIC},
+        {"role": "user", "content": prompt},
+    ]
+
+    prompt = tokenizer.apply_chat_template(
+        messages,
+        tokenize=False,
+        add_generation_prompt=True,
+        truncation=False,
+        padding=False,
+    )
     return prompt
 
 
@@ -196,14 +202,14 @@ def format_prompt_generation(
         ]
         return chat_messages
 
-    if LanguageModelStyle == LMStyle.Anthropic:
+    if LanguageModelStyle == LMStyle.Claude3:
         prompt = f"{HUMAN_PROMPT}\n"
         prompt += f"{PromptConstants.SYSTEM_MESSAGE_GENERIC}\n\n"
         prompt += f"{get_generic_question_template_answer(question).rstrip()}\n"
         prompt += f"{AI_PROMPT}"
         return prompt
 
-    if LanguageModelStyle == LMStyle.AnthropicMessage:
+    if LanguageModelStyle == LMStyle.Claude3:
         system = PromptConstants.SYSTEM_MESSAGE_GENERIC
         prompt = [
             {
@@ -266,7 +272,10 @@ def format_prompt_generation(
         prompt += f"{get_generic_question_template_answer(question)}"
         return prompt
 
-    if LanguageModelStyle == LMStyle.Smaug2 or LanguageModelStyle == LMStyle.Qwen1point5:
+    if (
+        LanguageModelStyle == LMStyle.Smaug2
+        or LanguageModelStyle == LMStyle.Qwen1point5
+    ):
         prompt = f"{get_qwen_question_template_answer(question)}"
         return prompt
 

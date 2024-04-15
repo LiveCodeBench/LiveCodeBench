@@ -34,6 +34,7 @@ assert {input} == ??
 [THOUGHT]
 """
 
+
 def make_direct_output_prompt(s):
     code, input = s
     return f"""You are given a Python function and an assertion containing an input to the function. Complete the assertion with a literal (no unsimplified expressions, no function calls) containing the output when executing the provided code on the given input, even if the function is incorrect or incomplete. Do NOT output any extra information. Provide the full assertion with the correct output in [ANSWER] and [/ANSWER] tags, following the examples.
@@ -63,14 +64,17 @@ assert {input} == ??
 [ANSWER]
 """
 
+
 def format_prompt_execution(question, LanguageModelStyle):
     return format_prompt_execution_base(question, LanguageModelStyle, False)
+
 
 def format_prompt_execution_cot(question, LanguageModelStyle):
     return format_prompt_execution_base(question, LanguageModelStyle, True)
 
+
 def format_prompt_execution_base(
-    question: CodeExecutionProblem, LanguageModelStyle: LMStyle, cot : bool
+    question: CodeExecutionProblem, LanguageModelStyle: LMStyle, cot: bool
 ) -> str:
     code = question.code
     input = question.input
@@ -88,15 +92,12 @@ def format_prompt_execution_base(
             },
         ]
         chat_messages += [
-            {
-                "role": "user",
-                "content": prompt 
-            },
+            {"role": "user", "content": prompt},
         ]
         return chat_messages
-    elif LanguageModelStyle == LMStyle.Anthropic:
+    elif LanguageModelStyle == LMStyle.Claude:
         return prompt
-    elif LanguageModelStyle == LMStyle.AnthropicMessage:
+    elif LanguageModelStyle == LMStyle.Claude3:
         prompt = [
             {
                 "role": "user",
@@ -124,10 +125,7 @@ def format_prompt_execution_base(
                 "role": "system",
                 "content": system_message,
             },
-            {
-                "role": "user",
-                "content": prompt
-            },
+            {"role": "user", "content": prompt},
         ]
         return chat_messages
     else:

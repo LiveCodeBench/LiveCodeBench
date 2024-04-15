@@ -153,11 +153,11 @@ def format_prompt_test_output(
             },
         ]
         return chat_messages
-    elif LanguageModelStyle == LMStyle.Anthropic:
+    elif LanguageModelStyle == LMStyle.Claude:
         prompt = f"{HUMAN_PROMPT}\n{PromptConstants.SYSTEM_MESSAGE_CHAT_GENERIC}\n\n"
         prompt += f"{get_generic_question_template_test_completion(question, testcase_input).rstrip()}\n{AI_PROMPT}"
         return prompt
-    elif LanguageModelStyle == LMStyle.AnthropicMessage:
+    elif LanguageModelStyle == LMStyle.Claude3:
         system = PromptConstants.SYSTEM_MESSAGE_CHAT_GENERIC
         prompt = [
             {
