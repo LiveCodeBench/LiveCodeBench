@@ -3,7 +3,7 @@ from typing import Union
 from lcb_runner.utils.scenarios import Scenario
 from lcb_runner.lm_styles import LanguageModel
 from lcb_runner.evaluation import codegen_metrics, test_output_metrics
-from lcb_runner.prompts import format_prompt_generation, format_prompt_test_output
+from lcb_runner.prompts import format_prompt_generation, format_prompt_test_output,format_prompt_self_repair
 from lcb_runner.utils.extraction_utils import extract_code, extract_test_output_code
 from lcb_runner.benchmarks import (
     CodeGenerationProblem,
@@ -27,6 +27,10 @@ def build_prompt_benchmark(
         benchmark = load_test_prediction_dataset()
         benchmark = sorted(benchmark, key=lambda x: (x.question_id, x.test_id))
         format_prompt = format_prompt_test_output
+    elif scenario == Scenario.selfrepair:
+        benchmark = load_test_prediction_dataset()
+        benchmark = sorted(benchmark, key=lambda x: (x.question_id, x.test_id))
+        format_prompt = format_prompt_self_repair  
     else:
         raise ValueError(f"Scenario {scenario} not implemented")
 
@@ -53,6 +57,14 @@ def combine_results(scenario: Scenario, results: list[list[str]], model: Languag
             )
             for outputs_list in results
         ]
+    elif scenario == Scenario.selfrepair:
+        combined_results = [
+            (
+                outputs_list,
+                [extract_code(output, model.model_style) for output in outputs_list],
+            )
+            for outputs_list in results
+        ]
     else:
         raise ValueError(f"Scenario {scenario} not implemented")
 
@@ -75,6 +87,12 @@ def sort_and_extract_save_results(scenario: Scenario, save_results: list[dict]):
             (save_result_instance["output_list"], save_result_instance["pred_list"])
             for save_result_instance in save_results
         ]
+    elif scenario == Scenario.selfrepair:
+        save_results = sorted(save_results, key=lambda x: x["question_id"])
+        combined_results = [
+            (save_result_instance["output_list"], save_result_instance["code_list"])
+            for save_result_instance in save_results
+        ]
 
     else:
         raise ValueError(f"Scenario {scenario} not implemented")
@@ -88,7 +106,7 @@ def get_metrics(
     benchmark: list[CodeGenerationProblem | TestOutputPredictionProblem],
     combined_results,
 ):
-    if scenario == Scenario.codegeneration:
+    if scenario == Scenario.codegeneration or scenario == Scenario.selfrepair:
         eval_samples = [instance.get_evaluation_sample() for instance in benchmark]
         generations = [extracted for _, extracted in combined_results]
         metrics = codegen_metrics(

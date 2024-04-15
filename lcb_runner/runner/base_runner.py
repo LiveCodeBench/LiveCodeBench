@@ -97,16 +97,30 @@ class BaseRunner(ABC):
 
     def run_main(self, benchmark: list, format_prompt: callable) -> list:
         if self.args.scenario == "selfrepair":
-            with open(f"output/{self.model.model_repr}/Scenario.codegeneration_{self.args.n}_{self.args.temperature}_eval_all.json") as f:
-                check_metadata = json.load(f)[0]
-            checked_base_question_cotent = check_metadata["question_content"]
-            checked_base_codes = check_metadata["code_list"][0]
-            checked_base_results = check_metadata["graded_list"][0]
-            checked_base_metadata = check_metadata["metadata"][0]
-            prompts = [
-                format_prompt(checked_base_question_cotent, self.model,checked_base_codes,checked_base_results,checked_base_metadata)
-                for problem in benchmark
-            ]
+            with open(f"output/{self.model.model_repr}/Scenario.codegeneration_10_{self.args.temperature}_eval_all.json") as f:
+                check_metadata = json.load(f)
+            outputs = []
+            for check in tqdm(check_metadata):
+                output = []
+                checked_base_question_cotent = check["question_content"]
+                checked_base_codes = check["code_list"]
+                checked_base_results = check["graded_list"]
+                checked_base_metadata = check["metadata"]
+                for i in range(len(checked_base_codes)):
+                    prompt=(
+                        format_prompt(
+                            checked_base_question_cotent,
+                            self.model.model_style,
+                            checked_base_codes[i],
+                            checked_base_results[i],
+                            checked_base_metadata[i],
+                        )
+                    )
+                    if prompt == "" or type(prompt) is not list:
+                        output.append(checked_base_codes[i])
+                    output.append(self._run_single(prompt))
+                outputs.append(output)
+            return outputs
         else:
             prompts = [
                 format_prompt(problem, self.model.model_style) for problem in benchmark
