@@ -14,10 +14,21 @@ def get_args():
         help="Name of the model to use matching `lm_styles.py`",
     )
     parser.add_argument(
+        "--local_model_path",
+        type=str,
+        default=None,
+        help="if you have a local model, specify it here in conjunction with --model",
+    )
+    parser.add_argument(
         "--scenario",
         type=Scenario,
         default=Scenario.codegeneration,
         help="Type of scenario to run",
+    )
+    parser.add_argument(
+        "--cot_code_execution",
+        action="store_true",
+        help="whether to use CoT in code execution scenario",
     )
     parser.add_argument(
         "--n", type=int, default=10, help="Number of samples to generate"
@@ -62,6 +73,12 @@ def get_args():
         type=int,
         default=-1,
         help="Tensor parallel size for vllm",
+    )
+    parser.add_argument(
+        "--custom_output_file",
+        type=str,
+        default=None,
+        help="Path to the custom output file used in `custom_evaluator.py`",
     )
     parser.add_argument("--dtype", type=str, default="bfloat16", help="Dtype for vllm")
 

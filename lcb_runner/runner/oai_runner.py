@@ -5,7 +5,6 @@ try:
     import openai
     from openai import OpenAI
 except ImportError as e:
-    # print("Cannot import openai")
     pass
 
 from lcb_runner.runner.base_runner import BaseRunner
@@ -29,7 +28,6 @@ class OpenAIRunner(BaseRunner):
             "timeout": args.openai_timeout,
             # "stop": args.stop, --> stop is only used for base models currently
         }
-        print("Client kwargs: ", self.client_kwargs)
 
     def _run_single(self, prompt: list[dict[str, str]]) -> list[str]:
         assert isinstance(prompt, list)

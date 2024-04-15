@@ -5,43 +5,39 @@ from dataclasses import dataclass
 
 from datasets import load_dataset
 
-
 @dataclass
-class Test:
-    input: str
-    output: str
-    testtype: str
-
-
-@dataclass
-class TestOutputPredictionProblem:
-    question_title: str
-    question_content: str
+class CodeExecutionProblem:
     question_id: str
     contest_id: str
     contest_date: datetime
     difficulty: str
-    test: list[Test]
-    starter_code: str
     function_name: str
-    test_id: int
+    code: str
+    input: str
+    output: str
+    id: str
+    problem_id: str
+    numsteps: int
+
 
     def __post_init__(self):
-        self.test = [Test(**t) for t in json.loads(self.test)]  # type: ignore
+        pass
 
     def insert_output(self, output_list: list[str], pred_list: list[str]) -> dict:
         return {
-            "question_title": self.question_title,
-            "question_content": self.question_content,
             "question_id": self.question_id,
             "contest_id": self.contest_id,
             "contest_date": self.contest_date.isoformat(),
             "difficulty": self.difficulty,
+            "function_name": self.function_name,
+            "code": self.code,
+            "input": self.input,
+            "output": self.output,
+            "id": self.id,
+            "problem_id": self.problem_id,
+            "numsteps": self.numsteps,
             "output_list": output_list,
             "pred_list": pred_list,
-            "test_id": self.test_id,
-            "function_name": self.function_name,
-            "starter_code": self.starter_code,
         }
 
     def insert_output_evaluation(
@@ -54,17 +50,19 @@ class TestOutputPredictionProblem:
 
     def get_evaluation_sample(self) -> dict:
         return {
-            "input": self.question_content,
-            "output": self.test[0].output,
+            "code": self.code,
+            "input": self.input,
+            "output": self.output,
         }
+        
 
 
-def load_test_prediction_dataset() -> list[TestOutputPredictionProblem]:
-    dataset = load_dataset("livecodebench/test_generation", split="test")  # type: ignore
-    dataset = [TestOutputPredictionProblem(**d) for d in dataset]
-    print(f"Loaded {len(dataset)} prediction problems")
+def load_code_execution_dataset() -> list[CodeExecutionProblem]:
+    dataset = load_dataset("livecodebench/execution-v2", split="test")
+    dataset = [CodeExecutionProblem(**p) for p in dataset]
+    print(f"Loaded {len(dataset)} problems")
     return dataset
 
 
 if __name__ == "__main__":
-    dataset = load_test_prediction_dataset()
+    dataset = load_code_execution_dataset()

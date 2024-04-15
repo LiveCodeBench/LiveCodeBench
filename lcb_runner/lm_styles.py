@@ -5,8 +5,8 @@ from enum import Enum
 
 class LMStyle(Enum):
     OpenAIChat = "OpenAIChat"
-    Anthropic = "Anthropic"
-    AnthropicMessage = "AnthropicMessage"
+    Claude = "Claude"  # Claude 1 and Claude 2
+    Claude3 = "Claude3"
     Gemini = "Gemini"
     MistralWeb = "MistralWeb"
 
@@ -141,29 +141,36 @@ LanguageModelList: list[LanguageModel] = [
     LanguageModel(
         "claude-2",
         "Claude-2",
-        LMStyle.Anthropic,
+        LMStyle.Claude,
         datetime(2022, 12, 31),
         link="https://www.anthropic.com/index/claude-2",
     ),
     LanguageModel(
         "claude-instant-1",
         "Claude-Instant-1",
-        LMStyle.Anthropic,
+        LMStyle.Claude,
         datetime(2022, 12, 31),
         link="https://www.anthropic.com/index/introducing-claude",
     ),
     LanguageModel(
         "claude-3-opus-20240229",
         "Claude-3-Opus",
-        LMStyle.AnthropicMessage,
+        LMStyle.Claude3,
         datetime(2023, 9, 1),
         link="https://www.anthropic.com/index/claude-3",
     ),
     LanguageModel(
         "claude-3-sonnet-20240229",
         "Claude-3-Sonnet",
-        LMStyle.AnthropicMessage,
+        LMStyle.Claude3,
         datetime(2023, 9, 1),
+        link="https://www.anthropic.com/index/claude-3",
+    ),
+    LanguageModel(
+        "claude-3-haiku-20240307",
+        "Claude-3-Haiku",
+        LMStyle.Claude3,
+        datetime(2023, 4, 30),
         link="https://www.anthropic.com/index/claude-3",
     ),
     LanguageModel(
@@ -286,14 +293,14 @@ LanguageModelList: list[LanguageModel] = [
         link="https://huggingface.co/stabilityai/stable-code-3b/",
     ),
     LanguageModel(
-        "/abacus/models/Qwen1.5-72B-Chat/",
+        "qwen/Qwen1.5-72B-Chat",
         "Qwen-1.5-72B-Chat ",
         LMStyle.Qwen1point5,
         datetime(2024, 3, 31),
         link="https://huggingface.co/qwen/Qwen1.5-72B-Chat/",
     ),
     LanguageModel(
-        "/abacus/models/Smaug-2-72B/",
+        "abacusai/Smaug-2-72B",
         "Smaug-2-72B ",
         LMStyle.Smaug2,
         datetime(2024, 3, 31),

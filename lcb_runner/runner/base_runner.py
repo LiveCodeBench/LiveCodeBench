@@ -31,7 +31,7 @@ class BaseRunner(ABC):
             with open(self.cache_path, "w") as f:
                 json.dump(self.cache, f, indent=4)
 
-    @abstractmethod
+    # @abstractmethod
     def _run_single(self, prompt: str | list[dict[str, str]]) -> list[str]:
         pass
 
