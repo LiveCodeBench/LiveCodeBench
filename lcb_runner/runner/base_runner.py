@@ -37,7 +37,7 @@ class BaseRunner(ABC):
         pass
 
     @staticmethod
-    def run_single(combined_args) -> str:
+    def run_single(combined_args) -> list[str]:
         """
         Run the model for a single prompt and return the output
         Static method to be used in multiprocessing
@@ -59,7 +59,7 @@ class BaseRunner(ABC):
 
         return result
 
-    def run_batch(self, prompts: list[str | list[dict[str, str]]]) -> list[str]:
+    def run_batch(self, prompts: list[str | list[dict[str, str]]]) -> list[list[str]]:
         outputs = []
         arguments = [
             (
@@ -96,38 +96,57 @@ class BaseRunner(ABC):
 
         return outputs
 
+    def run_main_repair(self, format_prompt: callable) -> list[list[str]]:
+        assert self.args.n == 1
+        with open(
+            f"output/{self.model.model_repr}/{Scenario.codegeneration}_{self.args.repair_n}_{self.args.temperature}_eval_all.json"
+        ) as f:
+            check_metadata_list = json.load(f)
+
+        outputs = [
+            [None for _ in range(self.args.n)] for _ in range(len(check_metadata_list))
+        ]
+        prompts = []
+        prompt_index_to_question_idx = {}
+        prompt_index_to_code_idx = {}
+
+        for check_metadata_idx, check_metadata in enumerate(check_metadata_list):
+            question_content = check_metadata["question_content"]
+            code_list = check_metadata["code_list"]
+            output_list = check_metadata["output_list"]
+            graded_list = check_metadata["graded_list"]
+            metadata = check_metadata["metadata"]
+            for code_idx in range(len(code_list)):
+                prompt = format_prompt(
+                    question_content,
+                    self.model.model_style,
+                    code_list[code_idx],
+                    graded_list[code_idx],
+                    metadata[code_idx],
+                )
+                print(prompt)
+                if prompt == "" or type(prompt) is list:
+                    outputs[check_metadata_idx][code_idx] = output_list[code_idx]
+                    continue
+                prompts.append(prompt)
+                prompt_index_to_question_idx[len(prompts) - 1] = check_metadata_idx
+                prompt_index_to_code_idx[len(prompts) - 1] = code_idx
+
+        prompt_outputs = self.run_batch(prompts)
+        for prompt_idx, output in enumerate(prompt_outputs):
+            question_idx = prompt_index_to_question_idx[prompt_idx]
+            code_idx = prompt_index_to_code_idx[prompt_idx]
+            outputs[question_idx][code_idx] = output
+
+        return outputs
+
     def run_main(self, benchmark: list, format_prompt: callable) -> list:
         if self.args.scenario == Scenario.selfrepair:
-            with open(f"output/{self.model.model_repr}/Scenario.codegeneration_10_{self.args.temperature}_eval_all.json") as f:
-                check_metadata = json.load(f)
-            outputs = []
-            for check in tqdm(check_metadata):
-                output = []
-                checked_base_question_cotent = check["question_content"]
-                checked_base_codes = check["code_list"]
-                checked_output_codes = check["output_list"]
-                checked_base_results = check["graded_list"]
-                checked_base_metadata = check["metadata"]
-                for i in range(len(checked_base_codes)):
-                    prompt=(
-                        format_prompt(
-                            checked_base_question_cotent,
-                            self.model.model_style,
-                            checked_base_codes[i],
-                            checked_base_results[i],
-                            checked_base_metadata[i],
-                        )
-                    )
-                    if prompt == "" or type(prompt) is not list:
-                        output.append(checked_output_codes[i])
-                    else:
-                        output.append(self._run_single(prompt))
-                outputs.append(output)
-            return outputs
-        else:
-            prompts = [
-                format_prompt(problem, self.model.model_style) for problem in benchmark
-            ]
+            return self.run_main_repair(format_prompt)
+
+        prompts = [
+            format_prompt(problem, self.model.model_style) for problem in benchmark
+        ]
         outputs = self.run_batch(prompts)
         self.save_cache()
         return outputs

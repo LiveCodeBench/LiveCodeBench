@@ -34,6 +34,12 @@ def get_args():
         "--n", type=int, default=10, help="Number of samples to generate"
     )
     parser.add_argument(
+        "--repair_n",
+        type=int,
+        default=10,
+        help="Number of samples for which code generation was run (used to map the code generation file)",
+    )
+    parser.add_argument(
         "--temperature", type=float, default=0.2, help="Temperature for sampling"
     )
     parser.add_argument("--top_p", type=float, default=0.95, help="Top p for sampling")

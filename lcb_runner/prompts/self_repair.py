@@ -4,6 +4,7 @@ from anthropic import HUMAN_PROMPT, AI_PROMPT
 
 from lcb_runner.lm_styles import LMStyle
 
+
 class PromptConstants:
     SYSTEM_MESSAGE_GENERIC = f"You are a helpful programming assistant and an expert Python programmer. You are helping a user write a program to solve a problem. The user has written some code, but it has some errors and is not passing the tests. You will help the user by first giving a concise (at most 2-3 sentences) textual explanation of what is wrong with the code. After you have pointed out what is wrong with the code, you will then generate a fixed version of the program. You must put the entired fixed program within code delimiters only for once."
 
@@ -23,74 +24,86 @@ class PromptConstants:
 
     FORMATTING_WITHOUT_STARTER_CODE = "Read the inputs from stdin solve the problem and write the answer to stdout (do not directly test on the sample inputs). Enclose your code within delimiters as follows."
 
+
 def truncate_io(io):
     if len(str(io)) > 200:
         io = str(io)[:200] + "...."
     return io
 
-def get_check_prompt(question: str, result,metadata):
+
+def get_check_prompt(question: str, result, metadata):
     result_by_test_case = result
     if "error_code:-2" in metadata:
         # time limit exceeded
-        message = f"The above code is incorrect and exceeds the time limit.\n{metadata}\n"
+        message = (
+            f"The above code is incorrect and exceeds the time limit.\n{metadata}\n"
+        )
     elif "error_code:-1" in metadata:
         # runtime error
         runtime_message = metadata
-        message = f"The above code is incorrect and has a runtime error.\n{runtime_message}\n"
+        message = (
+            f"The above code is incorrect and has a runtime error.\n{runtime_message}\n"
+        )
     else:
         message = f"The above code is incorrect and does not pass the testcase.\n{truncate_io(metadata)}\n"
     return message
 
-def get_generic_question_template_answer(question: str,code, result,metadata):
+
+def get_generic_question_template_answer(question: str, code, result, metadata):
     prompt = f"### Question:\n{question}\n\n"
     prompt += f"### Answer:\n```python\n{code}\n```\n\n"
-    prompt += get_check_prompt(question, result,metadata) + "\n"
+    prompt += get_check_prompt(question, result, metadata) + "\n"
     prompt += f"### Format: {PromptConstants.FORMATTING_WITHOUT_STARTER_CODE}\n"
     prompt += "```python\n# YOUR CODE HERE\n```\n\n"
     prompt += f"### Answer: (use the provided format with backticks)\n\n"
     return prompt
 
-def get_cllama_question_template_answer(question: str, code, result,metadata):
+
+def get_cllama_question_template_answer(question: str, code, result, metadata):
     prompt = f"### Question\n{question}\n\n"
     prompt += f"### Answer\n```python\n{code}\n```\n\n"
-    prompt += get_check_prompt(question, result,metadata)
+    prompt += get_check_prompt(question, result, metadata)
     prompt += f"### Format: {PromptConstants.FORMATTING_WITHOUT_STARTER_CODE}\n"
     prompt += "```python\n# YOUR CODE HERE\n```\n\n"
     prompt += f"### Answer: (use the provided format with backticks)\n\n"
     return prompt
 
-def get_deepseekcode_question_template_answer(question:str, code, result, metadata):
+
+def get_deepseekcode_question_template_answer(question: str, code, result, metadata):
     prompt = f"### Instruction: You will be given a question (problem specification) and will generate a correct Python program that matches the specification and passes all tests. You will NOT return anything except for the program.\n\n"
     prompt += f"Question:\n{question}\n\n"
     prompt += f"### Response:\n```python\n{code}\n```\n\n"
-    prompt += get_check_prompt(question, result,metadata)
+    prompt += get_check_prompt(question, result, metadata)
     prompt += f"### Format: {PromptConstants.FORMATTING_WITHOUT_STARTER_CODE}\n"
     prompt += "```python\n# YOUR CODE HERE\n```\n\n"
     prompt += f"### Answer: (use the provided format with backticks)\n\n"
     return prompt
+
 
 def get_magicoder_question_template_answer(question: str, code, result, metadata):
     prompt = f"You will be given a question (problem specification) and will generate a correct Python program that matches the specification and passes all tests. You will NOT return anything except for the program.\n\n"
     prompt += f"Question:\n{question}\n\n"
     prompt += f"@@ Response \n```python\n{code}\n```\n\n"
-    prompt += get_check_prompt(question, result,metadata)
+    prompt += get_check_prompt(question, result, metadata)
     prompt += f"### Format: {PromptConstants.FORMATTING_WITHOUT_STARTER_CODE}\n"
     prompt += "```python\n# YOUR CODE HERE\n```\n\n"
     prompt += f"### Answer: (use the provided format with backticks)\n\n"
     return prompt
 
-def get_mixtral_question_template_answer(question:str, code, result, metadata):
+
+def get_mixtral_question_template_answer(question: str, code, result, metadata):
     prompt = f"Question:\n"
     prompt += f"{question}\n\n"
     prompt += f"Answer:\n\n"
     prompt += f"```python\n\n{code}\n``\n\n"
-    prompt += get_check_prompt(question, result,metadata)
+    prompt += get_check_prompt(question, result, metadata)
     prompt += f"### Format: {PromptConstants.FORMATTING_WITHOUT_STARTER_CODE}\n"
     prompt += "```python\n# YOUR CODE HERE\n```\n\n"
     prompt += f"### Answer: (use the provided format with backticks)\n\n"
     return prompt
 
-def get_wizard_question_template_answer(question:str, code, result, metadata):
+
+def get_wizard_question_template_answer(question: str, code, result, metadata):
     prompt = f"""### Instruction: You are a helpful programming assistant and an expert Python programmer. You are helping a user write a program to solve a problem. The user has written some code, but it has some errors and is not passing the tests. You will help the user by first giving a concise (at most 2-3 sentences) textual explanation of what is wrong with the code. After you have pointed out what is wrong with the code, you will then generate a fixed version of the program. You must put the entired fixed program within code delimiters only for once., for example:
     ```python
     # YOUR CODE HERE
@@ -98,16 +111,17 @@ def get_wizard_question_template_answer(question:str, code, result, metadata):
 """
     prompt += f"{question}\n\n"
     prompt += f"### Response:```python\n\n{code}\n```\n\n"
-    prompt += get_check_prompt(question, result,metadata)
+    prompt += get_check_prompt(question, result, metadata)
     prompt += f"### Format: {PromptConstants.FORMATTING_WITHOUT_STARTER_CODE}\n"
     prompt += "```python\n# YOUR CODE HERE\n```\n\n"
     prompt += f"### Answer: (use the provided format with backticks)\n\n"
     return prompt
 
+
 def get_phind_question_template_answer(question: str, code, result, metadata):
     prompt = f"{question}\n\n"
-    prompt += f'```python\n{code}\n``` \n\n'
-    prompt += get_check_prompt(question, result,metadata)
+    prompt += f"```python\n{code}\n``` \n\n"
+    prompt += get_check_prompt(question, result, metadata)
     prompt += f"\n\n### Assistant"
     prompt += f"### Format: {PromptConstants.FORMATTING_WITHOUT_STARTER_CODE}\n"
     prompt += "```python\n# YOUR CODE HERE\n```\n\n"
@@ -115,10 +129,12 @@ def get_phind_question_template_answer(question: str, code, result, metadata):
     return prompt
 
 
-def format_prompt_self_repair(question: str, LanguageModelStyle: LMStyle, code, result,metadata) -> str:
-    if result :
+def format_prompt_self_repair(
+    question: str, LanguageModelStyle: LMStyle, code, result, metadata
+) -> str:
+    if result:
         # The code is accepted, no need to change anything.
-        return  ""
+        return ""
     if LanguageModelStyle == LMStyle.OpenAIChat:
         chat_messages = [
             {
@@ -129,13 +145,26 @@ def format_prompt_self_repair(question: str, LanguageModelStyle: LMStyle, code, 
         chat_messages += [
             {
                 "role": "user",
-                "content": get_generic_question_template_answer(question, code ,result,metadata),
+                "content": get_generic_question_template_answer(
+                    question, code, result, metadata
+                ),
             },
         ]
         return chat_messages
-    elif LanguageModelStyle == LMStyle.Anthropic:
+    elif LanguageModelStyle == LMStyle.Claude:
         prompt = f"{HUMAN_PROMPT}\n{PromptConstants.SYSTEM_MESSAGE_GENERIC}\n\n{get_generic_question_template_answer(question, code, result, metadata).rstrip()}\n{AI_PROMPT}"
         return prompt
+    elif LanguageModelStyle == LMStyle.Claude3:
+        system = PromptConstants.SYSTEM_MESSAGE_GENERIC
+        prompt = [
+            {
+                "role": "user",
+                "content": get_generic_question_template_answer(
+                    question, code, result
+                ).rstrip(),
+            }
+        ]
+        return system, prompt
     elif LanguageModelStyle == LMStyle.Gemini:
         prompt = f"{PromptConstants.SYSTEM_MESSAGE_GENERIC}\n{get_generic_question_template_answer(question, code, result,metadata)}"
         return prompt
@@ -158,9 +187,12 @@ def format_prompt_self_repair(question: str, LanguageModelStyle: LMStyle, code, 
         prompt = f"### System Prompt\n\n{PromptConstants.SYSTEM_MESSAGE_PHIND}\n\n### User Message\n\n{get_phind_question_template_answer(question, code, result,metadata)}"
         return prompt
     else:
-        raise NotImplementedError(f"LanguageModelStyle {LanguageModelStyle} not implemented")
+        raise NotImplementedError(
+            f"LanguageModelStyle {LanguageModelStyle} not implemented"
+        )
 
-def extract_code(model_output: str, lmstyle : LMStyle):
+
+def extract_code(model_output: str, lmstyle: LMStyle):
     outputlines = model_output.split("\n")
     if lmstyle == LMStyle.CodeLLaMa:
         indexlines = [i for i, line in enumerate(outputlines) if "PYTHON]" in line]
@@ -170,6 +202,7 @@ def extract_code(model_output: str, lmstyle : LMStyle):
         return ""
     return "\n".join(outputlines[indexlines[0] + 1 : indexlines[1]])
 
+
 def test():
     def write_str_or_json(prompt):
         if isinstance(prompt, str):
@@ -177,19 +210,28 @@ def test():
         else:
             fp.write(json.dumps(prompt))
         return
-    
+
     for lm_style in [LMStyle.OpenAIChat]:
-        with open("output/GPT-3.5-Turbo-0125/Scenario.codegeneration_10_0.2_eval_all.json") as f:
+        with open(
+            "output/GPT-3.5-Turbo-0125/Scenario.codegeneration_10_0.2_eval_all.json"
+        ) as f:
             check_metadata = json.load(f)[0]
         checked_base_question_cotent = check_metadata["question_content"]
         checked_base_codes = check_metadata["code_list"][0]
         checked_base_results = check_metadata["graded_list"][0]
         checked_base_metadata = check_metadata["metadata"][0]
-        leetcode_prompt = format_prompt_self_repair(checked_base_question_cotent, lm_style,checked_base_codes,checked_base_results,checked_base_metadata)
+        leetcode_prompt = format_prompt_self_repair(
+            checked_base_question_cotent,
+            lm_style,
+            checked_base_codes,
+            checked_base_results,
+            checked_base_metadata,
+        )
 
         with open(f"/tmp/leetcode_{lm_style}.txt", "w") as fp:
             write_str_or_json(leetcode_prompt)
     return
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     test()
