@@ -99,7 +99,7 @@ class BaseRunner(ABC):
     def run_main_repair(self, format_prompt: callable) -> list[list[str]]:
         assert self.args.n == 1
         with open(
-            f"output/{self.model.model_repr}/{Scenario.codegeneration}_{self.args.repair_n}_{self.args.temperature}_eval_all.json"
+            f"output/{self.model.model_repr}/{Scenario.codegeneration}_{self.args.codegen_n}_{self.args.temperature}_eval_all.json"
         ) as f:
             check_metadata_list = json.load(f)
 

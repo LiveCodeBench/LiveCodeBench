@@ -94,7 +94,7 @@ def main():
         elif args.scenario == Scenario.selfrepair:
             metadatas = metrics[2]
             with open(
-                f"output/{model.model_repr}/{Scenario.codegeneration}_{args.repair_n}_{args.temperature}_eval_all.json"
+                f"output/{model.model_repr}/{Scenario.codegeneration}_{args.codegen_n}_{args.temperature}_eval_all.json"
             ) as f:
                 code_gen_evals = json.load(f)
             original_code_lists = [
