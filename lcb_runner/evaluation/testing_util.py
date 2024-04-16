@@ -23,6 +23,14 @@ from pyext import RuntimeModule
 from enum import Enum
 
 
+def truncatefn(s, length=300):
+    assert isinstance(s, str)
+    if len(s) <= length:
+        return s
+
+    return s[: length // 2] + "...(truncated) ..." + s[-length // 2 :]
+
+
 class CODE_TYPE(Enum):
     call_based = 0
     standard_input = 1
@@ -55,7 +63,7 @@ class Capturing(list):
         return self
 
     def __exit__(self, *args):
-        self.extend(self._stringio.getvalue().splitlines())
+        self.append(self._stringio.getvalue())
         del self._stringio  # free up some memory
         sys.stdout = self._stdout
 
@@ -99,7 +107,8 @@ def run_test(sample, test=None, debug=False, timeout=6):
         print(f"loaded input_output = {datetime.now().time()}")
 
     if test is None:
-        return in_outs
+        assert False, "should not happen: test code is none"
+        return in_outs, {"error": "no test code provided"}
     elif test is not None:
         results = []
         sol = "from string import *\nfrom re import *\nfrom datetime import *\nfrom collections import *\nfrom heapq import *\nfrom bisect import *\nfrom copy import *\nfrom math import *\nfrom random import *\nfrom statistics import *\nfrom itertools import *\nfrom functools import *\nfrom operator import *\nfrom io import *\nfrom sys import *\nfrom json import *\nfrom builtins import *\nfrom typing import *\nimport string\nimport re\nimport datetime\nimport collections\nimport heapq\nimport bisect\nimport copy\nimport math\nimport random\nimport statistics\nimport itertools\nimport functools\nimport operator\nimport io\nimport sys\nimport json\nsys.setrecursionlimit(6*10**5)\n"
@@ -124,7 +133,11 @@ def run_test(sample, test=None, debug=False, timeout=6):
                 if debug:
                     print(f"type 0 compilation error = {e}")
                 results.append(-2)
-                return results
+                return results, {
+                    "error": repr(e),
+                    "error_code": -1,
+                    "error_message": "Compilation Error",
+                }
             signal.alarm(0)
 
         elif which_type == CODE_TYPE.standard_input:
@@ -182,7 +195,11 @@ def run_test(sample, test=None, debug=False, timeout=6):
                 if debug:
                     print(f"type 1 compilation error = {e}")
                 results.append(-2)
-                return results
+                return results, {
+                    "error": repr(e),
+                    "error_code": -1,
+                    "error_message": "Compilation Error",
+                }
             signal.alarm(0)
         if debug:
             print(f"get method = {datetime.now().time()}")
@@ -194,12 +211,30 @@ def run_test(sample, test=None, debug=False, timeout=6):
             e = sys.exc_info()
             print(f"unable to get function error = {e}")
             results.append(-2)
-            return results
+            return results, {
+                "error": repr(e),
+                "error_code": -1,
+                "error_message": "Unable to extract code",
+            }
 
         for index, inputs in enumerate(in_outs["inputs"]):
+            raw_inputs = inputs
+            raw_outputs = in_outs["outputs"][index]
             if which_type == CODE_TYPE.call_based:
                 inputs = [json.loads(line) for line in inputs.split("\n")]
                 in_outs["outputs"][index] = json.loads(in_outs["outputs"][index])
+
+                truncate_line_size = 300 // (raw_inputs.count("\n") + 1)
+                raw_inputs = "\n".join(
+                    [
+                        truncatefn(line, truncate_line_size)
+                        for line in raw_inputs.strip().split("\n")
+                    ]
+                )
+                raw_outputs = truncatefn(raw_outputs, 200)
+            else:
+                raw_inputs = truncatefn(raw_inputs)
+                raw_outputs = truncatefn(raw_outputs, 200)
             # JSON forces dictionaries to have string keys; this undoes this (assuming a singleton list)
             try:
                 if isinstance(inputs[0], dict):
@@ -230,6 +265,10 @@ def run_test(sample, test=None, debug=False, timeout=6):
                 faulthandler.enable()
                 try:
                     output = method(*inputs)
+                    raw_true_output = output
+
+                    raw_true_output_copy = json.dumps(output)
+                    raw_true_output_copy = truncatefn(raw_true_output_copy, 200)
 
                     # ground truth sequences are not tuples
                     if isinstance(output, tuple):
@@ -255,7 +294,13 @@ def run_test(sample, test=None, debug=False, timeout=6):
                         True
                     results.append(tmp_result)
                     if tmp_result != True:
-                        return results
+                        return results, {
+                            "output": raw_true_output_copy,
+                            "expected": raw_outputs,
+                            "inputs": raw_inputs,
+                            "error_code": -2,
+                            "error_message": "Wrong Answer",
+                        }
                     # reset the alarm
                     signal.alarm(0)
                 except Exception as e:
@@ -266,7 +311,22 @@ def run_test(sample, test=None, debug=False, timeout=6):
                             f"Standard input runtime error or time limit exceeded error = {e}"
                         )
                     results.append(-1)
-                    return results
+                    if "timeoutexception" in repr(e).lower():
+                        return results, {
+                            "error": repr(e),
+                            "error_code": -3,
+                            "error_message": "Time Limit Exceeded",
+                            "inputs": raw_inputs,
+                            "expected": raw_outputs,
+                        }
+                    else:
+                        return results, {
+                            "error": repr(e),
+                            "error_code": -4,
+                            "error_message": "Runtime Error",
+                            "inputs": raw_inputs,
+                            "expected": raw_outputs,
+                        }
                 faulthandler.disable()
                 signal.alarm(0)
                 if debug:
@@ -296,9 +356,26 @@ def run_test(sample, test=None, debug=False, timeout=6):
                             f"Call-based runtime error or time limit exceeded error = {repr(e)}{e}"
                         )
                         results.append(-1)
-                        return results
+                        if "timeoutexception" in repr(e).lower():
+                            return results, {
+                                "error": repr(e),
+                                "error_code": -3,
+                                "error_message": "Time Limit Exceeded",
+                                "inputs": raw_inputs,
+                                "expected": raw_outputs,
+                            }
+                        else:
+                            return results, {
+                                "error": repr(e),
+                                "error_code": -4,
+                                "error_message": "Runtime Error",
+                                "inputs": raw_inputs,
+                                "expected": raw_outputs,
+                            }
                     signal.alarm(0)
-
+                raw_true_output = output[0]
+                raw_true_output_copy = truncatefn(raw_true_output, 200)
+                output = raw_true_output.splitlines()
                 if not passed:
                     if debug:
                         nl = "\n"
@@ -525,7 +602,13 @@ def run_test(sample, test=None, debug=False, timeout=6):
 
                 results.append(tmp_result)
                 if tmp_result != True:
-                    return results
+                    return results, {
+                        "output": raw_true_output_copy,
+                        "expected": raw_outputs,
+                        "inputs": raw_inputs,
+                        "error_code": -2,
+                        "error_message": "Wrong Answer",
+                    }
 
                 if debug:
                     nl = "\n"
@@ -540,7 +623,7 @@ def run_test(sample, test=None, debug=False, timeout=6):
 
                     print(f"results = {results}")
 
-    return results
+    return results, {}
 
 
 def custom_compare_(output, ground_truth):

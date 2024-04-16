@@ -2,6 +2,7 @@ import os
 import json
 
 from lcb_runner.runner.parser import get_args
+from lcb_runner.utils.scenarios import Scenario
 from lcb_runner.lm_styles import LanguageModelStore
 from lcb_runner.runner.runner_utils import build_runner
 from lcb_runner.utils.path_utils import get_output_path
@@ -80,12 +81,51 @@ def main():
         metrics = get_metrics(args.scenario, args, benchmark, combined_results)
         graded = extract_instance_results(metrics[1])
 
-        save_eval_results = [
-            instance.insert_output_evaluation(outputs_list, extracted_list, graded_list)
-            for instance, (outputs_list, extracted_list), graded_list in zip(
-                benchmark, combined_results, graded
-            )
-        ]
+        if args.scenario == Scenario.codegeneration:
+            metadatas = metrics[2]
+            save_eval_results = [
+                instance.insert_output_evaluation(
+                    outputs_list, extracted_list, graded_list, metadata=meta
+                )
+                for instance, (outputs_list, extracted_list), graded_list, meta in zip(
+                    benchmark, combined_results, graded, metadatas
+                )
+            ]
+        elif args.scenario == Scenario.selfrepair:
+            metadatas = metrics[2]
+            with open(
+                f"output/{model.model_repr}/{Scenario.codegeneration}_{args.codegen_n}_{args.temperature}_eval_all.json"
+            ) as f:
+                code_gen_evals = json.load(f)
+            original_code_lists = [
+                code_gen_eval["code_list"] for code_gen_eval in code_gen_evals
+            ]
+
+            save_eval_results = [
+                instance.insert_output_evaluation(
+                    outputs_list,
+                    extracted_list,
+                    graded_list,
+                    metadata=meta,
+                    original_code_list=original_code_list,
+                )
+                for instance, (
+                    outputs_list,
+                    extracted_list,
+                ), graded_list, meta, original_code_list in zip(
+                    benchmark, combined_results, graded, metadatas, original_code_lists
+                )
+            ]
+
+        else:
+            save_eval_results = [
+                instance.insert_output_evaluation(
+                    outputs_list, extracted_list, graded_list
+                )
+                for instance, (outputs_list, extracted_list), graded_list in zip(
+                    benchmark, combined_results, graded
+                )
+            ]
 
         with open(output_path.replace(".json", "_eval.json"), "w") as f:
             json.dump(metrics, f, indent=4)

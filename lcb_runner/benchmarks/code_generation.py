@@ -66,7 +66,7 @@ class CodeGenerationProblem:
             self.private_test_cases = json.loads(
                 pickle.loads(
                     zlib.decompress(
-                        base64.b64decode(self.private_test_cases.encode("utf-8"))
+                        base64.b64decode(self.private_test_cases.encode("utf-8"))  # type: ignore
                     )
                 )
             )  # type: ignore
@@ -89,11 +89,17 @@ class CodeGenerationProblem:
         }
 
     def insert_output_evaluation(
-        self, output_list: list[str], code_list: list[str], graded_list: list[bool]
+        self,
+        output_list: list[str],
+        code_list: list[str],
+        graded_list: list[bool],
+        **kwargs,
     ) -> dict:
         output = self.insert_output(output_list, code_list)
         output["graded_list"] = graded_list
         output["pass@1"] = graded_list.count(True) / len(graded_list)
+        for k, v in kwargs.items():
+            output[k] = v
         return output
 
     def get_evaluation_sample(self):

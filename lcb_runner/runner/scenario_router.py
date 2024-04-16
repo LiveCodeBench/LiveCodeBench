@@ -13,12 +13,14 @@ from lcb_runner.prompts import (
     format_prompt_test_output,
     format_prompt_execution,
     format_prompt_execution_cot,
+    format_prompt_self_repair,
 )
 from lcb_runner.utils.extraction_utils import (
     extract_code,
     extract_test_output_code,
     extract_execution_code,
 )
+
 from lcb_runner.benchmarks import (
     CodeGenerationProblem,
     TestOutputPredictionProblem,
@@ -57,6 +59,10 @@ def build_prompt_benchmark(
         benchmark = load_test_prediction_dataset()
         benchmark = sorted(benchmark, key=lambda x: (x.question_id, x.test_id))
         format_prompt = format_prompt_test_output
+    elif scenario == Scenario.selfrepair:
+        benchmark = load_code_generation_dataset()
+        benchmark = sorted(benchmark, key=lambda x: x.question_id)
+        format_prompt = format_prompt_self_repair
     elif scenario == Scenario.codeexecution:
         cot_code_execution: bool = args.cot_code_execution
         benchmark = load_code_execution_dataset()
@@ -67,7 +73,6 @@ def build_prompt_benchmark(
             format_prompt = format_prompt_execution
     else:
         raise ValueError(f"Scenario {scenario} not implemented")
-
     return benchmark, format_prompt
 
 
@@ -91,6 +96,24 @@ def combine_results(
                 outputs_list,
                 [
                     extract_test_output_code(output, model.model_style)
+                    for output in outputs_list
+                ],
+            )
+            for outputs_list in results
+        ]
+    elif scenario == Scenario.selfrepair:
+        combined_results = [
+            (
+                [
+                    output[0] if type(output) is list else output
+                    for output in outputs_list
+                ],
+                [
+                    (
+                        extract_code(output[0], model.model_style)
+                        if type(output) is list
+                        else extract_code(output, model.model_style)
+                    )
                     for output in outputs_list
                 ],
             )
@@ -131,7 +154,12 @@ def sort_and_extract_save_results(scenario: Scenario, save_results: list[dict]):
             (save_result_instance["output_list"], save_result_instance["pred_list"])
             for save_result_instance in save_results
         ]
-
+    elif scenario == Scenario.selfrepair:
+        save_results = sorted(save_results, key=lambda x: x["question_id"])
+        combined_results = [
+            (save_result_instance["output_list"], save_result_instance["code_list"])
+            for save_result_instance in save_results
+        ]
     elif scenario == Scenario.codeexecution:
         save_results = sorted(save_results, key=lambda x: int(x["id"].split("_")[1]))
         combined_results = [
@@ -153,7 +181,7 @@ def get_metrics(
     ],
     combined_results,
 ):
-    if scenario == Scenario.codegeneration:
+    if scenario == Scenario.codegeneration or scenario == Scenario.selfrepair:
         eval_samples = [instance.get_evaluation_sample() for instance in benchmark]
         generations = [extracted for _, extracted in combined_results]
         metrics = codegen_metrics(
