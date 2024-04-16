@@ -75,8 +75,22 @@ Particularly, you can provide `--start_date` and `--end_date` flags (using the `
 python -m lcb_runner.evaluation.compute_scores --eval_all_file {saved_eval_all_file} --start_date 2023-09-01
 ```
 
-**NOTE: We have pruned a large number of test cases from the orignal benchmark and created `code_generation_lite` which is set as the default benchmark offering similar performance estimation much faster. If you wish to use the original benchmark, please use the `--not_fast` flag. We are in the process of updating the leaderboard scores with this setting.** 
+**NOTE: We have pruned a large number of test cases from the orignal benchmark and created `code_generation_lite` which is set as the default benchmark offering similar performance estimation much faster. If you wish to use the original benchmark, please use the `--not_fast` flag. We are in the process of updating the leaderboard scores with this updated setting.** 
 
+
+### Self Repair
+For running self repair, you need to provide an additional `--codegen_n` flag that maps to the number of codes that were generated during code generation. Additionally, the `--temperature` flag is used to resolve the old code generation eval file which must be present in the `output` directory. 
+
+```bash
+python -m lcb_runner.runner.main --model {model_name} --scenario codegeneration --codege_n {num_codes_codegen} --n 1 # only n=1 supported
+```
+
+In case you generated metadata with previour version of the codebase, you might get missing keys exception. 
+You can run the following command to rerun the metadata generation
+
+```bash
+python -m lcb_runner.runner.main --model {model_name} --scenario codegeneration --evaluate --continue_existing
+```
 ### Test Output Prediction
 For running the test output prediction scenario you can simply run
 
