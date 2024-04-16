@@ -1,4 +1,7 @@
 import json
+import zlib
+import pickle
+import base64
 from enum import Enum
 from datetime import datetime
 from dataclasses import dataclass
@@ -57,7 +60,16 @@ class CodeGenerationProblem:
         self.public_test_cases = json.loads(self.public_test_cases)  # type: ignore
         self.public_test_cases = [Test(**t) for t in self.public_test_cases]
 
-        self.private_test_cases = json.loads(self.private_test_cases)  # type: ignore
+        try:
+            self.private_test_cases = json.loads(self.private_test_cases)  # type: ignore
+        except:
+            self.private_test_cases = json.loads(
+                pickle.loads(
+                    zlib.decompress(
+                        base64.b64decode(self.private_test_cases.encode("utf-8"))
+                    )
+                )
+            )  # type: ignore
         self.private_test_cases = [Test(**t) for t in self.private_test_cases]
 
         self.metadata = json.loads(self.metadata)  # type: ignore
@@ -103,6 +115,13 @@ class CodeGenerationProblem:
 
 
 def load_code_generation_dataset() -> list[CodeGenerationProblem]:
+    dataset = load_dataset("livecodebench/code_generation_lite", split="test")
+    dataset = [CodeGenerationProblem(**p) for p in dataset]  # type: ignore
+    print(f"Loaded {len(dataset)} problems")
+    return dataset
+
+
+def load_code_generation_dataset_not_fast() -> list[CodeGenerationProblem]:
     dataset = load_dataset("livecodebench/code_generation", split="test")
     dataset = [CodeGenerationProblem(**p) for p in dataset]  # type: ignore
     print(f"Loaded {len(dataset)} problems")
