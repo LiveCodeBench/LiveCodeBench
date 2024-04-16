@@ -18,34 +18,46 @@ class PromptConstants:
 ```python 
 # YOUR CODE HERE
 ```"""
-    FORMATTING_MESSAGE = "You will use the following starter code to write the solution to the problem and enclose your code within delimiters."
 
-    FORMATTING_WITHOUT_STARTER_MESSAGE = "Read the inputs from stdin solve the problem and write the answer to stdout (do not directly test on the sample inputs). Enclose your code within delimiters as follows."
+    FORMATTING_REPEAT = f"First reason about the code providing a textual explanation of what is wrong with the code and then generate a fixed of the program enclosed code delimiters."
+
+    FORMATTING_MESSAGE = "You will use the following starter code to write the solution to the problem and enclose your code within delimiters."
 
     FORMATTING_WITHOUT_STARTER_CODE = "Read the inputs from stdin solve the problem and write the answer to stdout (do not directly test on the sample inputs). Enclose your code within delimiters as follows."
 
 
-def truncate_io(io):
-    if len(str(io)) > 200:
-        io = str(io)[:200] + "...."
-    return io
+# def truncate_io(io):
+#     if len(str(io)) > 200:
+#         io = str(io)[:200] + "...."
+#     return io
 
 
 def get_check_prompt(question: str, result, metadata):
-    result_by_test_case = result
-    if "error_code:-2" in metadata:
+    ## assumes i/o examples are already truncated!
+    ## less pressure on storing 10 MB json because on a single large input-output pair
+    # result_by_test_case = result
+    # assert len(metadata) == 1, f"metadata = {metadata}"
+    # metadata = metadata[0]
+    metadata = json.loads(metadata)
+    if "error_code" not in metadata:
+        return ""
+    if metadata["error_code"] == -1:
         # time limit exceeded
-        message = (
-            f"The above code is incorrect and exceeds the time limit.\n{metadata}\n"
-        )
-    elif "error_code:-1" in metadata:
+        message = f"The above code is incorrect and got the following compilation error.\n{metadata['error']}"
+    elif metadata["error_code"] == -2:
+        # wrong answer
+        message = f"The above code is incorrect and got a wrong answer.\nInput: {metadata['inputs']}\nGenerated Output: {metadata['output']}\nExpected: {metadata['expected']}"
+    elif metadata["error_code"] == -3:
+        # time limit exceeded
+        message = f"The above code is incorrect and got time limit exceeded.\n{metadata['error']}\nInput: {metadata['inputs']}\nExpected: {metadata['expected']}"
+        pass
+    elif metadata["error_code"] == -4:
         # runtime error
-        runtime_message = metadata
-        message = (
-            f"The above code is incorrect and has a runtime error.\n{runtime_message}\n"
-        )
+        message = f"The above code is incorrect and got a runtime error.\nInput: {metadata['inputs']}\nExpected: {metadata['expected']}\n{metadata['error']}"
     else:
-        message = f"The above code is incorrect and does not pass the testcase.\n{truncate_io(metadata)}\n"
+        raise NotImplementedError(
+            f"metadata['error_code'] = {metadata['error_code']} not implemented || {metadata=}"
+        )
     return message
 
 
@@ -137,17 +149,16 @@ def format_prompt_self_repair(
         return ""
     if LanguageModelStyle == LMStyle.OpenAIChat:
         chat_messages = [
-            {
-                "role": "system",
-                "content": PromptConstants.SYSTEM_MESSAGE_GENERIC,
-            },
+            {"role": "system", "content": PromptConstants.SYSTEM_MESSAGE_GENERIC},
         ]
         chat_messages += [
             {
                 "role": "user",
                 "content": get_generic_question_template_answer(
                     question, code, result, metadata
-                ),
+                )
+                + "\n\n"
+                + PromptConstants.FORMATTING_REPEAT,
             },
         ]
         return chat_messages
@@ -165,14 +176,25 @@ def format_prompt_self_repair(
             }
         ]
         return system, prompt
+    elif LanguageModelStyle == LMStyle.MistralWeb:
+        chat_messages = [
+            {
+                "role": "system",
+                "content": PromptConstants.SYSTEM_MESSAGE_GENERIC,
+            },
+        ]
+        chat_messages += [
+            {
+                "role": "user",
+                "content": get_generic_question_template_answer(question, code, result),
+            },
+        ]
+        return chat_messages
     elif LanguageModelStyle == LMStyle.Gemini:
         prompt = f"{PromptConstants.SYSTEM_MESSAGE_GENERIC}\n{get_generic_question_template_answer(question, code, result,metadata)}"
         return prompt
     elif LanguageModelStyle == LMStyle.DeepSeekCodeInstruct:
         prompt = f"{PromptConstants.SYSTEM_MESSAGE_DEEPSEEK}\n\n{get_deepseekcode_question_template_answer(question, code, result,metadata)}"
-        return prompt
-    elif LanguageModelStyle == LMStyle.MistralWeb:
-        prompt = f"[INST] {PromptConstants.SYSTEM_MESSAGE_GENERIC}\n{get_mixtral_question_template_answer(question, code, result,metadata)}[/INST]\n\n### Response\n\n"
         return prompt
     elif LanguageModelStyle == LMStyle.CodeLLaMaInstruct:
         prompt = f"[INST] <<SYS>>\n{PromptConstants.SYSTEM_MESSAGE_GENERIC}\n<</SYS>>\n\n{get_cllama_question_template_answer(question, code, result,metadata)}\n[/INST]"
