@@ -16,10 +16,12 @@ from lcb_runner.evaluation.testing_util import run_test
 from lcb_runner.evaluation.pass_k_utils import compute_metrics_from_results
 
 
-def _temp_run(sample, generation, debug, result,metadata_list):
-    res,metadata = run_test(sample, test=generation, debug=debug, timeout=45)
+def _temp_run(sample, generation, debug, result, metadata_list, timeout):
+    res, metadata = run_test(sample, test=generation, debug=debug, timeout=timeout)
     result.append(res)
     metadata_list.append(metadata)
+
+
 def check_correctness(sample, generation, timeout, debug=True):
     """Check correctness of code generation with a global timeout.
     The global timeout is to catch some extreme/rare cases not handled by the timeouts
@@ -29,7 +31,8 @@ def check_correctness(sample, generation, timeout, debug=True):
     result = manager.list()
     metadata_list = manager.list()
     p = multiprocessing.Process(
-        target=_temp_run, args=(sample, generation, debug, result,metadata_list)
+        target=_temp_run,
+        args=(sample, generation, debug, result, metadata_list, timeout),
     )
     p.start()
     p.join(
@@ -43,7 +46,7 @@ def check_correctness(sample, generation, timeout, debug=True):
         result = [[-1 for i in range(len(in_outs["inputs"]))]]
         if debug:
             print(f"global timeout")
-    return result[0],metadata_list[0]
+    return result[0], metadata_list[0]
 
 
 def evaluate_generations_by_problem(args):
@@ -57,7 +60,9 @@ def evaluate_generations_by_problem(args):
     for o_idx, o in enumerate(problem_generations):
         curr_res = [-2]
         try:
-            curr_res,curr_metadata = check_correctness(sample, o, timeout=timeout, debug=debug)
+            curr_res, curr_metadata = check_correctness(
+                sample, o, timeout=timeout, debug=debug
+            )
             if debug:
                 print(f"\nSuccessful compilation of task {o_idx}!")
             fixed = []
@@ -89,7 +94,7 @@ def evaluate_generations_by_problem(args):
             print("Result\n")
             print(res[i])
             print("*" * 30 + "\n\n")
-    return res,metadata
+    return res, metadata
 
 
 def evaluate_generations(
@@ -139,7 +144,7 @@ def evaluate_generations(
     ), f"results = {len(results)} inputs = {len(inputs)} {results=}"
     # results = {i: r for r, (_, i) in zip(results, inputs)}
 
-    return results,metadata
+    return results, metadata
 
 
 def codegen_metrics(

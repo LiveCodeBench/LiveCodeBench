@@ -5,6 +5,7 @@ from dataclasses import dataclass
 
 from datasets import load_dataset
 
+
 @dataclass
 class CodeExecutionProblem:
     question_id: str
@@ -18,7 +19,6 @@ class CodeExecutionProblem:
     id: str
     problem_id: str
     numsteps: int
-
 
     def __post_init__(self):
         pass
@@ -54,12 +54,11 @@ class CodeExecutionProblem:
             "input": self.input,
             "output": self.output,
         }
-        
 
 
 def load_code_execution_dataset() -> list[CodeExecutionProblem]:
     dataset = load_dataset("livecodebench/execution-v2", split="test")
-    dataset = [CodeExecutionProblem(**p) for p in dataset]
+    dataset = [CodeExecutionProblem(**p) for p in dataset]  # type: ignore
     print(f"Loaded {len(dataset)} problems")
     return dataset
 
