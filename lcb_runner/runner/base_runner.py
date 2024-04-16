@@ -124,8 +124,7 @@ class BaseRunner(ABC):
                     graded_list[code_idx],
                     metadata[code_idx],
                 )
-                print(prompt)
-                if prompt == "" or type(prompt) is list:
+                if prompt == "":
                     outputs[check_metadata_idx][code_idx] = output_list[code_idx]
                     continue
                 prompts.append(prompt)
