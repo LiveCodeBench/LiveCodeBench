@@ -163,4 +163,18 @@ def codegen_metrics(
         timeout=timeout,
     )
     metrics = compute_metrics_from_results(results, k_list=k_list)
-    return metrics, results, metadata
+
+    final_metadata = []
+    for key in sorted(list(metadata.keys())):
+        final_metadata.append(metadata[key])
+    for i in range(len(final_metadata)):
+        if type(final_metadata[i]) is not list:
+            final_metadata[i] = [json.dumps(final_metadata[i])]
+        else:
+            final_metadata[i] = [json.dumps(x) for x in final_metadata[i]]
+
+        assert len(final_metadata[i]) == len(
+            generations[0]
+        ), f"{len(final_metadata[i])=}"
+
+    return metrics, results, final_metadata
