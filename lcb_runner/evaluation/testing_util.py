@@ -55,7 +55,7 @@ class Capturing(list):
         return self
 
     def __exit__(self, *args):
-        self.extend(self._stringio.getvalue().splitlines())
+        self.append(self._stringio.getvalue())
         del self._stringio  # free up some memory
         sys.stdout = self._stdout
 
@@ -197,6 +197,8 @@ def run_test(sample, test=None, debug=False, timeout=6):
             return results, {"error":e, "error_code":-2}
 
         for index, inputs in enumerate(in_outs["inputs"]):
+            raw_inputs = inputs
+            raw_outputs = in_outs["outputs"][index]
             if which_type == CODE_TYPE.call_based:
                 inputs = [json.loads(line) for line in inputs.split("\n")]
                 in_outs["outputs"][index] = json.loads(in_outs["outputs"][index])
@@ -230,7 +232,7 @@ def run_test(sample, test=None, debug=False, timeout=6):
                 faulthandler.enable()
                 try:
                     output = method(*inputs)
-
+                    raw_true_output = output
                     # ground truth sequences are not tuples
                     if isinstance(output, tuple):
                         output = list(output)
@@ -255,7 +257,7 @@ def run_test(sample, test=None, debug=False, timeout=6):
                         True
                     results.append(tmp_result)
                     if tmp_result != True:
-                        return results, {"output":output,"expected":in_outs["outputs"][index],"inputs":inputs}
+                        return results, {"output":raw_true_output,"expected":raw_outputs,"inputs":raw_inputs}
                     # reset the alarm
                     signal.alarm(0)
                 except Exception as e:
@@ -298,7 +300,8 @@ def run_test(sample, test=None, debug=False, timeout=6):
                         results.append(-1)
                         return results,  {"error":e, "error_code":-1}
                     signal.alarm(0)
-
+                raw_true_output = output[0]
+                output = raw_true_output.splitlines()
                 if not passed:
                     if debug:
                         nl = "\n"
@@ -525,7 +528,7 @@ def run_test(sample, test=None, debug=False, timeout=6):
 
                 results.append(tmp_result)
                 if tmp_result != True:
-                    return results, {"output":output,"expected":in_outs["outputs"][index],"inputs":inputs}
+                    return results, {"output":raw_true_output,"expected":raw_outputs,"inputs":raw_inputs}
 
                 if debug:
                     nl = "\n"
