@@ -48,6 +48,13 @@ def get_parser():
         help="End date for the contest to filter the evaluation file (format - YYYY-MM-DD)",
     )
 
+    parser.add_argument(
+        "--platform",
+        type=str,
+        default=None,
+        help="End date for the contest to filter the evaluation file (format - YYYY-MM-DD)",
+    )
+
     args = parser.parse_args()
 
     if args.eval_all_file is None:
@@ -75,6 +82,9 @@ def compute_scores(args):
         results = [
             result for result in results if result["contest_date"] <= args.end_date
         ]
+
+    if args.platform is not None:
+        results = [result for result in results if result["platform"] == args.platform]
 
     pass_1_list = [result["pass@1"] for result in results]
     print(f"Pass@1: {sum(pass_1_list) / len(pass_1_list)}")
