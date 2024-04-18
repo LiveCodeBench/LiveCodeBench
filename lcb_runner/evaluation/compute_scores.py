@@ -52,7 +52,7 @@ def get_parser():
         "--platform",
         type=str,
         default=None,
-        help="End date for the contest to filter the evaluation file (format - YYYY-MM-DD)",
+        help="Platform to filter the evaluation file",
     )
 
     args = parser.parse_args()
