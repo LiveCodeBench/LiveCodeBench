@@ -1,4 +1,3 @@
-import os
 import json
 
 from lcb_runner.runner.parser import get_args
@@ -13,16 +12,34 @@ from lcb_runner.runner.scenario_router import (
 def main():
     args = get_args()
 
-    benchmark, _ = build_prompt_benchmark(args.scenario, args.cot_code_execution)
+    benchmark, _ = build_prompt_benchmark(args)
 
     with open(args.custom_output_file, "r") as f:
-        ## custom outputs must list[list[str]]
-        ## list of extracted outputs per question
-        ## sorted by the benchmark question_id
         custom_outputs = json.load(f)
-
+        assert isinstance(custom_outputs, list)
         assert len(custom_outputs) == len(benchmark)
-        assert all(isinstance(custom_output, list) for custom_output in custom_outputs)
+        if isinstance(custom_outputs[0], list):
+            ## custom outputs must list[list[str]]
+            ## list of extracted outputs per question
+            ## sorted by the benchmark question_id
+
+            assert all(
+                isinstance(custom_output, list) for custom_output in custom_outputs
+            )
+        elif isinstance(custom_outputs[0], dict):
+            ## custom outputs must list[dict[str, Any]]
+            ## list of extracted outputs per question
+            ## sorted by the benchmark question_id
+
+            assert all(
+                isinstance(custom_output, dict) for custom_output in custom_outputs
+            )
+            custom_outputs = [
+                custom_output["code_list"]
+                for custom_output in sorted(
+                    custom_outputs, key=lambda x: str(x["question_id"])
+                )
+            ]
 
     save_results = [
         instance.insert_output(custom_output, custom_output)
