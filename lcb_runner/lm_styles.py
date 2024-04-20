@@ -286,14 +286,14 @@ LanguageModelList: list[LanguageModel] = [
     ),
     LanguageModel(
         "meta-llama/Meta-Llama-3-70B",
-        "LLama3-70B-Base",
+        "LLama3-70b-Base",
         LMStyle.GenericBase,
         datetime(2023, 1, 1),
         link="https://huggingface.co/meta-llama/Meta-Llama-3-70B",
     ),
     LanguageModel(
         "meta-llama/Meta-Llama-3-8B",
-        "LLama3-8B-Base",
+        "LLama3-8b-Base",
         LMStyle.GenericBase,
         datetime(2023, 1, 1),
         link="https://huggingface.co/meta-llama/Meta-Llama-3-8B",

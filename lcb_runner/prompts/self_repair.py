@@ -162,6 +162,31 @@ def format_prompt_self_repair(
             },
         ]
         return chat_messages
+    if LanguageModelStyle == LMStyle.LLaMa3:
+        chat_messages = [
+            {"role": "system", "content": PromptConstants.SYSTEM_MESSAGE_GENERIC},
+        ]
+        chat_messages += [
+            {
+                "role": "user",
+                "content": get_generic_question_template_answer(
+                    question, code, result, metadata
+                ),
+            },
+        ]
+
+        from transformers import AutoTokenizer
+
+        tokenizer = AutoTokenizer.from_pretrained(
+            "meta-llama/Meta-Llama-3-8B-Instruct", padding_side="left", use_fast=False
+        )
+        return tokenizer.apply_chat_template(
+            chat_messages,
+            tokenize=False,
+            add_generation_prompt=True,
+            truncation=False,
+            padding=False,
+        )
     elif LanguageModelStyle == LMStyle.Claude:
         prompt = f"{HUMAN_PROMPT}\n{PromptConstants.SYSTEM_MESSAGE_GENERIC}\n\n{get_generic_question_template_answer(question, code, result, metadata).rstrip()}\n{AI_PROMPT}"
         return prompt

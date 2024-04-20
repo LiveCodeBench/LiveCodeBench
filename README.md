@@ -82,14 +82,14 @@ python -m lcb_runner.evaluation.compute_scores --eval_all_file {saved_eval_all_f
 For running self repair, you need to provide an additional `--codegen_n` flag that maps to the number of codes that were generated during code generation. Additionally, the `--temperature` flag is used to resolve the old code generation eval file which must be present in the `output` directory. 
 
 ```bash
-python -m lcb_runner.runner.main --model {model_name} --scenario codegeneration --codege_n {num_codes_codegen} --n 1 # only n=1 supported
+python -m lcb_runner.runner.main --model {model_name --scenario selfrepair --codegen_n {num_codes_codegen} --n 1 # only n=1 supported
 ```
 
 In case you generated metadata with previour version of the codebase, you might get missing keys exception. 
 You can run the following command to rerun the metadata generation
 
 ```bash
-python -m lcb_runner.runner.main --model {model_name} --scenario codegeneration --evaluate --continue_existing
+python -m lcb_runner.runner.main --model {model_name} --scenario selfrepair --evaluate --continue_existing
 ```
 ### Test Output Prediction
 For running the test output prediction scenario you can simply run
