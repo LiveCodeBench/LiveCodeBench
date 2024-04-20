@@ -10,10 +10,7 @@ class LMStyle(Enum):
     Gemini = "Gemini"
     MistralWeb = "MistralWeb"
 
-    DeepSeekBase = "DeepSeekBase"
-    CodeLLaMaBase = "CodeLLaMaBase"
-    StarCoder2Base = "StarCoder2Base"
-    StableCodeBase = "StableCodeBase"
+    GenericBase = "GenericBase"
 
     DeepSeekCodeInstruct = "DeepSeekCodeInstruct"
     CodeLLaMaInstruct = "CodeLLaMaInstruct"
@@ -25,6 +22,8 @@ class LMStyle(Enum):
 
     Qwen1point5 = "Qwen1point5"
     Smaug2 = "Smaug2"
+
+    LLaMa3 = "LLaMa3"
 
 
 @dataclass
@@ -197,65 +196,107 @@ LanguageModelList: list[LanguageModel] = [
     LanguageModel(
         "bigcode/starcoder2-3b",
         "StarCoder2-3b",
-        LMStyle.StarCoder2Base,
+        LMStyle.GenericBase,
         datetime(2023, 1, 1),
         link="https://huggingface.co/bigcode/starcoder2-7b-magicoder-instruct/tree/main",
     ),
     LanguageModel(
         "bigcode/starcoder2-7b",
         "StarCoder2-7b",
-        LMStyle.StarCoder2Base,
+        LMStyle.GenericBase,
         datetime(2023, 1, 1),
         link="https://huggingface.co/bigcode/starcoder2-7b-magicoder-instruct/tree/main",
     ),
     LanguageModel(
         "bigcode/starcoder2-15b",
         "StarCoder2-15b",
-        LMStyle.StarCoder2Base,
+        LMStyle.GenericBase,
         datetime(2023, 1, 1),
         link="https://huggingface.co/bigcode/starcoder2-7b-magicoder-instruct/tree/main",
     ),
     LanguageModel(
         "codellama/CodeLlama-34b-hf",
         "CodeLlama-34b-Base",
-        LMStyle.CodeLLaMaBase,
+        LMStyle.GenericBase,
         datetime(2023, 1, 1),
         link="https://huggingface.co/codellama/CodeLlama-34b-hf",
     ),
     LanguageModel(
         "codellama/CodeLlama-13b-hf",
         "CodeLlama-13b-Base",
-        LMStyle.CodeLLaMaBase,
+        LMStyle.GenericBase,
         datetime(2023, 1, 1),
         link="https://huggingface.co/codellama/CodeLlama-13b-hf",
     ),
     LanguageModel(
         "codellama/CodeLlama-7b-hf",
         "CodeLlama-7b-Base",
-        LMStyle.CodeLLaMaBase,
+        LMStyle.GenericBase,
         datetime(2023, 1, 1),
         link="https://huggingface.co/codellama/CodeLlama-7b-hf",
     ),
     LanguageModel(
         "deepseek-ai/deepseek-coder-33b-base",
         "DSCoder-33b-Base",
-        LMStyle.DeepSeekBase,
+        LMStyle.GenericBase,
         datetime(2023, 1, 1),
         link="https://huggingface.co/deepseek-ai/deepseek-coder-33b-base",
     ),
     LanguageModel(
         "deepseek-ai/deepseek-coder-6.7b-base",
         "DSCoder-6.7b-Base",
-        LMStyle.DeepSeekBase,
+        LMStyle.GenericBase,
         datetime(2023, 1, 1),
         link="https://huggingface.co/deepseek-ai/deepseek-coder-6.7b-base",
     ),
     LanguageModel(
         "deepseek-ai/deepseek-coder-1.3b-base",
         "DSCoder-1.3b-Base",
-        LMStyle.DeepSeekBase,
+        LMStyle.GenericBase,
         datetime(2023, 1, 1),
         link="https://huggingface.co/deepseek-ai/deepseek-coder-1.3b-base",
+    ),
+    LanguageModel(
+        "google/codegemma-7b",
+        "CodeGemma-7b-Base",
+        LMStyle.GenericBase,
+        datetime(2023, 1, 1),
+        link="https://huggingface.co/google/codegemma-7b",
+    ),
+    LanguageModel(
+        "google/codegemma-2b",
+        "CodeGemma-2b-Base",
+        LMStyle.GenericBase,
+        datetime(2023, 1, 1),
+        link="https://huggingface.co/google/codegemma-2b",
+    ),
+    LanguageModel(
+        "google/gemma-7b",
+        "Gemma-7b-Base",
+        LMStyle.GenericBase,
+        datetime(2023, 1, 1),
+        link="https://huggingface.co/google/gemma-7b",
+    ),
+    LanguageModel(
+        "google/gemma-2b",
+        "Gemma-2b-Base",
+        LMStyle.GenericBase,
+        datetime(2023, 1, 1),
+        link="https://huggingface.co/google/gemma-2b",
+    ),
+    LanguageModel(
+        "meta-llama/Meta-Llama-3-70B",
+        "LLama3-70B-Base",
+        LMStyle.GenericBase,
+        datetime(2023, 1, 1),
+        link="https://huggingface.co/meta-llama/Meta-Llama-3-70B",
+    ),
+    LanguageModel(
+        "meta-llama/Meta-Llama-3-8B",
+        "LLama3-8B-Base",
+        LMStyle.GenericBase,
+        datetime(2023, 1, 1),
+        link="https://huggingface.co/meta-llama/Meta-Llama-3-8B",
     ),
     LanguageModel(
         "mistral-large-latest",
@@ -288,7 +329,7 @@ LanguageModelList: list[LanguageModel] = [
     LanguageModel(
         "stabilityai/stable-code-3b",
         "StableCode-3B",
-        LMStyle.StableCodeBase,
+        LMStyle.GenericBase,
         datetime(2023, 9, 1),
         link="https://huggingface.co/stabilityai/stable-code-3b/",
     ),
@@ -305,6 +346,20 @@ LanguageModelList: list[LanguageModel] = [
         LMStyle.Smaug2,
         datetime(2024, 3, 31),
         link="https://huggingface.co/abacusai/Smaug-2-72B/",
+    ),
+    LanguageModel(
+        "meta-llama/Meta-Llama-3-8B-Instruct",
+        "LLama3-8b-Ins",
+        LMStyle.LLaMa3,
+        datetime(2023, 1, 1),
+        link="https://huggingface.co/codellama/CodeLlama-7b-Instruct-hf",
+    ),
+    LanguageModel(
+        "meta-llama/Meta-Llama-3-70B-Instruct",
+        "LLama3-70b-Ins",
+        LMStyle.LLaMa3,
+        datetime(2023, 1, 1),
+        link="https://huggingface.co/codellama/CodeLlama-7b-Instruct-hf",
     ),
 ]
 

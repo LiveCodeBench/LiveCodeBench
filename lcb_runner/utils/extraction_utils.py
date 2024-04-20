@@ -7,12 +7,7 @@ def extract_code(model_output: str, lmstyle: LMStyle):
         indexlines = [i for i, line in enumerate(outputlines) if "PYTHON]" in line]
         if len(indexlines) < 2:
             indexlines = [i for i, line in enumerate(outputlines) if "```" in line]
-    elif lmstyle in [
-        LMStyle.CodeLLaMaBase,
-        LMStyle.DeepSeekBase,
-        LMStyle.StarCoder2Base,
-        LMStyle.StableCodeBase,
-    ]:
+    elif lmstyle == LMStyle.GenericBase:
         return model_output.strip()
     else:
         indexlines = [i for i, line in enumerate(outputlines) if "```" in line]
@@ -49,7 +44,8 @@ def extract_test_output_code(model_output: str, lmstyle: LMStyle = None):
         return ""
     return "\n".join(outputlines[indexlines[0] + 1 : indexlines[1]])
 
-def extract_execution_code(model_output: str, lmstyle: LMStyle, cot : bool = False):
+
+def extract_execution_code(model_output: str, lmstyle: LMStyle, cot: bool = False):
     if cot:
         if "[ANSWER]" in model_output:
             model_output = model_output.split("[ANSWER]")[1].strip()
@@ -58,5 +54,5 @@ def extract_execution_code(model_output: str, lmstyle: LMStyle, cot : bool = Fal
     if "[/ANSWER]" in model_output:
         model_output = model_output.split("[/ANSWER]")[0].strip()
     else:
-        model_output = model_output.split('\n')[0].strip()
+        model_output = model_output.split("\n")[0].strip()
     return model_output.strip()

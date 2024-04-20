@@ -202,6 +202,32 @@ def format_prompt_generation(
         ]
         return chat_messages
 
+    if LanguageModelStyle == LMStyle.LLaMa3:
+        chat_messages = [
+            {
+                "role": "system",
+                "content": PromptConstants.SYSTEM_MESSAGE_GENERIC,
+            },
+        ]
+        chat_messages += [
+            {
+                "role": "user",
+                "content": get_generic_question_template_answer(question),
+            },
+        ]
+        from transformers import AutoTokenizer
+
+        tokenizer = AutoTokenizer.from_pretrained(
+            "meta-llama/Meta-Llama-3-8B-Instruct", padding_side="left", use_fast=False
+        )
+        return tokenizer.apply_chat_template(
+            chat_messages,
+            tokenize=False,
+            add_generation_prompt=True,
+            truncation=False,
+            padding=False,
+        )
+
     if LanguageModelStyle == LMStyle.Claude3:
         prompt = f"{HUMAN_PROMPT}\n"
         prompt += f"{PromptConstants.SYSTEM_MESSAGE_GENERIC}\n\n"
@@ -279,12 +305,7 @@ def format_prompt_generation(
         prompt = f"{get_qwen_question_template_answer(question)}"
         return prompt
 
-    if LanguageModelStyle in [
-        LMStyle.DeepSeekBase,
-        LMStyle.CodeLLaMaBase,
-        LMStyle.StarCoder2Base,
-        LMStyle.StableCodeBase,
-    ]:
+    if LanguageModelStyle == LMStyle.GenericBase:
         prompt = get_base_model_question_template_answer(question)
         return prompt
 
