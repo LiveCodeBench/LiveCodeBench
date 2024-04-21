@@ -1,4 +1,5 @@
 try:
+    from transformers import AutoTokenizer
     from vllm import LLM, SamplingParams
 except ImportError as e:
     # print("Cannot import vllm")
@@ -10,12 +11,14 @@ from lcb_runner.runner.base_runner import BaseRunner
 class VLLMRunner(BaseRunner):
     def __init__(self, args, model):
         super().__init__(args, model)
+        tokenizer = AutoTokenizer.from_pretrained(model.model_name)
         self.llm = LLM(
             (
                 model.model_name
                 if args.local_model_path is None
                 else args.local_model_path
             ),
+            tokenizer,
             tensor_parallel_size=args.tensor_parallel_size,
             dtype=args.dtype,
             enforce_eager=True,
@@ -29,6 +32,7 @@ class VLLMRunner(BaseRunner):
             frequency_penalty=0,
             presence_penalty=0,
             stop=self.args.stop,
+            enable_prefix_caching=True,
         )
 
     def _run_single(self, prompt: str) -> list[str]:
@@ -46,14 +50,14 @@ class VLLMRunner(BaseRunner):
             remaining_prompts.append(prompt)
             remaining_indices.append(prompt_index)
         if remaining_prompts:
-            outputs = self.llm.generate(remaining_prompts, self.sampling_params)
+            vllm_outputs = self.llm.generate(remaining_prompts, self.sampling_params)
             if self.args.use_cache:
-                for index, output in zip(remaining_indices, outputs):
+                for index, vllm_output in zip(remaining_indices, vllm_outputs):
                     self.cache[remaining_prompts[index]] = [
-                        o.text for o in output.outputs
+                        o.text for o in vllm_output.outputs
                     ]
-                    outputs[index] = [o.text for o in output.outputs]
+                    outputs[index] = [o.text for o in vllm_output.outputs]
             else:
-                for index, output in zip(remaining_indices, outputs):
-                    outputs[index] = [o.text for o in output.outputs]
+                for index, vllm_output in zip(remaining_indices, vllm_outputs):
+                    outputs[index] = [o.text for o in vllm_output.outputs]
         return outputs
