@@ -11,14 +11,12 @@ from lcb_runner.runner.base_runner import BaseRunner
 class VLLMRunner(BaseRunner):
     def __init__(self, args, model):
         super().__init__(args, model)
-        tokenizer = AutoTokenizer.from_pretrained(model.model_name)
         self.llm = LLM(
             (
                 model.model_name
                 if args.local_model_path is None
                 else args.local_model_path
             ),
-            tokenizer,
             tensor_parallel_size=args.tensor_parallel_size,
             dtype=args.dtype,
             enforce_eager=True,
