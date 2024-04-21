@@ -95,7 +95,7 @@ def format_prompt_execution_base(
             {"role": "user", "content": prompt},
         ]
         return chat_messages
-    if LanguageModelStyle == LMStyle.OpenAIChat:
+    if LanguageModelStyle == LMStyle.LLaMa3:
         chat_messages = [
             {
                 "role": "system",
