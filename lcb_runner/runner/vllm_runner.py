@@ -11,16 +11,18 @@ from lcb_runner.runner.base_runner import BaseRunner
 class VLLMRunner(BaseRunner):
     def __init__(self, args, model):
         super().__init__(args, model)
+        model_tokenizer_path = (
+            model.model_name if args.local_model_path is None else args.local_model_path
+        )
         self.llm = LLM(
-            (
-                model.model_name
-                if args.local_model_path is None
-                else args.local_model_path
-            ),
+            model=model_tokenizer_path,
+            tokenizer=model_tokenizer_path,
             tensor_parallel_size=args.tensor_parallel_size,
             dtype=args.dtype,
             enforce_eager=True,
             max_model_len=4096,
+            disable_custom_all_reduce=False,
+            enable_prefix_caching=True,
         )
         self.sampling_params = SamplingParams(
             n=self.args.n,
@@ -30,7 +32,6 @@ class VLLMRunner(BaseRunner):
             frequency_penalty=0,
             presence_penalty=0,
             stop=self.args.stop,
-            enable_prefix_caching=True,
         )
 
     def _run_single(self, prompt: str) -> list[str]:
