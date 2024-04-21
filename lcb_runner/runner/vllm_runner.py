@@ -51,10 +51,11 @@ class VLLMRunner(BaseRunner):
         if remaining_prompts:
             vllm_outputs = self.llm.generate(remaining_prompts, self.sampling_params)
             if self.args.use_cache:
-                for index, vllm_output in zip(remaining_indices, vllm_outputs):
-                    self.cache[remaining_prompts[index]] = [
-                        o.text for o in vllm_output.outputs
-                    ]
+                assert len(remaining_prompts) == len(vllm_outputs)
+                for index, remaining_prompt, vllm_output in zip(
+                    remaining_indices, remaining_prompts, vllm_outputs
+                ):
+                    self.cache[remaining_prompt] = [o.text for o in vllm_output.outputs]
                     outputs[index] = [o.text for o in vllm_output.outputs]
             else:
                 for index, vllm_output in zip(remaining_indices, vllm_outputs):
