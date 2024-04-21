@@ -106,7 +106,7 @@ class BaseRunner(ABC):
                 batch = prompts[i : i + batch_size]
                 batch_outputs = self.run_batch(batch)
                 outputs.extend(batch_outputs)
-            self.save_cache()
+                self.save_cache()
         else:
             outputs = self.run_batch(prompts)
         return outputs
