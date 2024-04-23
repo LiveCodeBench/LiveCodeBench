@@ -250,6 +250,11 @@ def format_prompt_generation(
         prompt += f"{get_generic_question_template_answer(question)}"
         return prompt
 
+    if LanguageModelStyle == LMStyle.StarCoderInstruct:
+        prompt = f"{PromptConstants.SYSTEM_MESSAGE_GENERIC}\n"
+        prompt += f"{get_generic_question_template_answer(question)}"
+        return prompt
+
     if LanguageModelStyle == LMStyle.MistralWeb:
         chat_messages = [
             {

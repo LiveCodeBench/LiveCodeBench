@@ -14,6 +14,7 @@ class LMStyle(Enum):
 
     DeepSeekCodeInstruct = "DeepSeekCodeInstruct"
     CodeLLaMaInstruct = "CodeLLaMaInstruct"
+    StarCoderInstruct = "StarCoderInstruct"
 
     Phind = "Phind"
     WizardCoder = "WizardCoder"
@@ -360,6 +361,13 @@ LanguageModelList: list[LanguageModel] = [
         LMStyle.LLaMa3,
         datetime(2023, 1, 1),
         link="https://huggingface.co/codellama/CodeLlama-7b-Instruct-hf",
+    ),
+    LanguageModel(
+        "bigcode/starcoder2-instruct-15b-v0.1",
+        "StarCoder2-Ins-v0.1",
+        LMStyle.LLaMa3,
+        datetime(2023, 4, 30),
+        link="https://huggingface.co/bigcode/starcoder2-instruct-15b-v0.1",
     ),
 ]
 

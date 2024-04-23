@@ -218,6 +218,10 @@ def format_prompt_self_repair(
     elif LanguageModelStyle == LMStyle.Gemini:
         prompt = f"{PromptConstants.SYSTEM_MESSAGE_GENERIC}\n{get_generic_question_template_answer(question, code, result,metadata)}"
         return prompt
+    elif LanguageModelStyle == LMStyle.StarCoderInstruct:
+        prompt = f"{PromptConstants.SYSTEM_MESSAGE_GENERIC}\n{get_generic_question_template_answer(question, code, result,metadata)}"
+        return prompt
+
     elif LanguageModelStyle == LMStyle.DeepSeekCodeInstruct:
         prompt = f"{PromptConstants.SYSTEM_MESSAGE_DEEPSEEK}\n\n{get_deepseekcode_question_template_answer(question, code, result,metadata)}"
         return prompt

@@ -130,6 +130,8 @@ def format_prompt_execution_base(
         return system_message, prompt
     elif LanguageModelStyle == LMStyle.Gemini:
         return prompt
+    elif LanguageModelStyle == LMStyle.StarCoderInstruct:
+        return prompt
     elif LanguageModelStyle == LMStyle.DeepSeekCodeInstruct:
         return prompt
     elif LanguageModelStyle == LMStyle.CodeLLaMaInstruct:
