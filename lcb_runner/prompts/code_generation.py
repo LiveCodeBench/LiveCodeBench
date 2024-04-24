@@ -48,14 +48,12 @@ def get_starcoder_instruct_question_content(question: CodeGenerationProblem):
     IO_GUIDE = "read from and write to standard IO"
     FUNC_GUIDE = "use the provided function signature"
 
-    APPS_PROMPT = """Write a python code to solve the following coding problem that obeys the constraints and
-    passes the example test cases. The output code needs to {QUESTION_GUIDE}. Please wrap your code
-    answer using ```python and ```.
+    APPS_PROMPT = """Write a python code to solve the following coding problem that obeys the constraints and passes the example test cases. The output code needs to {QUESTION_GUIDE}. Please wrap your code answer using ```python and ```.
 
     {question}"""
 
     STARTER_CODE_PROMPT = """Here is the starter code for the problem:
-    ```
+    ```python
     {starter_code}
     ```"""
 
