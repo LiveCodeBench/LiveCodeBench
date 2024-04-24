@@ -43,6 +43,38 @@ def get_generic_question_template_answer(question: CodeGenerationProblem):
     return prompt
 
 
+def get_starcoder_instruct_question_content(question: CodeGenerationProblem):
+    # Prompt adopted from CodeLlama (https://arxiv.org/pdf/2308.12950.pdf)
+    IO_GUIDE = "read from and write to standard IO"
+    FUNC_GUIDE = "use the provided function signature"
+
+    APPS_PROMPT = """Write a python code to solve the following coding problem that obeys the constraints and
+    passes the example test cases. The output code needs to {QUESTION_GUIDE}. Please wrap your code
+    answer using ```python and ```.
+
+    {question}"""
+
+    STARTER_CODE_PROMPT = """Here is the starter code for the problem:
+    ```
+    {starter_code}
+    ```"""
+
+    question_guide = (
+        FUNC_GUIDE
+        if question.public_test_cases[0].testtype.value == "functional"
+        else IO_GUIDE
+    )
+    instruction = APPS_PROMPT.format(
+        QUESTION_GUIDE=question_guide, question=question.question_content
+    )
+    starter_code = question.starter_code
+    if len(starter_code.strip()) != 0:
+        instruction += "\n\n" + STARTER_CODE_PROMPT.format(
+            starter_code=starter_code.strip()
+        )
+    return instruction
+
+
 def get_cllama_question_template_answer(question: CodeGenerationProblem):
     prompt = f"### Question\n{question.question_content}\n\n"
     if question.starter_code:
@@ -251,8 +283,15 @@ def format_prompt_generation(
         return prompt
 
     if LanguageModelStyle == LMStyle.StarCoderInstruct:
-        prompt = f"{PromptConstants.SYSTEM_MESSAGE_GENERIC}\n"
-        prompt += f"{get_generic_question_template_answer(question)}"
+        # prompt = f"{PromptConstants.SYSTEM_MESSAGE_GENERIC}\n"
+        # prompt += f"{get_generic_question_template_answer(question)}"
+        prompt = f"""You are an exceptionally intelligent coding assistant that consistently delivers accurate and reliable responses to user instructions.
+
+### Instruction
+{get_starcoder_instruct_question_content(question)}
+
+### Response
+```python"""
         return prompt
 
     if LanguageModelStyle == LMStyle.MistralWeb:

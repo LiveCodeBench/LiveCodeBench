@@ -365,7 +365,7 @@ LanguageModelList: list[LanguageModel] = [
     LanguageModel(
         "bigcode/starcoder2-instruct-15b-v0.1",
         "StarCoder2-Ins-v0.1",
-        LMStyle.LLaMa3,
+        LMStyle.StarCoderInstruct,
         datetime(2023, 4, 30),
         link="https://huggingface.co/bigcode/starcoder2-instruct-15b-v0.1",
     ),
