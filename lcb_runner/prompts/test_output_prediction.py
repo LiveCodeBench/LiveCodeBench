@@ -203,11 +203,38 @@ def format_prompt_test_output(
         return prompt
 
     elif LanguageModelStyle == LMStyle.StarCoderInstruct:
-        prompt = f"{PromptConstants.SYSTEM_MESSAGE_CHAT_GENERIC}\n"
-        prompt += (
-            f"{get_generic_question_template_test_completion(question, testcase_input)}"
-        )
-        return prompt
+        prompt_template = """<|endoftext|>You are an exceptionally intelligent coding assistant that consistently delivers accurate and reliable responses to user instructions.
+
+### Instruction
+{instruction}
+
+### Response
+```python
+# Test case
+"""
+        instruction = get_generic_question_template_test_completion(question, testcase_input)
+        return prompt_template.format(instruction=instruction)
+    elif LanguageModelStyle == LMStyle.OC_SC2:
+        prompt_template = """<s>[INST] {instruction} [/INST]```python
+# Test case
+"""
+        instruction = get_generic_question_template_test_completion(question, testcase_input)
+        return prompt_template.format(instruction=instruction)
+
+    elif LanguageModelStyle == LMStyle.CodeGemmaInstruct:
+        prompt_template = """<bos><start_of_turn>user
+{instruction}<end_of_turn>
+<start_of_turn>model
+```python
+# Test case
+"""
+        instruction = get_generic_question_template_test_completion(question, testcase_input)
+        return prompt_template.format(instruction=instruction)
+
+    elif LanguageModelStyle == LMStyle.GenericBase:
+        prompt_template = "### Instruction\n{instruction}\n\n### Response\n```python\n# Test case\n"
+        instruction = get_generic_question_template_test_completion(question, testcase_input)
+        return prompt_template.format(instruction=instruction)
 
     elif LanguageModelStyle == LMStyle.DeepSeekCodeInstruct:
         prompt = (

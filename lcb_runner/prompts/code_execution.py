@@ -132,6 +132,12 @@ def format_prompt_execution_base(
         return prompt
     elif LanguageModelStyle == LMStyle.StarCoderInstruct:
         return prompt
+    elif LanguageModelStyle == LMStyle.GenericBase:
+        return prompt
+    elif LanguageModelStyle == LMStyle.OC_SC2:
+        return prompt
+    elif LanguageModelStyle == LMStyle.CodeGemmaInstruct:
+        return prompt
     elif LanguageModelStyle == LMStyle.DeepSeekCodeInstruct:
         return prompt
     elif LanguageModelStyle == LMStyle.CodeLLaMaInstruct:

@@ -1,8 +1,15 @@
 from lcb_runner.lm_styles import LMStyle
+import os
 
 
 def extract_code(model_output: str, lmstyle: LMStyle):
-    if lmstyle == LMStyle.StarCoderInstruct:
+    if os.getenv("BACKTICKS") and lmstyle in [
+        LMStyle.StarCoderInstruct,
+        LMStyle.OC_SC2,
+        LMStyle.CodeGemmaInstruct,
+        LMStyle.LLaMa3,
+        LMStyle.DeepSeekCodeInstruct,
+    ]:
         end_index = model_output.find("```")
         end_index = len(model_output) if end_index == -1 else end_index
         return model_output[:end_index]
