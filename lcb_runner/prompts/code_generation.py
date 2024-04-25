@@ -369,7 +369,8 @@ def format_prompt_generation(
         return chat_messages
 
     if LanguageModelStyle == LMStyle.LLaMa3:
-        return get_llama3_instruct_oneshot(question)
+        if os.getenv("ONE_SHOT"):
+            return get_llama3_instruct_oneshot(question)
         chat_messages = [
             {
                 "role": "system",
