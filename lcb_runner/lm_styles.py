@@ -372,11 +372,11 @@ LanguageModelList: list[LanguageModel] = [
         link="https://huggingface.co/codellama/CodeLlama-7b-Instruct-hf",
     ),
     LanguageModel(
-        "bigcode/starcoder2-instruct-15b-v0.1",
+        "bigcode/starcoder2-15b-instruct-v0.1",
         "StarCoder2-Ins-v0.1",
         LMStyle.StarCoderInstruct,
         datetime(2023, 4, 30),
-        link="https://huggingface.co/bigcode/starcoder2-instruct-15b-v0.1",
+        link="https://huggingface.co/bigcode/starcoder2-15b-instruct-v0.1",
     ),
     LanguageModel(
         "m-a-p/OpenCodeInterpreter-SC2-15B",
