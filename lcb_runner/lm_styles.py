@@ -12,6 +12,7 @@ class LMStyle(Enum):
 
     GenericBase = "GenericBase"
 
+    CodeGemmaInstruct = "CodeGemmaInstruct"
     DeepSeekCodeInstruct = "DeepSeekCodeInstruct"
     CodeLLaMaInstruct = "CodeLLaMaInstruct"
     StarCoderInstruct = "StarCoderInstruct"
@@ -20,6 +21,7 @@ class LMStyle(Enum):
     WizardCoder = "WizardCoder"
     MagiCoder = "MagiCoder"
     OC = "OC"
+    OC_SC2 = "OC_SC2"
 
     Qwen1point5 = "Qwen1point5"
     Smaug2 = "Smaug2"
@@ -265,6 +267,13 @@ LanguageModelList: list[LanguageModel] = [
         link="https://huggingface.co/google/codegemma-7b",
     ),
     LanguageModel(
+        "google/codegemma-7b-it",
+        "CodeGemma-7b-IT",
+        LMStyle.CodeGemmaInstruct,
+        datetime(2023, 1, 1),
+        link="https://huggingface.co/google/codegemma-7b-it",
+    ),
+    LanguageModel(
         "google/codegemma-2b",
         "CodeGemma-2b-Base",
         LMStyle.GenericBase,
@@ -363,11 +372,18 @@ LanguageModelList: list[LanguageModel] = [
         link="https://huggingface.co/codellama/CodeLlama-7b-Instruct-hf",
     ),
     LanguageModel(
-        "bigcode/starcoder2-instruct-15b-v0.1",
+        "bigcode/starcoder2-15b-instruct-v0.1",
         "StarCoder2-Ins-v0.1",
-        LMStyle.LLaMa3,
+        LMStyle.StarCoderInstruct,
         datetime(2023, 4, 30),
-        link="https://huggingface.co/bigcode/starcoder2-instruct-15b-v0.1",
+        link="https://huggingface.co/bigcode/starcoder2-15b-instruct-v0.1",
+    ),
+    LanguageModel(
+        "m-a-p/OpenCodeInterpreter-SC2-15B",
+        "StarCoder2-OCI-v0.1",
+        LMStyle.OC_SC2,
+        datetime(2023, 4, 30),
+        link="https://huggingface.co/m-a-p/OpenCodeInterpreter-SC2-15B",
     ),
 ]
 

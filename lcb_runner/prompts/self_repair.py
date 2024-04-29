@@ -1,3 +1,4 @@
+import os
 import json
 
 from anthropic import HUMAN_PROMPT, AI_PROMPT
@@ -69,6 +70,65 @@ def get_generic_question_template_answer(question: str, code, result, metadata):
     prompt += "```python\n# YOUR CODE HERE\n```\n\n"
     prompt += f"### Answer: (use the provided format with backticks)\n\n"
     return prompt
+
+
+def get_repair_prompt(question: str, code, result, metadata):
+    prompt = f"Question:\n{question}\n\n"
+    prompt += f"Answer:\n```python\n{code}\n```\n\n"
+    prompt += get_check_prompt(question, result, metadata) + "\n\n"
+    prompt += "Please provide a fixed version of the code."
+    return prompt
+
+
+def get_starcoder_instruct_question_template_answer(
+    question: str, code, result, metadata
+):
+    prompt_template = """<|endoftext|>You are an exceptionally intelligent coding assistant that consistently delivers accurate and reliable responses to user instructions.
+
+### Instruction
+{instruction}
+
+### Response
+```python"""
+    prompt = get_repair_prompt(question, code, result, metadata)
+    return prompt_template.format(instruction=prompt)
+
+
+def get_codegemma_question_template_answer(question: str, code, result, metadata):
+    prompt_template = """<bos><start_of_turn>user
+{instruction}<end_of_turn>
+<start_of_turn>model
+```python"""
+    prompt = get_repair_prompt(question, code, result, metadata)
+    return prompt_template.format(instruction=prompt)
+
+
+def get_oc_sc2_question_template_answer(question: str, code, result, metadata):
+    prompt_template = """<s>[INST] {instruction} [/INST]Here is the fixed code:
+
+```python"""
+    prompt = get_repair_prompt(question, code, result, metadata)
+    return prompt_template.format(instruction=prompt)
+
+
+def get_llama3_question_template_answer(question: str, code, result, metadata):
+    prompt_template = """<|begin_of_text|><|start_header_id|>user<|end_header_id|>
+
+{instruction}<|eot_id|><|start_header_id|>assistant<|end_header_id|>
+
+```python"""
+    prompt = get_repair_prompt(question, code, result, metadata)
+    return prompt_template.format(instruction=prompt)
+
+
+def get_deepseek_question_template_answer(question: str, code, result, metadata):
+    prompt_template = """<｜begin▁of▁sentence｜>You are an AI programming assistant, utilizing the Deepseek Coder model, developed by Deepseek Company, and you only answer questions related to computer science. For politically sensitive questions, security and privacy issues, and other non-computer science questions, you will refuse to answer
+### Instruction:
+{instruction}
+### Response:
+```python"""
+    prompt = get_repair_prompt(question, code, result, metadata)
+    return prompt_template.format(instruction=prompt)
 
 
 def get_cllama_question_template_answer(question: str, code, result, metadata):
@@ -162,7 +222,17 @@ def format_prompt_self_repair(
             },
         ]
         return chat_messages
+    if LanguageModelStyle == LMStyle.CodeGemmaInstruct:
+        return get_codegemma_question_template_answer(question, code, result, metadata)
+    if LanguageModelStyle == LMStyle.GenericBase:
+        prompt_template = "### Instruction\n{instruction}\n\n### Response\nHere is the fixed code:\n```python"
+        instruction = get_repair_prompt(question, code, result, metadata)
+        return prompt_template.format(instruction=instruction)
+    if LanguageModelStyle == LMStyle.OC_SC2:
+        return get_oc_sc2_question_template_answer(question, code, result, metadata)
     if LanguageModelStyle == LMStyle.LLaMa3:
+        if os.getenv("BACKTICKS"):
+            return get_llama3_question_template_answer(question, code, result, metadata)
         chat_messages = [
             {"role": "system", "content": PromptConstants.SYSTEM_MESSAGE_GENERIC},
         ]
@@ -219,11 +289,15 @@ def format_prompt_self_repair(
         prompt = f"{PromptConstants.SYSTEM_MESSAGE_GENERIC}\n{get_generic_question_template_answer(question, code, result,metadata)}"
         return prompt
     elif LanguageModelStyle == LMStyle.StarCoderInstruct:
-        prompt = f"{PromptConstants.SYSTEM_MESSAGE_GENERIC}\n{get_generic_question_template_answer(question, code, result,metadata)}"
-        return prompt
+        return get_starcoder_instruct_question_template_answer(
+            question, code, result, metadata
+        )
 
     elif LanguageModelStyle == LMStyle.DeepSeekCodeInstruct:
-        prompt = f"{PromptConstants.SYSTEM_MESSAGE_DEEPSEEK}\n\n{get_deepseekcode_question_template_answer(question, code, result,metadata)}"
+        if os.getenv("BACKTICKS"):
+            prompt = get_deepseek_question_template_answer(question, code, result, metadata)
+        else:
+            prompt = f"{PromptConstants.SYSTEM_MESSAGE_DEEPSEEK}\n\n{get_deepseekcode_question_template_answer(question, code, result,metadata)}"
         return prompt
     elif LanguageModelStyle == LMStyle.CodeLLaMaInstruct:
         prompt = f"[INST] <<SYS>>\n{PromptConstants.SYSTEM_MESSAGE_GENERIC}\n<</SYS>>\n\n{get_cllama_question_template_answer(question, code, result,metadata)}\n[/INST]"

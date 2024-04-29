@@ -1,3 +1,4 @@
+import os
 import json
 
 try:
@@ -43,6 +44,155 @@ def get_generic_question_template_answer(question: CodeGenerationProblem):
     return prompt
 
 
+def get_starcoder_instruct_question_content(question: CodeGenerationProblem):
+    # Prompt adopted from CodeLlama (https://arxiv.org/pdf/2308.12950.pdf)
+    IO_GUIDE = "read from and write to standard IO"
+    FUNC_GUIDE = "use the provided function signature"
+
+    APPS_PROMPT = """Write a python code to solve the following coding problem that obeys the constraints and passes the example test cases. The output code needs to {QUESTION_GUIDE}. Please wrap your code answer using ```python and ```.
+
+{question}"""
+
+    STARTER_CODE_PROMPT = """Here is the starter code for the problem:
+```python
+{starter_code}
+```"""
+
+    question_guide = (
+        FUNC_GUIDE
+        if question.public_test_cases[0].testtype.value == "functional"
+        else IO_GUIDE
+    )
+    instruction = APPS_PROMPT.format(
+        QUESTION_GUIDE=question_guide, question=question.question_content
+    )
+    starter_code = question.starter_code
+    if len(starter_code.strip()) != 0:
+        instruction += "\n\n" + STARTER_CODE_PROMPT.format(
+            starter_code=starter_code.strip()
+        )
+    return instruction
+
+
+def get_oneshot_prompt(question: CodeGenerationProblem):
+    if question.starter_code:
+        examples_json = func
+    else:
+        examples_json = stdin
+
+    def get_example_prompt(example):
+        prompt = example["question"]
+        prompt += "\n\n"
+        if question.starter_code:
+            prompt += "### Starter Code\n"
+            prompt += example["sample_code"]
+            prompt += "\n\n"
+        if example["answer"]:
+            return prompt, f"```python\n{example['answer']}\n```"
+        else:
+            return prompt, f"```python\n"
+
+    shot1 = get_example_prompt(examples_json[0])
+    shot2 = get_example_prompt(
+        {
+            "question": question.question_content,
+            "sample_code": question.starter_code,
+            "answer": "",
+        }
+    )
+    return shot1, shot2
+
+
+def get_oci_sc2_oneshot(question: CodeGenerationProblem):
+    shot1, shot2 = get_oneshot_prompt(question)
+    example_prompt, example_output = shot1
+    input_prompt, output_prefix = shot2
+    return f"<s>[INST] {example_prompt} [/INST]{example_output}</s> [INST] {input_prompt} [/INST]{output_prefix}"
+
+
+def get_codegemma_instruct_oneshot(question: CodeGenerationProblem):
+    shot1, shot2 = get_oneshot_prompt(question)
+    example_prompt, example_output = shot1
+    input_prompt, output_prefix = shot2
+    return f"""<bos><start_of_turn>user
+{example_prompt}<end_of_turn>
+<start_of_turn>model
+{example_output}<end_of_turn>
+<start_of_turn>user
+{input_prompt}<end_of_turn>
+<start_of_turn>model
+{output_prefix}"""
+
+
+def get_llama3_instruct_oneshot(question: CodeGenerationProblem):
+    shot1, shot2 = get_oneshot_prompt(question)
+    example_prompt, example_output = shot1
+    input_prompt, output_prefix = shot2
+    return f"""<|begin_of_text|><|start_header_id|>user<|end_header_id|>
+
+{example_prompt}<|eot_id|><|start_header_id|>assistant<|end_header_id|>
+
+{example_output}<|eot_id|><|start_header_id|>user<|end_header_id|>
+
+{input_prompt}<|eot_id|><|start_header_id|>assistant<|end_header_id|>
+
+{output_prefix}"""
+
+
+# def get_starcoder_instruct_oneshot(question: CodeGenerationProblem) -> str:
+#     if question.starter_code:
+#         examples_json = func
+#     else:
+#         examples_json = stdin
+
+#     system = "You are an exceptionally intelligent coding assistant that consistently delivers accurate and reliable responses to user instructions."
+
+#     def get_example_prompt(example):
+#         prompt = ""
+#         prompt += "### Instruction\n"
+#         prompt += example["question"]
+#         prompt += "\n\n"
+#         if question.starter_code:
+#             prompt += "### Starter Code\n"
+#             prompt += example["sample_code"]
+#             prompt += "\n\n"
+#         prompt += "### Response\n```python\n"
+#         prompt += f"{example['answer']}"
+#         if example["answer"]:
+#             prompt += "```\n\n"
+#         return prompt
+
+#     prompt = ""
+#     prompt += get_example_prompt(examples_json[0])
+#     prompt += get_example_prompt(
+#         {
+#             "question": question.question_content,
+#             "sample_code": question.starter_code,
+#             "answer": "",
+#         }
+#     )
+#     return f"{system}\n\n{prompt}"
+
+
+def get_starcoder_instruct_oneshot(question: CodeGenerationProblem) -> str:
+    shot1, shot2 = get_oneshot_prompt(question)
+    example_prompt, example_output = shot1
+    input_prompt, output_prefix = shot2
+    return f"""<|endoftext|>You are an exceptionally intelligent coding assistant that consistently delivers accurate and reliable responses to user instructions.
+
+### Instruction
+{example_prompt}
+
+### Response
+{example_output}
+
+### Instruction
+{input_prompt}
+
+### Response
+{output_prefix}"""
+
+
 def get_cllama_question_template_answer(question: CodeGenerationProblem):
     prompt = f"### Question\n{question.question_content}\n\n"
     if question.starter_code:
@@ -70,6 +220,22 @@ def get_deepseekcode_question_template_answer(question: CodeGenerationProblem):
         prompt += f"```python\n# YOUR CODE HERE\n```\n\n"
     prompt += f"### Response:\n\n"
     return prompt
+
+
+def get_deepseekcode_oneshot(question: CodeGenerationProblem):
+    shot1, shot2 = get_oneshot_prompt(question)
+    example_prompt, example_output = shot1
+    input_prompt, output_prefix = shot2
+    return f"""<｜begin▁of▁sentence｜>You are an AI programming assistant, utilizing the Deepseek Coder model, developed by Deepseek Company, and you only answer questions related to computer science. For politically sensitive questions, security and privacy issues, and other non-computer science questions, you will refuse to answer
+### Instruction:
+{example_prompt}
+### Response:
+{example_output}
+<|EOT|>
+### Instruction:
+{input_prompt}
+### Response:
+{output_prefix}"""
 
 
 def get_qwen_question_template_answer(question: CodeGenerationProblem):
@@ -203,6 +369,8 @@ def format_prompt_generation(
         return chat_messages
 
     if LanguageModelStyle == LMStyle.LLaMa3:
+        if os.getenv("ONE_SHOT"):
+            return get_llama3_instruct_oneshot(question)
         chat_messages = [
             {
                 "role": "system",
@@ -251,8 +419,33 @@ def format_prompt_generation(
         return prompt
 
     if LanguageModelStyle == LMStyle.StarCoderInstruct:
-        prompt = f"{PromptConstants.SYSTEM_MESSAGE_GENERIC}\n"
-        prompt += f"{get_generic_question_template_answer(question)}"
+        # prompt = f"""You are an exceptionally intelligent coding assistant that consistently delivers accurate and reliable responses to user instructions.
+
+        # ### Instruction
+        # {get_starcoder_instruct_question_content(question)}
+
+        # ### Response
+        # ```python"""
+        #         return prompt
+        assert os.getenv("ONE_SHOT"), "StarCoderInstruct (v0.1) must be run in one-shot mode"
+        return get_starcoder_instruct_oneshot(question)
+
+    if LanguageModelStyle == LMStyle.OC_SC2:
+        if os.getenv("ONE_SHOT"):
+            prompt = get_oci_sc2_oneshot(question)
+        else:
+            prompt = f"<s>[INST] {get_starcoder_instruct_question_content(question)} [/INST]```python"
+        return prompt
+
+    if LanguageModelStyle == LMStyle.CodeGemmaInstruct:
+        if os.getenv("ONE_SHOT"):
+            prompt = get_codegemma_instruct_oneshot(question)
+        else:
+            instruction = get_starcoder_instruct_question_content(question)
+            prompt = f"""<bos><start_of_turn>user
+{instruction}<end_of_turn>
+<start_of_turn>model
+```python"""
         return prompt
 
     if LanguageModelStyle == LMStyle.MistralWeb:
@@ -269,6 +462,8 @@ def format_prompt_generation(
         return chat_messages
 
     if LanguageModelStyle == LMStyle.DeepSeekCodeInstruct:
+        if os.getenv("ONE_SHOT"):
+            return get_deepseekcode_oneshot(question)
         prompt = f"{PromptConstants.SYSTEM_MESSAGE_DEEPSEEK}\n\n"
         prompt += f"{get_deepseekcode_question_template_answer(question)}"
         return prompt
