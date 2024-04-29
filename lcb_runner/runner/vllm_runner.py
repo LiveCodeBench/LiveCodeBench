@@ -22,7 +22,7 @@ class VLLMRunner(BaseRunner):
             enforce_eager=True,
             max_model_len=4096,
             disable_custom_all_reduce=False,
-            enable_prefix_caching=True,
+            enable_prefix_caching=args.enable_prefix_caching,
         )
         self.sampling_params = SamplingParams(
             n=self.args.n,

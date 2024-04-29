@@ -89,6 +89,11 @@ def get_args():
         help="Tensor parallel size for vllm",
     )
     parser.add_argument(
+        "--enable_prefix_caching",
+        action="store_true",
+        help="Enable prefix caching for vllm",
+    )
+    parser.add_argument(
         "--custom_output_file",
         type=str,
         default=None,
