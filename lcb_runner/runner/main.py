@@ -24,7 +24,7 @@ def main():
         print(f"Running with {len(benchmark)} instances in debug mode")
         benchmark = benchmark[:5]
 
-    output_path = get_output_path(model, args)
+    output_path = get_output_path(model.model_repr, args)
 
     if args.continue_existing:
         if os.path.exists(output_path):

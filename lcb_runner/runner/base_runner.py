@@ -17,7 +17,7 @@ class BaseRunner(ABC):
         self.client_kwargs: dict[str | str] = {}
 
         if self.args.use_cache:
-            self.cache_path = get_cache_path(model, args)
+            self.cache_path = get_cache_path(model.model_repr, args)
             if os.path.exists(self.cache_path):
                 with open(self.cache_path) as f:
                     self.cache: dict = json.load(f)

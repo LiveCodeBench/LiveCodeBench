@@ -9,17 +9,21 @@ class LMStyle(Enum):
     Claude3 = "Claude3"
     Gemini = "Gemini"
     MistralWeb = "MistralWeb"
+    CohereCommand = "CohereCommand"
+    DataBricks = "DataBricks"
 
     GenericBase = "GenericBase"
 
     DeepSeekCodeInstruct = "DeepSeekCodeInstruct"
     CodeLLaMaInstruct = "CodeLLaMaInstruct"
     StarCoderInstruct = "StarCoderInstruct"
+    CodeQwenInstruct = "CodeQwenInstruct"
 
     Phind = "Phind"
     WizardCoder = "WizardCoder"
     MagiCoder = "MagiCoder"
     OC = "OC"
+    Eurusx = "Eurusx"
 
     Qwen1point5 = "Qwen1point5"
     Smaug2 = "Smaug2"
@@ -40,6 +44,55 @@ class LanguageModel:
 
 
 LanguageModelList: list[LanguageModel] = [
+    LanguageModel(
+        "meta-llama/Meta-Llama-3-70B",
+        "LLama3-70b-Base",
+        LMStyle.GenericBase,
+        datetime(2023, 1, 1),
+        link="https://huggingface.co/meta-llama/Meta-Llama-3-70B",
+    ),
+    LanguageModel(
+        "meta-llama/Meta-Llama-3-8B",
+        "LLama3-8b-Base",
+        LMStyle.GenericBase,
+        datetime(2023, 1, 1),
+        link="https://huggingface.co/meta-llama/Meta-Llama-3-8B",
+    ),
+    LanguageModel(
+        "meta-llama/Meta-Llama-3-8B-Instruct",
+        "LLama3-8b-Ins",
+        LMStyle.LLaMa3,
+        datetime(2023, 1, 1),
+        link="https://huggingface.co/meta-llama/Meta-Llama-3-8B-Instruct",
+    ),
+    LanguageModel(
+        "meta-llama/Meta-Llama-3-70B-Instruct",
+        "LLama3-70b-Ins",
+        LMStyle.LLaMa3,
+        datetime(2023, 1, 1),
+        link="https://huggingface.co/meta-llama/Meta-Llama-3-70B-Instruct",
+    ),    
+    LanguageModel(
+        "deepseek-ai/deepseek-coder-33b-base",
+        "DSCoder-33b-Base",
+        LMStyle.GenericBase,
+        datetime(2023, 1, 1),
+        link="https://huggingface.co/deepseek-ai/deepseek-coder-33b-base",
+    ),
+    LanguageModel(
+        "deepseek-ai/deepseek-coder-6.7b-base",
+        "DSCoder-6.7b-Base",
+        LMStyle.GenericBase,
+        datetime(2023, 1, 1),
+        link="https://huggingface.co/deepseek-ai/deepseek-coder-6.7b-base",
+    ),
+    LanguageModel(
+        "deepseek-ai/deepseek-coder-1.3b-base",
+        "DSCoder-1.3b-Base",
+        LMStyle.GenericBase,
+        datetime(2023, 1, 1),
+        link="https://huggingface.co/deepseek-ai/deepseek-coder-1.3b-base",
+    ),
     LanguageModel(
         "deepseek-ai/deepseek-coder-33b-instruct",
         "DSCoder-33b-Ins",
@@ -62,46 +115,67 @@ LanguageModelList: list[LanguageModel] = [
         link="https://huggingface.co/deepseek-ai/deepseek-coder-1.3b-instruct",
     ),
     LanguageModel(
+        "deepseek-ai/DeepSeek-V2",
+        "DeepSeek-V2",
+        LMStyle.DeepSeekCodeInstruct,
+        datetime(2023, 8, 1),
+        link="https://huggingface.co/deepseek-ai/DeepSeek-V2",
+    ),
+    LanguageModel(
+        "codellama/CodeLlama-70b-hf",
+        "CodeLlama-70b-Base",
+        LMStyle.GenericBase,
+        datetime(2023, 1, 1),
+        link="https://huggingface.co/codellama/CodeLlama-70b-hf",
+    ),
+    LanguageModel(
+        "codellama/CodeLlama-34b-hf",
+        "CodeLlama-34b-Base",
+        LMStyle.GenericBase,
+        datetime(2023, 1, 1),
+        link="https://huggingface.co/codellama/CodeLlama-34b-hf",
+    ),
+    LanguageModel(
+        "codellama/CodeLlama-13b-hf",
+        "CodeLlama-13b-Base",
+        LMStyle.GenericBase,
+        datetime(2023, 1, 1),
+        link="https://huggingface.co/codellama/CodeLlama-13b-hf",
+    ),
+    LanguageModel(
+        "codellama/CodeLlama-7b-hf",
+        "CodeLlama-7b-Base",
+        LMStyle.GenericBase,
+        datetime(2023, 1, 1),
+        link="https://huggingface.co/codellama/CodeLlama-7b-hf",
+    ),
+    LanguageModel(
+        "codellama/CodeLlama-70b-Instruct-hf",
+        "CodeLlama-70b-Ins",
+        LMStyle.CodeLLaMaInstruct,
+        datetime(2023, 1, 1),
+        link="https://huggingface.co/codellama/CodeLlama-70b-hf",
+    ),
+    LanguageModel(
         "codellama/CodeLlama-34b-Instruct-hf",
-        "Cllama-34b-Ins",
+        "CodeLlama-34b-Ins",
         LMStyle.CodeLLaMaInstruct,
         datetime(2023, 1, 1),
         link="https://huggingface.co/codellama/CodeLlama-34b-Instruct-hf",
     ),
     LanguageModel(
         "codellama/CodeLlama-13b-Instruct-hf",
-        "Cllama-13b-Ins",
+        "CodeLlama-13b-Ins",
         LMStyle.CodeLLaMaInstruct,
         datetime(2023, 1, 1),
         link="https://huggingface.co/codellama/CodeLlama-13b-Instruct-hf",
     ),
     LanguageModel(
         "codellama/CodeLlama-7b-Instruct-hf",
-        "Cllama-7b-Ins",
+        "CodeLlama-7b-Ins",
         LMStyle.CodeLLaMaInstruct,
         datetime(2023, 1, 1),
         link="https://huggingface.co/codellama/CodeLlama-7b-Instruct-hf",
-    ),
-    LanguageModel(
-        "WizardCoderLM/WizardCoderCoder-Python-34B-V1.0",
-        "WCoder-34B-V1",
-        LMStyle.WizardCoder,
-        datetime(2023, 1, 1),
-        link="https://huggingface.co/WizardCoderLM/WizardCoderCoder-Python-34B-V1.0",
-    ),
-    LanguageModel(
-        "WizardCoderLM/WizardCoderCoder-33B-V1.1",
-        "WCoder-33B-V1.1",
-        LMStyle.WizardCoder,
-        datetime(2023, 9, 1),
-        link="https://huggingface.co/WizardCoderLM/WizardCoderCoder-33B-V1.1",
-    ),
-    LanguageModel(
-        "Phind/Phind-CodeLlama-34B-v2",
-        "Phind-34B-V2",
-        LMStyle.Phind,
-        datetime(2023, 1, 1),
-        link="https://huggingface.co/Phind/Phind-CodeLlama-34B-v2",
     ),
     LanguageModel(
         "gpt-3.5-turbo-0301",
@@ -139,11 +213,11 @@ LanguageModelList: list[LanguageModel] = [
         link="https://platform.openai.com/docs/models/gpt-4-turbo-and-gpt-4",
     ),
     LanguageModel(
-        "claude-2",
-        "Claude-2",
-        LMStyle.Claude,
-        datetime(2022, 12, 31),
-        link="https://www.anthropic.com/index/claude-2",
+        "gpt-4o-2024-05-13",
+        "GPT-4O-2024-05-13",
+        LMStyle.OpenAIChat,
+        datetime(2023, 4, 30),
+        link="https://openai.com/index/spring-update",
     ),
     LanguageModel(
         "claude-instant-1",
@@ -151,6 +225,13 @@ LanguageModelList: list[LanguageModel] = [
         LMStyle.Claude,
         datetime(2022, 12, 31),
         link="https://www.anthropic.com/index/introducing-claude",
+    ),
+    LanguageModel(
+        "claude-2",
+        "Claude-2",
+        LMStyle.Claude,
+        datetime(2022, 12, 31),
+        link="https://www.anthropic.com/index/claude-2",
     ),
     LanguageModel(
         "claude-3-opus-20240229",
@@ -175,24 +256,38 @@ LanguageModelList: list[LanguageModel] = [
     ),
     LanguageModel(
         "gemini-pro",
-        "Gemini-Gemini-Pro",
+        "Gemini-Pro",
         LMStyle.Gemini,
         datetime(2023, 5, 1),
         link="https://blog.Gemini/technology/ai/gemini-api-developers-cloud",
     ),
     LanguageModel(
-        "ise-uiuc/Magicoder-S-DS-6.7B",
-        "MagiCoderS-DS-6.7B",
-        LMStyle.MagiCoder,
-        datetime(2023, 7, 30),
-        link="https://huggingface.co/ise-uiuc/Magicoder-S-DS-6.7B",
+        "gemini-1.5-pro-undefined",
+        "Gemini-Pro-1.5 (April) (n=1)",
+        LMStyle.Gemini,
+        datetime(2023, 4, 30),
+        link="https://blog.google/technology/ai/gemini-api-developers-cloud",
     ),
     LanguageModel(
-        "ise-uiuc/Magicoder-S-CL-7B",
-        "MagiCoderS-CL-7B",
-        LMStyle.MagiCoder,
+        "gemini-1.5-pro-latest",
+        "Gemini-Pro-1.5 (May)",
+        LMStyle.Gemini,
+        datetime(2023, 4, 30),
+        link="https://blog.google/technology/ai/gemini-api-developers-cloud",
+    ),
+    LanguageModel(
+        "gemini-1.5-flash-latest",
+        "Gemini-Flash-1.5 (n=1)",
+        LMStyle.Gemini,
+        datetime(2023, 4, 30),
+        link="https://blog.google/technology/ai/gemini-api-developers-cloud",
+    ),   
+    LanguageModel(
+        "databricks-dbrx-instruct",
+        "DBRX-Ins",
+        LMStyle.DataBricks,
         datetime(2023, 1, 1),
-        link="https://huggingface.co/ise-uiuc/Magicoder-S-CL-7B",
+        link="https://huggingface.co/databricks/dbrx-instruct",
     ),
     LanguageModel(
         "bigcode/starcoder2-3b",
@@ -214,48 +309,6 @@ LanguageModelList: list[LanguageModel] = [
         LMStyle.GenericBase,
         datetime(2023, 1, 1),
         link="https://huggingface.co/bigcode/starcoder2-7b-magicoder-instruct/tree/main",
-    ),
-    LanguageModel(
-        "codellama/CodeLlama-34b-hf",
-        "CodeLlama-34b-Base",
-        LMStyle.GenericBase,
-        datetime(2023, 1, 1),
-        link="https://huggingface.co/codellama/CodeLlama-34b-hf",
-    ),
-    LanguageModel(
-        "codellama/CodeLlama-13b-hf",
-        "CodeLlama-13b-Base",
-        LMStyle.GenericBase,
-        datetime(2023, 1, 1),
-        link="https://huggingface.co/codellama/CodeLlama-13b-hf",
-    ),
-    LanguageModel(
-        "codellama/CodeLlama-7b-hf",
-        "CodeLlama-7b-Base",
-        LMStyle.GenericBase,
-        datetime(2023, 1, 1),
-        link="https://huggingface.co/codellama/CodeLlama-7b-hf",
-    ),
-    LanguageModel(
-        "deepseek-ai/deepseek-coder-33b-base",
-        "DSCoder-33b-Base",
-        LMStyle.GenericBase,
-        datetime(2023, 1, 1),
-        link="https://huggingface.co/deepseek-ai/deepseek-coder-33b-base",
-    ),
-    LanguageModel(
-        "deepseek-ai/deepseek-coder-6.7b-base",
-        "DSCoder-6.7b-Base",
-        LMStyle.GenericBase,
-        datetime(2023, 1, 1),
-        link="https://huggingface.co/deepseek-ai/deepseek-coder-6.7b-base",
-    ),
-    LanguageModel(
-        "deepseek-ai/deepseek-coder-1.3b-base",
-        "DSCoder-1.3b-Base",
-        LMStyle.GenericBase,
-        datetime(2023, 1, 1),
-        link="https://huggingface.co/deepseek-ai/deepseek-coder-1.3b-base",
     ),
     LanguageModel(
         "google/codegemma-7b",
@@ -286,26 +339,54 @@ LanguageModelList: list[LanguageModel] = [
         link="https://huggingface.co/google/gemma-2b",
     ),
     LanguageModel(
-        "meta-llama/Meta-Llama-3-70B",
-        "LLama3-70b-Base",
-        LMStyle.GenericBase,
-        datetime(2023, 1, 1),
-        link="https://huggingface.co/meta-llama/Meta-Llama-3-70B",
-    ),
-    LanguageModel(
-        "meta-llama/Meta-Llama-3-8B",
-        "LLama3-8b-Base",
-        LMStyle.GenericBase,
-        datetime(2023, 1, 1),
-        link="https://huggingface.co/meta-llama/Meta-Llama-3-8B",
-    ),
-    LanguageModel(
         "mistral-large-latest",
         "Mistral-Large",
         LMStyle.MistralWeb,
         datetime(2023, 1, 1),
         link="https://mistral.ai/news/mistral-large/",
     ),
+    LanguageModel(
+        "open-mixtral-8x22b",
+        "Mixtral-8x22B-Ins",
+        LMStyle.MistralWeb,
+        datetime(2023, 1, 1),
+        link="https://mistral.ai/news/mixtral-8x22b/",
+    ),
+    LanguageModel(
+        "open-mixtral-8x7b",
+        "Mixtral-8x7B-Ins",
+        LMStyle.MistralWeb,
+        datetime(2023, 1, 1),
+        link="https://mistral.ai/news/mixtral-8x7b/",
+    ),
+    LanguageModel(
+        "command-r",
+        "Command-R",
+        LMStyle.CohereCommand,
+        datetime(2023, 1, 1),
+        link="https://docs.cohere.com/docs/models",
+    ),
+    LanguageModel(
+        "command-r+",
+        "Command-R+",
+        LMStyle.CohereCommand,
+        datetime(2023, 1, 1),
+        link="https://docs.cohere.com/docs/models",
+    ),
+    LanguageModel(
+        "Qwen/CodeQwen1.5-7B",
+        "CodeQwen15-7B",
+        LMStyle.GenericBase,
+        datetime(2023, 8, 30),
+        link="https://huggingface.co/Qwen/CodeQwen1.5-7B",
+    ),
+    LanguageModel(
+        "Qwen/CodeQwen1.5-7B-Chat",
+        "CodeQwen15-7B-Chat",
+        LMStyle.CodeQwenInstruct,
+        datetime(2023, 8, 30),
+        link="https://huggingface.co/Qwen/CodeQwen1.5-7B-Chat",
+    ),    
     LanguageModel(
         "m-a-p/OpenCodeInterpreter-DS-33B",
         "OC-DS-33B",
@@ -335,6 +416,13 @@ LanguageModelList: list[LanguageModel] = [
         link="https://huggingface.co/stabilityai/stable-code-3b/",
     ),
     LanguageModel(
+        "bigcode/starcoder2-instruct-15b-v0.1",
+        "StarCoder2-Ins-v0.1",
+        LMStyle.LLaMa3,
+        datetime(2023, 4, 30),
+        link="https://huggingface.co/bigcode/starcoder2-instruct-15b-v0.1",
+    ),
+    LanguageModel(
         "qwen/Qwen1.5-72B-Chat",
         "Qwen-1.5-72B-Chat ",
         LMStyle.Qwen1point5,
@@ -349,25 +437,53 @@ LanguageModelList: list[LanguageModel] = [
         link="https://huggingface.co/abacusai/Smaug-2-72B/",
     ),
     LanguageModel(
-        "meta-llama/Meta-Llama-3-8B-Instruct",
-        "LLama3-8b-Ins",
-        LMStyle.LLaMa3,
+        "WizardCoderLM/WizardCoderCoder-Python-34B-V1.0",
+        "WCoder-34B-V1",
+        LMStyle.WizardCoder,
         datetime(2023, 1, 1),
-        link="https://huggingface.co/codellama/CodeLlama-7b-Instruct-hf",
+        link="https://huggingface.co/WizardCoderLM/WizardCoderCoder-Python-34B-V1.0",
     ),
     LanguageModel(
-        "meta-llama/Meta-Llama-3-70B-Instruct",
-        "LLama3-70b-Ins",
-        LMStyle.LLaMa3,
-        datetime(2023, 1, 1),
-        link="https://huggingface.co/codellama/CodeLlama-7b-Instruct-hf",
+        "WizardCoderLM/WizardCoderCoder-33B-V1.1",
+        "WCoder-33B-V1.1",
+        LMStyle.WizardCoder,
+        datetime(2023, 9, 1),
+        link="https://huggingface.co/WizardCoderLM/WizardCoderCoder-33B-V1.1",
     ),
     LanguageModel(
-        "bigcode/starcoder2-instruct-15b-v0.1",
-        "StarCoder2-Ins-v0.1",
-        LMStyle.LLaMa3,
+        "Phind/Phind-CodeLlama-34B-v2",
+        "Phind-34B-V2",
+        LMStyle.Phind,
+        datetime(2023, 1, 1),
+        link="https://huggingface.co/Phind/Phind-CodeLlama-34B-v2",
+    ),
+    LanguageModel(
+        "ise-uiuc/Magicoder-S-DS-6.7B",
+        "MagiCoderS-DS-6.7B",
+        LMStyle.MagiCoder,
+        datetime(2023, 7, 30),
+        link="https://huggingface.co/ise-uiuc/Magicoder-S-DS-6.7B",
+    ),
+    LanguageModel(
+        "ise-uiuc/Magicoder-S-CL-7B",
+        "MagiCoderS-CL-7B",
+        LMStyle.MagiCoder,
+        datetime(2023, 1, 1),
+        link="https://huggingface.co/ise-uiuc/Magicoder-S-CL-7B",
+    ),
+    LanguageModel(
+        "openbmb/Eurus-70b-sft",
+        "Eurus-70B-SFT (n=1)",
+        LMStyle.Eurusx,
+        datetime(2023, 1, 1),
+        link="https://huggingface.co/openbmb/Eurus-70b-sft",
+    ),
+    LanguageModel(
+        "openbmb/Eurux-8x22b-nca",
+        "Eurux-8x22b-NCA (n=1)",
+        LMStyle.Eurusx,
         datetime(2023, 4, 30),
-        link="https://huggingface.co/bigcode/starcoder2-instruct-15b-v0.1",
+        link="https://huggingface.co/openbmb/Eurux-8x22b-nca",
     ),
 ]
 

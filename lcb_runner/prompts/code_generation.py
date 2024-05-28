@@ -23,6 +23,8 @@ class PromptConstants:
 ```python 
 # YOUR CODE HERE
 ```"""
+    
+    SYSTEM_MESSAGE_CODEQWEN = f"<|im_start|>system\nYou are a helpful assistant.<|im_end|>\n<|im_start|>user"
 
     FORMATTING_MESSAGE_WITH_STARTER_CODE = "You will use the following starter code to write the solution to the problem and enclose your code within delimiters."
 
@@ -141,6 +143,22 @@ def get_phind_question_template_answer(question: CodeGenerationProblem):
         prompt += f"{PromptConstants.FORMATTING_WITHOUT_STARTER_CODE}\n\n"
         prompt += f"```python\n# YOUR CODE HERE\n```\n\n"
     prompt += f"\n\n### Assistant"
+    return prompt
+
+def get_codeqwen_question_template_answer(question: CodeGenerationProblem):
+    prompt = "You will be given a question (problem specification) and will generate a correct Python program that matches the specification and passes all tests. You will NOT return anything except for the program.\n\n"
+    prompt += f"Question: {question.question_content}\n\n"
+    if question.starter_code:
+        prompt += (
+            f"{PromptConstants.FORMATTING_MESSAGE_WITH_STARTER_CODE}\n"
+        )
+        prompt += f"```python\n{question.starter_code}\n```\n\n<|im_end|>\n"
+    else:
+        prompt += (
+            f"{PromptConstants.FORMATTING_WITHOUT_STARTER_CODE}\n"
+        )
+        prompt += f"```python\n# YOUR CODE HERE\n```\n\n<|im_end|>\n"
+    prompt += f"<|im_start|>assistant\n"
     return prompt
 
 
@@ -273,6 +291,11 @@ def format_prompt_generation(
         prompt += f"{get_deepseekcode_question_template_answer(question)}"
         return prompt
 
+    if LanguageModelStyle == LMStyle.CodeQwenInstruct:
+        prompt = f"{PromptConstants.SYSTEM_MESSAGE_CODEQWEN}\n\n"
+        prompt += f"{get_codeqwen_question_template_answer(question)}"
+        return prompt
+
     if LanguageModelStyle == LMStyle.CodeLLaMaInstruct:
         prompt = f"[INST] <<SYS>>\n"
         prompt += f"{PromptConstants.SYSTEM_MESSAGE_GENERIC}\n"
@@ -301,6 +324,12 @@ def format_prompt_generation(
     if LanguageModelStyle == LMStyle.OC:
         prompt = f"{PromptConstants.SYSTEM_MESSAGE_GENERIC}\n\n"
         prompt += f"{get_generic_question_template_answer(question)}"
+        return prompt
+    
+    if LanguageModelStyle == LMStyle.Eurusx:
+        prompt = "[INST] Write Python code to solve the task:\n"
+        prompt += f"{get_generic_question_template_answer(question)}"
+        prompt += "[/INST]"
         return prompt
 
     if (

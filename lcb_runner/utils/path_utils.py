@@ -12,8 +12,7 @@ def ensure_dir(path: str, is_file=True):
     return
 
 
-def get_cache_path(model: LanguageModel, args) -> str:
-    model_repr = model.model_repr
+def get_cache_path(model_repr:str, args) -> str:
     scenario: Scenario = args.scenario
     n = args.n
     temperature = args.temperature
@@ -22,8 +21,7 @@ def get_cache_path(model: LanguageModel, args) -> str:
     return path
 
 
-def get_output_path(model: LanguageModel, args) -> str:
-    model_repr = model.model_repr
+def get_output_path(model_repr:str, args) -> str:
     scenario: Scenario = args.scenario
     n = args.n
     temperature = args.temperature
@@ -33,8 +31,7 @@ def get_output_path(model: LanguageModel, args) -> str:
     return path
 
 
-def get_eval_all_output_path(model: LanguageModel, args) -> str:
-    model_repr = model.model_repr
+def get_eval_all_output_path(model_repr:str, args) -> str:
     scenario: Scenario = args.scenario
     n = args.n
     temperature = args.temperature

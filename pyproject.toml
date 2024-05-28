@@ -19,6 +19,7 @@ anthropic = "^0.25.1"
 openai = "^1.17.1"
 mistralai = "^0.1.8"
 pyext = "0.7"
+annotated-types = "^0.7.0"
 
 [tool.poetry.group.with-gpu]
 optional = true

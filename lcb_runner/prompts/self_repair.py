@@ -237,6 +237,11 @@ def format_prompt_self_repair(
     elif LanguageModelStyle == LMStyle.Phind:
         prompt = f"### System Prompt\n\n{PromptConstants.SYSTEM_MESSAGE_PHIND}\n\n### User Message\n\n{get_phind_question_template_answer(question, code, result,metadata)}"
         return prompt
+    if LanguageModelStyle == LMStyle.Eurusx:
+        prompt = "[INST] Write Python code to solve the task:\n"
+        prompt += f"{get_wizard_question_template_answer(question, code, result,metadata)}"
+        prompt += "[/INST]"
+        return prompt
     else:
         raise NotImplementedError(
             f"LanguageModelStyle {LanguageModelStyle} not implemented"

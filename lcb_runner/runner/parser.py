@@ -17,7 +17,12 @@ def get_args():
         "--local_model_path",
         type=str,
         default=None,
-        help="if you have a local model, specify it here in conjunction with --model",
+        help="If you have a local model, specify it here in conjunction with --model",
+    )
+    parser.add_argument(
+        "--trust_remote_code",
+        action="store_true",
+        help="trust_remote_code option used in huggingface models"
     )
     parser.add_argument(
         "--scenario",
@@ -49,7 +54,7 @@ def get_args():
     )
     parser.add_argument("--top_p", type=float, default=0.95, help="Top p for sampling")
     parser.add_argument(
-        "--max_tokens", type=int, default=1200, help="Max tokens for sampling"
+        "--max_tokens", type=int, default=2000, help="Max tokens for sampling"
     )
     parser.add_argument(
         "--multiprocess",
@@ -98,6 +103,12 @@ def get_args():
         type=str,
         default=None,
         help="Path to the custom output file used in `custom_evaluator.py`",
+    )
+    parser.add_argument(
+        '--custom_output_save_name',
+        type=str,
+        default=None,
+        help="Folder name to save the custom output results (output file folder modified if None)"
     )
     parser.add_argument("--dtype", type=str, default="bfloat16", help="Dtype for vllm")
 

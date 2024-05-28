@@ -18,11 +18,12 @@ class VLLMRunner(BaseRunner):
             model=model_tokenizer_path,
             tokenizer=model_tokenizer_path,
             tensor_parallel_size=args.tensor_parallel_size,
-            dtype=args.dtype,
+            # dtype=args.dtype,
             enforce_eager=True,
             max_model_len=4096,
             disable_custom_all_reduce=False,
             enable_prefix_caching=args.enable_prefix_caching,
+            trust_remote_code=args.trust_remote_code,
         )
         self.sampling_params = SamplingParams(
             n=self.args.n,
