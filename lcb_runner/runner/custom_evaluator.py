@@ -40,21 +40,21 @@ def main():
             assert all(
                 isinstance(custom_output, dict) for custom_output in custom_outputs
             )
-            if isinstance(args.scenario, (Scenario.codegeneration, Scenario.selfrepair)):
+            if args.scenario in [Scenario.codegeneration, Scenario.selfrepair]:
                 custom_outputs = [
                     custom_output["code_list"]
                     for custom_output in sorted(
                         custom_outputs, key=lambda x: str(x["question_id"])
                     )
                 ]
-            elif isinstance(args.scenario, Scenario.testoutputprediction):
+            elif args.scenario == Scenario.testoutputprediction:
                 custom_outputs = [
                     custom_output['pred_list']
                     for custom_output in sorted(
                         custom_outputs, key=lambda x: (str(x["question_id"]), str(x['test_id']))
                     )
                 ]
-            elif isinstance(args.scenario, Scenario.codeexecution):
+            elif args.scenario == Scenario.codeexecution:
                 custom_outputs = [
                     custom_output['pred_list']
                     for custom_output in sorted(
