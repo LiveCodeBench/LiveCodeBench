@@ -42,7 +42,7 @@ def main():
             old_save_results = []
 
         old_save_results_question_ids = [
-            instance["question_id"] for instance in old_save_results
+            instance["question_id"] for instance in old_save_results if instance['output_list'] and [x for x in instance['output_list'] if x]
         ]
         remaining_benchmark = [
             instance
@@ -69,6 +69,7 @@ def main():
     save_results = [
         instance.insert_output(outputs_list, extracted_list)
         for instance, (outputs_list, extracted_list) in zip(remaining_benchmark, combined_results)
+        if [x for x in outputs_list if x]
     ]
 
     if args.continue_existing or args.continue_existing_with_eval:
@@ -122,7 +123,6 @@ def main():
                     for key in metrics[0]['detail']:
                         metrics[0]['detail'][key] = {**metrics[0]['detail'][key], **old_eval_results[0]['detail'][key]}
                     metrics[1] = {**metrics[1], **old_eval_results[1]}
-                    metrics[2] = old_eval_results[2] + metrics[2]
                 else:
                     print("Old eval file not present, cannot update eval file")
                     metrics = {}
@@ -144,6 +144,7 @@ def main():
                     benchmark, combined_results, graded, metadatas
                 )
             ]
+            metrics[2] = old_eval_results[2] + metrics[2]
         elif args.scenario == Scenario.selfrepair:
             metadatas = metrics[2]
             with open(
