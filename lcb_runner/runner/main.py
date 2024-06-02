@@ -26,7 +26,7 @@ def main():
 
     output_path = get_output_path(model.model_repr, args)
 
-    if args.continue_existing:
+    if args.continue_existing or args.continue_existing_with_eval:
         if os.path.exists(output_path):
             with open(output_path, "r") as f:
                 old_save_results = json.load(f)
@@ -63,10 +63,10 @@ def main():
 
     save_results = [
         instance.insert_output(outputs_list, extracted_list)
-        for instance, (outputs_list, extracted_list) in zip(benchmark, combined_results)
+        for instance, (outputs_list, extracted_list) in zip(remaining_benchmark, combined_results)
     ]
 
-    if args.continue_existing:
+    if args.continue_existing or args.continue_existing_with_eval:
         save_results += old_save_results
 
     save_results, combined_results = sort_and_extract_save_results(
@@ -78,8 +78,45 @@ def main():
 
     if args.evaluate:
         # TODO: we can add --continue_existing_evaluation flag to continue from existing evaluation
-        metrics = get_metrics(args.scenario, args, benchmark, combined_results)
-        graded = extract_instance_results(metrics[1])
+        eval_file = output_path.replace(".json", "_eval.json")
+        eval_all_file = output_path.replace(".json", "_eval_all.json")
+        if args.continue_existing_with_eval:
+            if os.path.exists(eval_file) and os.path.exists(eval_all_file):
+                with open(eval_file) as fp:
+                    old_eval_results = json.load(fp)
+                with open(eval_all_file) as fp:
+                    old_eval_all_results = json.load(fp)
+
+                old_eval_results_question_ids = [
+                    instance["question_id"] for instance in old_eval_all_results
+                ]
+                remaining_indices = [
+                    idx for idx in range(len(benchmark)) if benchmark[idx].question_id not in old_eval_results_question_ids
+                ]
+                benchmark = [benchmark[idx] for idx in remaining_indices]
+                combined_results = [combined_results[idx] for idx in remaining_indices]
+
+
+                old_eval_size = len(old_eval_results_question_ids)
+                new_eval_size = len(benchmark)
+
+                print(f"Found {old_eval_size}, running evals for {new_eval_size} problems")
+
+                metrics = get_metrics(args.scenario, args, benchmark, combined_results)
+                graded = extract_instance_results(metrics[1])
+
+                for key in metrics[0]:
+                    if key!="detail":
+                        metrics[0][key] = old_eval_size*old_eval_results[0][key] + new_eval_size*metrics[0][key]
+                        metrics[0][key]/= (old_eval_size+new_eval_size)
+                for key in metrics[0]['detail']:
+                    metrics[0]['detail'][key] = {**metrics[0]['detail'][key], **old_eval_results[0]['detail'][key]}
+                metrics[1] = {**metrics[1], **old_eval_results[1]}
+                metrics[2] = old_eval_results[2] + metrics[2]
+        else:
+            metrics = get_metrics(args.scenario, args, benchmark, combined_results)
+            graded = extract_instance_results(metrics[1])
+            old_eval_all_results = []
 
         if args.scenario == Scenario.codegeneration:
             metadatas = metrics[2]
@@ -126,11 +163,13 @@ def main():
                     benchmark, combined_results, graded
                 )
             ]
+        
+        save_eval_results = old_eval_all_results + save_eval_results
 
-        with open(output_path.replace(".json", "_eval.json"), "w") as f:
+        with open(eval_file, "w") as f:
             json.dump(metrics, f, indent=4)
 
-        with open(output_path.replace(".json", "_eval_all.json"), "w") as f:
+        with open(eval_all_file, "w") as f:
             json.dump(save_eval_results, f, indent=4)
 
 

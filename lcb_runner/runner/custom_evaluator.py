@@ -74,12 +74,26 @@ def main():
     metrics = get_metrics(args.scenario, args, benchmark, combined_results)
     graded = extract_instance_results(metrics[1])
 
-    save_eval_results = [
-        instance.insert_output_evaluation(outputs_list, extracted_list, graded_list)
-        for instance, (outputs_list, extracted_list), graded_list in zip(
-            benchmark, combined_results, graded
-        )
-    ]
+    if args.scenario == Scenario.codegeneration:
+        metadatas = metrics[2]
+        save_eval_results = [
+            instance.insert_output_evaluation(
+                outputs_list, extracted_list, graded_list, metadata=meta
+            )
+            for instance, (outputs_list, extracted_list), graded_list, meta in zip(
+                benchmark, combined_results, graded, metadatas
+            )
+        ]
+    else:
+        save_eval_results = [
+            instance.insert_output_evaluation(
+                outputs_list, extracted_list, graded_list
+            )
+            for instance, (outputs_list, extracted_list), graded_list in zip(
+                benchmark, combined_results, graded
+            )
+        ]
+    
 
     if args.custom_output_save_name is None:
         output_path = args.custom_output_file[:-5] + f"_{args.scenario.value}_output.json"

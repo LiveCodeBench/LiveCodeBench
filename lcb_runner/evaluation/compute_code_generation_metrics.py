@@ -177,4 +177,4 @@ def codegen_metrics(
             generations[0]
         ), f"{len(final_metadata[i])=}"
 
-    return metrics, results, final_metadata
+    return [metrics, results, final_metadata]

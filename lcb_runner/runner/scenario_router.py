@@ -181,9 +181,10 @@ def get_metrics(
     ],
     combined_results,
 ):
+    eval_samples = [instance.get_evaluation_sample() for instance in benchmark]
+    generations = [extracted for _, extracted in combined_results]
+
     if scenario == Scenario.codegeneration or scenario == Scenario.selfrepair:
-        eval_samples = [instance.get_evaluation_sample() for instance in benchmark]
-        generations = [extracted for _, extracted in combined_results]
         metrics = codegen_metrics(
             eval_samples,
             generations,
@@ -192,8 +193,6 @@ def get_metrics(
         )
 
     elif args.scenario == Scenario.testoutputprediction:
-        eval_samples = [instance.get_evaluation_sample() for instance in benchmark]
-        generations = [extracted for _, extracted in combined_results]
         metrics = test_output_metrics(
             eval_samples,
             generations,
@@ -201,10 +200,6 @@ def get_metrics(
         )
 
     elif args.scenario == Scenario.codeexecution:
-        eval_samples = [instance.get_evaluation_sample() for instance in benchmark]
-        generations = [extracted for _, extracted in combined_results]
-        for g in generations:
-            print(g)
         metrics = code_execution_metrics(
             eval_samples,
             generations,

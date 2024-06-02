@@ -85,12 +85,14 @@ For running self repair, you need to provide an additional `--codegen_n` flag th
 python -m lcb_runner.runner.main --model {model_name --scenario selfrepair --codegen_n {num_codes_codegen} --n 1 # only n=1 supported
 ```
 
-In case you generated metadata with previour version of the codebase, you might get missing keys exception. 
-You can run the following command to rerun the metadata generation
+In case you have results on a smaller subset or version of the benchmark, you can use `--continue_existing` and `--continue_existing_with_eval` flags to reuse the old computations. Particularly, you can run the following command to continue from existing generated solutions.
 
 ```bash
 python -m lcb_runner.runner.main --model {model_name} --scenario selfrepair --evaluate --continue_existing
 ```
+
+Note that this will only reuse the generated samples and rerun evaluations. To reuse the old evaluations, you can add the `--continue_existing_with_eval` flag.
+
 ### Test Output Prediction
 For running the test output prediction scenario you can simply run
 

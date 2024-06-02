@@ -53,4 +53,4 @@ def code_execution_metrics(
         for _r in r:
             r_new.append([_r])
         results[i] = r_new
-    return metrics, results
+    return [metrics, results]

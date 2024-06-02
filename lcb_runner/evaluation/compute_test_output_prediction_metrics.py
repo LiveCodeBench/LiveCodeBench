@@ -97,4 +97,4 @@ def test_output_metrics(
 
     metrics = compute_metrics_from_results(results, k_list=k_list)
 
-    return metrics, results
+    return [metrics, results]
