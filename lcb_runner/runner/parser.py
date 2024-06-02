@@ -37,7 +37,7 @@ def get_args():
     )
     parser.add_argument(
         "--release_version",
-        type="str",
+        type=str,
         default="release_v1",
         help="whether to use full set of tests (slower and more memory intensive evaluation)",
     )

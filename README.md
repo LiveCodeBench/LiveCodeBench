@@ -118,6 +118,15 @@ Alternatively, you can using [`lcb_runner/runner/custom_evaluator.py`](./lcb_run
 python -m lcb_runner.runner.custom_evaluator --custom_output_file {path_to_custom_outputs}
 ```
 
+Particularly, arrange the outputs in the following format
+
+```json
+[
+    {"question_id": "id1", "code_list": ["code1", "code2"]},
+    {"question_id": "id2", "code_list": ["code1", "code2"]}
+]
+```
+
 
 ## Adding Support for New Models
 
