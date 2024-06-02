@@ -374,7 +374,7 @@ LanguageModelList: list[LanguageModel] = [
         link="https://docs.cohere.com/docs/models",
     ),
     LanguageModel(
-        "command-r+",
+        "command-r-plus",
         "Command-R+",
         LMStyle.CohereCommand,
         datetime(2023, 1, 1),
