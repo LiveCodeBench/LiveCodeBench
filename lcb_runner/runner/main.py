@@ -25,10 +25,15 @@ def main():
         benchmark = benchmark[:5]
 
     output_path = get_output_path(model.model_repr, args)
+    eval_file = output_path.replace(".json", "_eval.json")
+    eval_all_file = output_path.replace(".json", "_eval_all.json")
 
     if args.continue_existing or args.continue_existing_with_eval:
         if os.path.exists(output_path):
             with open(output_path, "r") as f:
+                old_save_results = json.load(f)
+        elif os.path.exists(eval_all_file):
+            with open(eval_all_file, "r") as f:
                 old_save_results = json.load(f)
         else:
             print(
@@ -77,15 +82,16 @@ def main():
         json.dump(save_results, f, indent=4)
 
     if args.evaluate:
-        # TODO: we can add --continue_existing_evaluation flag to continue from existing evaluation
-        eval_file = output_path.replace(".json", "_eval.json")
-        eval_all_file = output_path.replace(".json", "_eval_all.json")
         if args.continue_existing_with_eval:
-            if os.path.exists(eval_file) and os.path.exists(eval_all_file):
-                with open(eval_file) as fp:
-                    old_eval_results = json.load(fp)
+            if os.path.exists(eval_all_file):
                 with open(eval_all_file) as fp:
                     old_eval_all_results = json.load(fp)
+
+                if os.path.exists(eval_file):
+                    with open(eval_file) as fp:
+                        old_eval_results = json.load(fp)
+                else:
+                    old_eval_results = None
 
                 old_eval_results_question_ids = [
                     instance["question_id"] for instance in old_eval_all_results
@@ -100,26 +106,36 @@ def main():
                 old_eval_size = len(old_eval_results_question_ids)
                 new_eval_size = len(benchmark)
 
+                if new_eval_size == 0:
+                    return
+
                 print(f"Found {old_eval_size}, running evals for {new_eval_size} problems")
 
                 metrics = get_metrics(args.scenario, args, benchmark, combined_results)
                 graded = extract_instance_results(metrics[1])
 
-                for key in metrics[0]:
-                    if key!="detail":
-                        metrics[0][key] = old_eval_size*old_eval_results[0][key] + new_eval_size*metrics[0][key]
-                        metrics[0][key]/= (old_eval_size+new_eval_size)
-                for key in metrics[0]['detail']:
-                    metrics[0]['detail'][key] = {**metrics[0]['detail'][key], **old_eval_results[0]['detail'][key]}
-                metrics[1] = {**metrics[1], **old_eval_results[1]}
-                metrics[2] = old_eval_results[2] + metrics[2]
+                if old_eval_results:
+                    for key in metrics[0]:
+                        if key!="detail":
+                            metrics[0][key] = old_eval_size*old_eval_results[0][key] + new_eval_size*metrics[0][key]
+                            metrics[0][key]/= (old_eval_size+new_eval_size)
+                    for key in metrics[0]['detail']:
+                        metrics[0]['detail'][key] = {**metrics[0]['detail'][key], **old_eval_results[0]['detail'][key]}
+                    metrics[1] = {**metrics[1], **old_eval_results[1]}
+                    metrics[2] = old_eval_results[2] + metrics[2]
+                else:
+                    print("Old eval file not present, cannot update eval file")
+                    metrics = {}
         else:
             metrics = get_metrics(args.scenario, args, benchmark, combined_results)
             graded = extract_instance_results(metrics[1])
             old_eval_all_results = []
 
         if args.scenario == Scenario.codegeneration:
-            metadatas = metrics[2]
+            if metrics:
+                metadatas = metrics[2]
+            else:
+                metadatas = [[] for _ in benchmark]
             save_eval_results = [
                 instance.insert_output_evaluation(
                     outputs_list, extracted_list, graded_list, metadata=meta
