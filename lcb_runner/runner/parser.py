@@ -36,6 +36,12 @@ def get_args():
         help="whether to use full set of tests (slower and more memory intensive evaluation)",
     )
     parser.add_argument(
+        "--release_version",
+        type="str",
+        default="release_v1",
+        help="whether to use full set of tests (slower and more memory intensive evaluation)",
+    )
+    parser.add_argument(
         "--cot_code_execution",
         action="store_true",
         help="whether to use CoT in code execution scenario",
@@ -69,6 +75,7 @@ def get_args():
         help="Stop token (use `,` to separate multiple tokens)",
     )
     parser.add_argument("--continue_existing", action="store_true")
+    parser.add_argument("--continue_existing_with_eval", action="store_true")
     parser.add_argument(
         "--use_cache", action="store_true", help="Use cache for generation"
     )
