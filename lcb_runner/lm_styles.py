@@ -263,21 +263,21 @@ LanguageModelList: list[LanguageModel] = [
     ),
     LanguageModel(
         "gemini-1.5-pro-undefined",
-        "Gemini-Pro-1.5 (April) (n=1)",
+        "Gemini-Pro-1.5-April (n=1)",
         LMStyle.Gemini,
         datetime(2023, 4, 30),
         link="https://blog.google/technology/ai/gemini-api-developers-cloud",
     ),
     LanguageModel(
         "gemini-1.5-pro-latest",
-        "Gemini-Pro-1.5 (May)",
+        "Gemini-Pro-1.5-May",
         LMStyle.Gemini,
         datetime(2023, 4, 30),
         link="https://blog.google/technology/ai/gemini-api-developers-cloud",
     ),
     LanguageModel(
         "gemini-1.5-flash-latest",
-        "Gemini-Flash-1.5 (n=1)",
+        "Gemini-Flash-1.5-May",
         LMStyle.Gemini,
         datetime(2023, 4, 30),
         link="https://blog.google/technology/ai/gemini-api-developers-cloud",
@@ -358,6 +358,13 @@ LanguageModelList: list[LanguageModel] = [
         LMStyle.MistralWeb,
         datetime(2023, 1, 1),
         link="https://mistral.ai/news/mixtral-8x7b/",
+    ),
+    LanguageModel(
+        "codestral-latest",
+        "Codestral-Latest",
+        LMStyle.MistralWeb,
+        datetime(2023, 1, 1),
+        link="https://mistral.ai/news/codestral/",
     ),
     LanguageModel(
         "command-r",

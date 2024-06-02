@@ -14,10 +14,19 @@ def build_runner(args, model: LanguageModel):
         from lcb_runner.runner.claude3_runner import Claude3Runner
 
         return Claude3Runner(args, model)
+    if model.model_style == LMStyle.Claude:
+        from lcb_runner.runner.claude_runner import ClaudeRunner
+
+        return ClaudeRunner(args, model)
+    if model.model_style == LMStyle.MistralWeb:
+        from lcb_runner.runner.mistral_runner import MistralRunner
+
+        return MistralRunner(args, model)
+    if model.model_style == LMStyle.CohereCommand:
+        from lcb_runner.runner.cohere_runner import CohereRunner
+
+        return CohereRunner(args, model)
     elif model.model_style in [
-        LMStyle.Claude,
-        LMStyle.Gemini,
-        LMStyle.MistralWeb,
     ]:
         raise NotImplementedError(
             f"Runner for language model style {model.model_style} not implemented yet"

@@ -246,7 +246,7 @@ def format_prompt_generation(
             padding=False,
         )
 
-    if LanguageModelStyle == LMStyle.Claude3:
+    if LanguageModelStyle == LMStyle.Claude:
         prompt = f"{HUMAN_PROMPT}\n"
         prompt += f"{PromptConstants.SYSTEM_MESSAGE_GENERIC}\n\n"
         prompt += f"{get_generic_question_template_answer(question).rstrip()}\n"
@@ -285,6 +285,16 @@ def format_prompt_generation(
             },
         ]
         return chat_messages
+
+    if LanguageModelStyle == LMStyle.CohereCommand:
+        chat_messages = [
+            {
+                "role": "System",
+                "message": PromptConstants.SYSTEM_MESSAGE_GENERIC,
+            },
+        ]
+        message = get_generic_question_template_answer(question)
+        return chat_messages, message
 
     if LanguageModelStyle == LMStyle.DeepSeekCodeInstruct:
         prompt = f"{PromptConstants.SYSTEM_MESSAGE_DEEPSEEK}\n\n"
