@@ -52,7 +52,7 @@ class GeminiRunner(BaseRunner):
                 )
             except Exception as e:
                 print("Exception: ", repr(e), "Sleeping for 20 seconds...")
-                sleep(20 * (6 - counter))
+                sleep(20 * (11 - counter))
                 counter = counter - 1
                 if counter == 0:
                     print(f"Failed to run model for {prompt}!")

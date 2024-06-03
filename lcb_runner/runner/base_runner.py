@@ -155,7 +155,7 @@ class BaseRunner(ABC):
 
         return outputs
 
-    def run_main(self, benchmark: list, format_prompt: callable) -> list:
+    def run_main(self, benchmark: list, format_prompt: callable) -> list[list[str]]:
         if self.args.scenario == Scenario.selfrepair:
             return self.run_main_repair(format_prompt)
 
