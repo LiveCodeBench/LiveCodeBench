@@ -63,7 +63,6 @@ def main():
     if len(remaining_benchmark) > 0:
         runner = build_runner(args, model)
         results: list[list[str]] = runner.run_main(remaining_benchmark, format_prompt)
-        results = [x for x in results if x]
     else:
         results = []
 
