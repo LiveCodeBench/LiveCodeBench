@@ -134,6 +134,7 @@ def main():
             metrics = get_metrics(args.scenario, args, benchmark, combined_results)
             graded = extract_instance_results(metrics[1])
             old_eval_all_results = []
+            old_eval_results = []
 
         if args.scenario == Scenario.codegeneration:
             if metrics:
@@ -148,7 +149,8 @@ def main():
                     benchmark, combined_results, graded, metadatas
                 )
             ]
-            if metrics:
+            if metrics and old_eval_results:
+                old_eval_results
                 metrics[2] = old_eval_results[2] + metrics[2]
         elif args.scenario == Scenario.selfrepair:
             metadatas = metrics[2]
