@@ -196,7 +196,7 @@ def format_prompt_self_repair(
             {
                 "role": "user",
                 "content": get_generic_question_template_answer(
-                    question, code, result
+                    question, code, result, metadata
                 ).rstrip(),
             }
         ]
@@ -211,7 +211,7 @@ def format_prompt_self_repair(
         chat_messages += [
             {
                 "role": "user",
-                "content": get_generic_question_template_answer(question, code, result),
+                "content": get_generic_question_template_answer(question, code, result, metadata),
             },
         ]
         return chat_messages

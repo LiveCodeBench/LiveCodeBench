@@ -17,7 +17,7 @@ class ClaudeRunner(BaseRunner):
         self.client_kwargs: dict[str | str] = {
             "model": args.model,
             "temperature": args.temperature,
-            "max_tokens": args.max_tokens,
+            "max_tokens_to_sample": args.max_tokens,
             "top_p": args.top_p,
         }
 
@@ -29,7 +29,7 @@ class ClaudeRunner(BaseRunner):
                     prompt=prompt,
                     **self.client_kwargs,
                 )                                
-                content = "\n".join([x.text for x in response.content])
+                content = response.completion
                 return content
             except Exception as e:
                 print("Exception: ", repr(e), "Sleeping for 20 seconds...")

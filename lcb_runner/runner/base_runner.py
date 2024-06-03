@@ -111,7 +111,7 @@ class BaseRunner(ABC):
             outputs = self.run_batch(prompts)
         return outputs
 
-    def run_main_repair(self, format_prompt: callable) -> list[list[str]]:
+    def run_main_repair(self, benchmark: list, format_prompt: callable) -> list[list[str]]:
         assert self.args.n == 1
         with open(
             f"output/{self.model.model_repr}/{Scenario.codegeneration}_{self.args.codegen_n}_{self.args.temperature}_eval_all.json"
@@ -120,32 +120,38 @@ class BaseRunner(ABC):
 
         outputs = [
             [None for _ in range(self.args.codegen_n)]
-            for _ in range(len(check_metadata_list))
+            for _ in range(len(benchmark))
         ]
         prompts = []
         prompt_index_to_question_idx = {}
         prompt_index_to_code_idx = {}
+        count = 0
 
-        for check_metadata_idx, check_metadata in enumerate(check_metadata_list):
-            question_content = check_metadata["question_content"]
-            code_list = check_metadata["code_list"]
-            output_list = check_metadata["output_list"]
-            graded_list = check_metadata["graded_list"]
-            metadata = check_metadata["metadata"]
-            for code_idx in range(len(code_list)):
-                prompt = format_prompt(
-                    question_content,
-                    self.model.model_style,
-                    code_list[code_idx],
-                    graded_list[code_idx],
-                    metadata[code_idx],
-                )
-                if prompt == "":
-                    outputs[check_metadata_idx][code_idx] = output_list[code_idx]
-                    continue
-                prompts.append(prompt)
-                prompt_index_to_question_idx[len(prompts) - 1] = check_metadata_idx
-                prompt_index_to_code_idx[len(prompts) - 1] = code_idx
+        for problem_idx, problem in enumerate(benchmark):
+            for check_metadata_idx, check_metadata in enumerate(check_metadata_list):
+                if problem.question_id == check_metadata['question_id']:
+                    count += 1 
+                    question_content = check_metadata["question_content"]
+                    code_list = check_metadata["code_list"]
+                    output_list = check_metadata["output_list"]
+                    graded_list = check_metadata["graded_list"]
+                    metadata = check_metadata["metadata"]
+                    for code_idx in range(len(code_list)):
+                        prompt = format_prompt(
+                            question_content,
+                            self.model.model_style,
+                            code_list[code_idx],
+                            graded_list[code_idx],
+                            metadata[code_idx],
+                        )
+                        if prompt == "":
+                            outputs[problem_idx][code_idx] = output_list[code_idx]
+                            continue
+                        prompts.append(prompt)
+                        prompt_index_to_question_idx[len(prompts) - 1] = problem_idx
+                        prompt_index_to_code_idx[len(prompts) - 1] = code_idx
+
+        assert len(benchmark)==count, f"{len(benchmark)=}!={count=}"
 
         prompt_outputs = self.prompts_to_outputs(prompts)
         for prompt_idx, output in enumerate(prompt_outputs):
@@ -157,7 +163,7 @@ class BaseRunner(ABC):
 
     def run_main(self, benchmark: list, format_prompt: callable) -> list[list[str]]:
         if self.args.scenario == Scenario.selfrepair:
-            return self.run_main_repair(format_prompt)
+            return self.run_main_repair(benchmark, format_prompt)
 
         prompts = [
             format_prompt(problem, self.model.model_style) for problem in benchmark

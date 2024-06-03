@@ -37,7 +37,7 @@ class MistralRunner(BaseRunner):
                 print("Exception: ", repr(e), "Sleeping for 20 seconds...")
                 sleep(20 * (11 - counter))
                 counter = counter - 1
-                if counter == 0:[]
+                if counter == 0:
                     print(f"Failed to run model for {prompt}!")
                     print("Exception: ", repr(e))
                     raise e
