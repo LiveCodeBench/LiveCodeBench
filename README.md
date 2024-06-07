@@ -77,7 +77,7 @@ python -m lcb_runner.evaluation.compute_scores --eval_all_file {saved_eval_all_f
 
 **NOTE: We have pruned a large number of test cases from the original benchmark and created `code_generation_lite` which is set as the default benchmark offering similar performance estimation much faster. If you wish to use the original benchmark, please use the `--not_fast` flag. We are in the process of updating the leaderboard scores with this updated setting.** 
 
-**NOTE: V2 Update: to run the update LiveCodeBench please use `--release_version release_v2`. In addition, if you have existing results from `release_v1` you can add `--continue_existing` or better `--continue_existing_with_eval` flags to reuse the old completions or evaluations respectively. 
+**NOTE: V2 Update: to run the update LiveCodeBench please use `--release_version release_v2`. In addition, if you have existing results from `release_v1` you can add `--continue_existing` or better `--continue_existing_with_eval` flags to reuse the old completions or evaluations respectively.**
 
 
 ### Self Repair
