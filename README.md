@@ -65,7 +65,7 @@ We use a modified version of the checker released with the [`apps` benchmark](ht
 python -m lcb_runner.runner.main --model {model_name} --scenario codegeneration --evaluate
 ```
 
-Note that time limits can cause a slight (`< 0.3`) points of variation in the computation of the `pass@1` and `pass@5` metrics.
+Note that time limits can cause slight (`< 0.5`) points of variation in the computation of the `pass@1` and `pass@5` metrics.
 If you observe a significant variation in performance, adjust the `--num_process_evaluate` flag to a lower value or increase the `--timeout` flag. Please report particular issues caused by improper timeouts here. 
 
 Finally, to get scores over different time windows, you can use [./lcb_runner/evaluation/compute_scores.py](./lcb_runner/evaluation/compute_scores.py) file. 
@@ -75,7 +75,9 @@ Particularly, you can provide `--start_date` and `--end_date` flags (using the `
 python -m lcb_runner.evaluation.compute_scores --eval_all_file {saved_eval_all_file} --start_date 2023-09-01
 ```
 
-**NOTE: We have pruned a large number of test cases from the orignal benchmark and created `code_generation_lite` which is set as the default benchmark offering similar performance estimation much faster. If you wish to use the original benchmark, please use the `--not_fast` flag. We are in the process of updating the leaderboard scores with this updated setting.** 
+**NOTE: We have pruned a large number of test cases from the original benchmark and created `code_generation_lite` which is set as the default benchmark offering similar performance estimation much faster. If you wish to use the original benchmark, please use the `--not_fast` flag. We are in the process of updating the leaderboard scores with this updated setting.** 
+
+**NOTE: V2 Update: to run the update LiveCodeBench please use `--release_version release_v2`. In addition, if you have existing results from `release_v1` you can add `--continue_existing` or better `--continue_existing_with_eval` flags to reuse the old completions or evaluations respectively. 
 
 
 ### Self Repair
