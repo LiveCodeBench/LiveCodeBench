@@ -13,12 +13,17 @@ from lcb_runner.runner.scenario_router import (
     sort_and_extract_save_results,
     get_metrics,
 )
+from lcb_runner.runner.http_api_runner import HttpAPIRunner
 
 
 def main():
     args = get_args()
 
     model = LanguageModelStore[args.model]
+    if args.model_type == 'http_api':
+        model_name = model.model_name
+        runner = HttpAPIRunner(api_url=args.api_url, api_key=args.api_key, model_name=model_name, num_samples=args.n)
+        
     benchmark, format_prompt = build_prompt_benchmark(args)
     if args.debug:
         print(f"Running with {len(benchmark)} instances in debug mode")
@@ -61,8 +66,13 @@ def main():
         remaining_benchmark = benchmark
 
     if len(remaining_benchmark) > 0:
-        runner = build_runner(args, model)
-        results: list[list[str]] = runner.run_main(remaining_benchmark, format_prompt)
+        if args.model_type == 'http_api':
+            def format_prompt_wrapper(sample):
+                return format_prompt(sample, model.model_style)
+            results = runner.run([format_prompt_wrapper(sample) for sample in remaining_benchmark])
+        else:
+            runner = build_runner(args, model)
+            results: list[list[str]] = runner.run_main(remaining_benchmark, format_prompt)
     else:
         results = []
 

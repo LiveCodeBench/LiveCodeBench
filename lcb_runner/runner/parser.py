@@ -20,6 +20,24 @@ def get_args():
         help="If you have a local model, specify it here in conjunction with --model",
     )
     parser.add_argument(
+        "--model_type", 
+        type=str, 
+        choices=["vllm", "http_api"], 
+        required=True, 
+        help="Type of the model"
+    )
+    parser.add_argument(
+        '--api_url', 
+        type=str, 
+        help="API URL for the model if using HTTP API-based inference"
+    )
+    parser.add_argument(
+        '--api_key', 
+        type=str, 
+        default="sk-123456", 
+        help="Parameters of the OpenAI Style API, used to verify the identity of the request and authorize access."
+    )
+    parser.add_argument(
         "--trust_remote_code",
         action="store_true",
         help="trust_remote_code option used in huggingface models"
@@ -118,6 +136,7 @@ def get_args():
         help="Folder name to save the custom output results (output file folder modified if None)"
     )
     parser.add_argument("--dtype", type=str, default="bfloat16", help="Dtype for vllm")
+    parser.add_argument("--kv_cache_dtype", type=str, default="fp8", help="kv-cache-dtype for vllm")
 
     args = parser.parse_args()
 
