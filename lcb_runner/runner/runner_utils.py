@@ -26,6 +26,10 @@ def build_runner(args, model: LanguageModel):
         from lcb_runner.runner.cohere_runner import CohereRunner
 
         return CohereRunner(args, model)
+    elif args.model_type == "http_api":
+        from lcb_runner.runner.http_api_runner import HttpAPIRunner
+        
+        return HttpAPIRunner(args, model)
     elif model.model_style in [
     ]:
         raise NotImplementedError(
