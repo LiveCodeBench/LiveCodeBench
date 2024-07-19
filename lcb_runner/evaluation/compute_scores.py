@@ -1,8 +1,13 @@
 import json
 import argparse
+import numpy as np
 from datetime import datetime
 
 from lcb_runner.lm_styles import LanguageModelStore
+from lcb_runner.evaluation.pass_k_utils import (
+    estimate_pass_at_k,
+    compute_metrics_from_results,
+)
 from lcb_runner.utils.scenarios import Scenario
 from lcb_runner.utils.path_utils import get_eval_all_output_path
 
@@ -85,6 +90,18 @@ def compute_scores(args):
 
     if args.platform is not None:
         results = [result for result in results if result["platform"] == args.platform]
+
+    print(len(results))
+    totals = [len(x["graded_list"]) for x in results]
+    corrects = [sum(x["graded_list"]) for x in results]
+    for k in [1, 5, 10, 25, 50, 100, 150, 200]:
+        print(
+            f"Pass@{k} = ",
+            estimate_pass_at_k(totals, corrects, k).mean(),
+            # np.array(
+            #     [estimate_pass_at_k(t, c, k) for t, c in zip(totals, corrects)]
+            # ).mean(),
+        )
 
     pass_1_list = [result["pass@1"] for result in results]
     print(f"Pass@1: {sum(pass_1_list) / len(pass_1_list)}")

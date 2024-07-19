@@ -11,6 +11,7 @@ class LMStyle(Enum):
     MistralWeb = "MistralWeb"
     CohereCommand = "CohereCommand"
     DataBricks = "DataBricks"
+    DeepSeekAPI = "DeepSeekAPI"
 
     GenericBase = "GenericBase"
 
@@ -71,7 +72,7 @@ LanguageModelList: list[LanguageModel] = [
         LMStyle.LLaMa3,
         datetime(2023, 1, 1),
         link="https://huggingface.co/meta-llama/Meta-Llama-3-70B-Instruct",
-    ),    
+    ),
     LanguageModel(
         "deepseek-ai/deepseek-coder-33b-base",
         "DSCoder-33b-Base",
@@ -115,9 +116,16 @@ LanguageModelList: list[LanguageModel] = [
         link="https://huggingface.co/deepseek-ai/deepseek-coder-1.3b-instruct",
     ),
     LanguageModel(
-        "deepseek-ai/DeepSeek-V2",
+        "deepseek-chat",
         "DeepSeek-V2",
-        LMStyle.DeepSeekCodeInstruct,
+        LMStyle.DeepSeekAPI,
+        datetime(2023, 8, 1),
+        link="https://huggingface.co/deepseek-ai/DeepSeek-V2",
+    ),
+    LanguageModel(
+        "deepseek-coder",
+        "DeepSeekCoder-V2",
+        LMStyle.DeepSeekAPI,
         datetime(2023, 8, 1),
         link="https://huggingface.co/deepseek-ai/DeepSeek-V2",
     ),
@@ -220,6 +228,13 @@ LanguageModelList: list[LanguageModel] = [
         link="https://openai.com/index/spring-update",
     ),
     LanguageModel(
+        "gpt-4o-mini-2024-07-18",
+        "GPT-4O-mini-2024-07-18",
+        LMStyle.OpenAIChat,
+        datetime(2023, 4, 30),
+        link="https://openai.com/index/spring-update",
+    ),
+    LanguageModel(
         "claude-instant-1",
         "Claude-Instant-1",
         LMStyle.Claude,
@@ -246,6 +261,13 @@ LanguageModelList: list[LanguageModel] = [
         LMStyle.Claude3,
         datetime(2023, 9, 1),
         link="https://www.anthropic.com/index/claude-3",
+    ),
+    LanguageModel(
+        "claude-3-5-sonnet-20240620",
+        "Claude-3.5-Sonnet",
+        LMStyle.Claude3,
+        datetime(2024, 3, 31),
+        link="https://www.anthropic.com/news/claude-3-5-sonnet",
     ),
     LanguageModel(
         "claude-3-haiku-20240307",
@@ -281,7 +303,7 @@ LanguageModelList: list[LanguageModel] = [
         LMStyle.Gemini,
         datetime(2023, 4, 30),
         link="https://blog.google/technology/ai/gemini-api-developers-cloud",
-    ),   
+    ),
     LanguageModel(
         "databricks-dbrx-instruct",
         "DBRX-Ins",
@@ -393,7 +415,35 @@ LanguageModelList: list[LanguageModel] = [
         LMStyle.CodeQwenInstruct,
         datetime(2023, 8, 30),
         link="https://huggingface.co/Qwen/CodeQwen1.5-7B-Chat",
-    ),    
+    ),
+    LanguageModel(
+        "Qwen/Qwen2-72B",
+        "Qwen2-Base-72B",
+        LMStyle.GenericBase,
+        datetime(2023, 8, 30),
+        link="https://huggingface.co/Qwen/Qwen2-72B",
+    ),
+    LanguageModel(
+        "Qwen/Qwen2-72B-Instruct",
+        "Qwen2-Ins-72B",
+        LMStyle.CodeQwenInstruct,
+        datetime(2023, 8, 30),
+        link="https://huggingface.co/Qwen/Qwen2-72B-Instruct",
+    ),
+    LanguageModel(
+        "Qwen/Qwen2-7B",
+        "Qwen2-Base-7B",
+        LMStyle.GenericBase,
+        datetime(2023, 8, 30),
+        link="https://huggingface.co/Qwen/Qwen2-7B",
+    ),
+    LanguageModel(
+        "Qwen/Qwen2-7B-Instruct",
+        "Qwen2-Ins-7B",
+        LMStyle.CodeQwenInstruct,
+        datetime(2023, 8, 30),
+        link="https://huggingface.co/Qwen/Qwen2-7B-Instruct",
+    ),
     LanguageModel(
         "m-a-p/OpenCodeInterpreter-DS-33B",
         "OC-DS-33B",

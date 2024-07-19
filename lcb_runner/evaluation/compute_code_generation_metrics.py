@@ -150,7 +150,7 @@ def evaluate_generations(
 def codegen_metrics(
     samples,
     generations,
-    k_list=[1, 5],
+    k_list=[1, 5, 10, 50, 100, 150, 200],
     num_process_evaluate=16,
     timeout=6,
     debug=False,

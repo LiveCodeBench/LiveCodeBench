@@ -13,6 +13,8 @@ from lcb_runner.benchmarks.code_generation import CodeGenerationProblem
 class PromptConstants:
     SYSTEM_MESSAGE_GENERIC = f"You are an expert Python programmer. You will be given a question (problem specification) and will generate a correct Python program that matches the specification and passes all tests. You will NOT return anything except for the program."
 
+    SYSTEM_MESSAGE_GEMINI = f"You are an expert Python programmer. You will be given a question (problem specification) and will generate a correct Python program that matches the specification and passes all tests. You will NOT return anything except for the program. Do NOT use system calls like `exit` in the generated program."
+
     SYSTEM_MESSAGE_DEEPSEEK = f"You are an AI programming assistant, utilizing the DeepSeek Coder model, developed by DeepSeek Company, and you answer questions related to computer science."
 
     SYSTEM_MESSAGE_MAGIC = f"You are an exceptionally intelligent coding assistant that consistently delivers accurate and reliable responses to user instructions.\n\n@@ Instruction\n"
@@ -23,8 +25,10 @@ class PromptConstants:
 ```python 
 # YOUR CODE HERE
 ```"""
-    
-    SYSTEM_MESSAGE_CODEQWEN = f"<|im_start|>system\nYou are a helpful assistant.<|im_end|>\n<|im_start|>user"
+
+    SYSTEM_MESSAGE_CODEQWEN = (
+        f"<|im_start|>system\nYou are a helpful assistant.<|im_end|>\n<|im_start|>user"
+    )
 
     FORMATTING_MESSAGE_WITH_STARTER_CODE = "You will use the following starter code to write the solution to the problem and enclose your code within delimiters."
 
@@ -145,18 +149,15 @@ def get_phind_question_template_answer(question: CodeGenerationProblem):
     prompt += f"\n\n### Assistant"
     return prompt
 
+
 def get_codeqwen_question_template_answer(question: CodeGenerationProblem):
     prompt = "You will be given a question (problem specification) and will generate a correct Python program that matches the specification and passes all tests. You will NOT return anything except for the program.\n\n"
     prompt += f"Question: {question.question_content}\n\n"
     if question.starter_code:
-        prompt += (
-            f"{PromptConstants.FORMATTING_MESSAGE_WITH_STARTER_CODE}\n"
-        )
+        prompt += f"{PromptConstants.FORMATTING_MESSAGE_WITH_STARTER_CODE}\n"
         prompt += f"```python\n{question.starter_code}\n```\n\n<|im_end|>\n"
     else:
-        prompt += (
-            f"{PromptConstants.FORMATTING_WITHOUT_STARTER_CODE}\n"
-        )
+        prompt += f"{PromptConstants.FORMATTING_WITHOUT_STARTER_CODE}\n"
         prompt += f"```python\n# YOUR CODE HERE\n```\n\n<|im_end|>\n"
     prompt += f"<|im_start|>assistant\n"
     return prompt
@@ -205,7 +206,7 @@ def get_base_model_question_template_answer(question: CodeGenerationProblem):
 def format_prompt_generation(
     question: CodeGenerationProblem, LanguageModelStyle: LMStyle
 ) -> str:
-    if LanguageModelStyle == LMStyle.OpenAIChat:
+    if LanguageModelStyle in [LMStyle.OpenAIChat, LMStyle.DeepSeekAPI]:
         chat_messages = [
             {
                 "role": "system",
@@ -264,7 +265,7 @@ def format_prompt_generation(
         return system, prompt
 
     if LanguageModelStyle == LMStyle.Gemini:
-        prompt = f"{PromptConstants.SYSTEM_MESSAGE_GENERIC}\n"
+        prompt = f"{PromptConstants.SYSTEM_MESSAGE_GEMINI}\n"
         prompt += f"{get_generic_question_template_answer(question)}"
         return prompt
 
@@ -335,7 +336,7 @@ def format_prompt_generation(
         prompt = f"{PromptConstants.SYSTEM_MESSAGE_GENERIC}\n\n"
         prompt += f"{get_generic_question_template_answer(question)}"
         return prompt
-    
+
     if LanguageModelStyle == LMStyle.Eurusx:
         prompt = "[INST] Write Python code to solve the task:\n"
         prompt += f"{get_generic_question_template_answer(question)}"

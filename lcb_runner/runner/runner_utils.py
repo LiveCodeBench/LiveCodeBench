@@ -26,8 +26,11 @@ def build_runner(args, model: LanguageModel):
         from lcb_runner.runner.cohere_runner import CohereRunner
 
         return CohereRunner(args, model)
-    elif model.model_style in [
-    ]:
+    if model.model_style == LMStyle.DeepSeekAPI:
+        from lcb_runner.runner.deepseek_runner import DeepSeekRunner
+
+        return DeepSeekRunner(args, model)
+    elif model.model_style in []:
         raise NotImplementedError(
             f"Runner for language model style {model.model_style} not implemented yet"
         )
