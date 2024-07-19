@@ -6,6 +6,7 @@ import os
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
 import json
 import multiprocessing
+from collections import defaultdict
 from concurrent.futures import ProcessPoolExecutor, as_completed
 
 
@@ -148,25 +149,50 @@ def evaluate_generations(
 
 
 def codegen_metrics(
-    samples,
-    generations,
-    k_list=[1, 5, 10, 50, 100, 150, 200],
+    samples_list,
+    generations_list,
+    k_list=[1, 5, 10, 20, 40, 50, 75, 100, 125, 150, 200],
     num_process_evaluate=16,
     timeout=6,
     debug=False,
 ):
-    results, metadata = evaluate_generations(
-        samples,
-        generations,
+
+    samples_linear = []
+    generations_linear = []
+    remap_index = []
+    results = defaultdict(list)
+    metadatas = defaultdict(list)
+    for idx, (sample, generation_list) in enumerate(
+        zip(samples_list, generations_list)
+    ):
+        assert isinstance(generation_list, list), generations_list[0]
+        for generation in generation_list:
+            assert isinstance(generation, str), generations_list[0]
+            samples_linear.append(sample)
+            generations_linear.append([generation])
+            remap_index.append(idx)
+
+    print(f"Evaluating {len(samples_linear)}...")
+
+    results_linear, metadatas_linear = evaluate_generations(
+        samples_linear,
+        generations_linear,
         debug=debug,
         num_process_evaluate=num_process_evaluate,
         timeout=timeout,
     )
+
+    for idx, sub_results in sorted(results_linear.items(), key=lambda x: x[0]):
+        results[remap_index[idx]].append(sub_results[0])
+
+    for idx, sub_metadatas in sorted(metadatas_linear.items(), key=lambda x: x[0]):
+        metadatas[remap_index[idx]].append(sub_metadatas[0])
+
     metrics = compute_metrics_from_results(results, k_list=k_list)
 
     final_metadata = []
-    for key in sorted(list(metadata.keys())):
-        final_metadata.append(metadata[key])
+    for key in sorted(list(metadatas.keys())):
+        final_metadata.append(metadatas[key])
     for i in range(len(final_metadata)):
         if type(final_metadata[i]) is not list:
             final_metadata[i] = [json.dumps(final_metadata[i])]
@@ -174,7 +200,7 @@ def codegen_metrics(
             final_metadata[i] = [json.dumps(x) for x in final_metadata[i]]
 
         assert len(final_metadata[i]) == len(
-            generations[0]
+            generations_list[0]
         ), f"{len(final_metadata[i])=}"
 
     return [metrics, results, final_metadata]
