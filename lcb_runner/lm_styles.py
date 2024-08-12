@@ -341,7 +341,7 @@ LanguageModelList: list[LanguageModel] = [
     ),
     LanguageModel(
         "gemini-1.5-pro-exp-0801",
-        "Gemini-Pro-1.5-August-True",
+        "Gemini-Pro-1.5-August",
         LMStyle.Gemini,
         datetime(2023, 4, 30),
         link="https://blog.google/technology/ai/gemini-api-developers-cloud",
