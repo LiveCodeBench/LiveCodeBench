@@ -30,6 +30,8 @@ class LMStyle(Enum):
     Smaug2 = "Smaug2"
 
     LLaMa3 = "LLaMa3"
+    DracarysLlama = "DracarysLlama"
+    DracarysQwen = "DracarysQwen"
 
 
 @dataclass
@@ -597,6 +599,20 @@ LanguageModelList: list[LanguageModel] = [
         LMStyle.Eurusx,
         datetime(2023, 4, 30),
         link="https://huggingface.co/openbmb/Eurux-8x22b-nca",
+    ),
+    LanguageModel(
+        "abacusai/Dracarys-Llama-3.1-70B-Instruct",
+        "LLama3.1-70b-Ins",
+        LMStyle.DracarysLlama,
+        datetime(2023, 1, 1),
+        link="https://huggingface.co/abacusai/Dracarys-Llama-3.1-70B-Instruct",
+    ),
+    LanguageModel(
+        "abacusai/Dracarys-72B-Instruct",
+        "Qwen2-Ins-72B",
+        LMStyle.DracarysQwen,
+        datetime(2023, 1, 1),
+        link="https://huggingface.co/abacusai/Dracarys-72B-Instruct",
     ),
 ]
 
