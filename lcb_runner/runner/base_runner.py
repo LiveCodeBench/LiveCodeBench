@@ -166,7 +166,7 @@ class BaseRunner(ABC):
             return self.run_main_repair(benchmark, format_prompt)
 
         prompts = [
-            format_prompt(problem, self.model.model_style) for problem in benchmark
+            format_prompt(problem, self.model) for problem in benchmark
         ]
         outputs = self.prompts_to_outputs(prompts)
         return outputs

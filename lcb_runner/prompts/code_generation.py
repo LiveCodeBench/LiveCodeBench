@@ -6,7 +6,7 @@ except ImportError:
     HUMAN_PROMPT = None
     AI_PROMPT = None
 
-from lcb_runner.lm_styles import LMStyle
+from lcb_runner.lm_styles import LMStyle, LanguageModel
 from lcb_runner.benchmarks.code_generation import CodeGenerationProblem
 
 
@@ -204,8 +204,9 @@ def get_base_model_question_template_answer(question: CodeGenerationProblem):
 
 
 def format_prompt_generation(
-    question: CodeGenerationProblem, LanguageModelStyle: LMStyle
+    question: CodeGenerationProblem, model: LanguageModel
 ) -> str:
+    LanguageModelStyle = model.model_style
     if LanguageModelStyle in [LMStyle.OpenAIChat, LMStyle.DeepSeekAPI]:
         chat_messages = [
             {
@@ -237,7 +238,7 @@ def format_prompt_generation(
         from transformers import AutoTokenizer
 
         tokenizer = AutoTokenizer.from_pretrained(
-            "meta-llama/Meta-Llama-3-8B-Instruct", padding_side="left", use_fast=False
+            model.model_name, padding_side="left", use_fast=False
         )
         return tokenizer.apply_chat_template(
             chat_messages,
@@ -366,7 +367,7 @@ def format_prompt_generation(
         from transformers import AutoTokenizer
 
         tokenizer = AutoTokenizer.from_pretrained(
-            "mistralai/Mistral-7B-Instruct-v0.3", padding_side="left", use_fast=False
+            model.model_name, padding_side="left", use_fast=False
         )
         return tokenizer.apply_chat_template(
             chat_messages,
@@ -392,7 +393,7 @@ def format_prompt_generation(
         from transformers import AutoTokenizer
 
         tokenizer = AutoTokenizer.from_pretrained(
-            "01-ai/Yi-1.5-6B-Chat", padding_side="left", use_fast=False
+            model.model_name, padding_side="left", use_fast=False
         )
         return tokenizer.apply_chat_template(
             chat_messages,
