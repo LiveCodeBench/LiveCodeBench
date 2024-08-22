@@ -29,6 +29,7 @@ class LMStyle(Enum):
     Qwen1point5 = "Qwen1point5"
     Smaug2 = "Smaug2"
 
+    LLaMa2 = "LLaMa2"
     LLaMa3 = "LLaMa3"
     Mistral = "Mistral"
     Yi = "Yi"
@@ -47,6 +48,27 @@ class LanguageModel:
 
 
 LanguageModelList: list[LanguageModel] = [
+    LanguageModel(
+        "meta-llama/Llama-2-7b-chat-hf",
+        "Llama-2-7b-chat",
+        LMStyle.GenericBase,
+        datetime(2023, 1, 1),
+        link="https://huggingface.co/meta-llama/Llama-2-7b-chat-hf",
+    ),
+    LanguageModel(
+        "meta-llama/Llama-2-7b-chat-hf",
+        "Llama-2-7b-chat",
+        LMStyle.GenericBase,
+        datetime(2023, 1, 1),
+        link="https://huggingface.co/meta-llama/Llama-2-13b-chat-hf",
+    ),
+    LanguageModel(
+        "meta-llama/Llama-2-7b-chat-hf",
+        "Llama-2-7b-chat",
+        LMStyle.GenericBase,
+        datetime(2023, 1, 1),
+        link="https://huggingface.co/meta-llama/Llama-2-70b-chat-hf",
+    ),
     LanguageModel(
         "meta-llama/Meta-Llama-3-70B",
         "LLama3-70b-Base",
