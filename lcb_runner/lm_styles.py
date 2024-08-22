@@ -483,6 +483,13 @@ LanguageModelList: list[LanguageModel] = [
         link="https://huggingface.co/mistralai/Mistral-Large-Instruct-2407",
     ),
     LanguageModel(
+        "mistralai/Codestral-22B-v0.1",
+        "Codestral-22B-v0.1",
+        LMStyle.Mistral,
+        datetime(2023, 1, 1),
+        link="https://huggingface.co/mistralai/Codestral-22B-v0.1",
+    ),
+    LanguageModel(
         "mistral-large-latest",
         "Mistral-Large",
         LMStyle.MistralWeb,
