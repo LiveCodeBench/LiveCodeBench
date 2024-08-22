@@ -353,6 +353,38 @@ def format_prompt_generation(
     if LanguageModelStyle == LMStyle.GenericBase:
         prompt = get_base_model_question_template_answer(question)
         return prompt
+    
+    if LanguageModelStyle == LMStyle.DracarysQwen:
+        prompt = f"{PromptConstants.SYSTEM_MESSAGE_CODEQWEN}\n\n"
+        prompt += f"{get_codeqwen_question_template_answer(question)}"
+        return prompt
+
+    if LanguageModelStyle == LMStyle.DracarysLlama:
+        chat_messages = [
+            {
+                "role": "system",
+                "content": PromptConstants.SYSTEM_MESSAGE_GENERIC,
+            },
+        ]
+        chat_messages += [
+            {
+                "role": "user",
+                "content": get_generic_question_template_answer(question),
+            },
+        ]
+        from transformers import AutoTokenizer
+
+        tokenizer = AutoTokenizer.from_pretrained(
+            "abacusai/Dracarys-Llama-3.1-70B-Instruct", padding_side="right", use_fast=False
+        )
+
+        return tokenizer.apply_chat_template(
+            chat_messages,
+            tokenize=False,
+            add_generation_prompt=True,
+            truncation=False,
+            padding=False,
+        )
 
     raise NotImplementedError(
         f"LanguageModelStyle {LanguageModelStyle} not implemented"

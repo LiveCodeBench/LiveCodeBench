@@ -153,6 +153,10 @@ def format_prompt_execution_base(
             {"role": "user", "content": prompt},
         ]
         return chat_messages
+    elif LanguageModelStyle == LMStyle.DracarysLlama:
+        return prompt
+    elif LanguageModelStyle == LMStyle.DracarysQwen:
+        return prompt
     else:
         raise NotImplementedError(
             f"LanguageModelStyle {LanguageModelStyle} not implemented"
