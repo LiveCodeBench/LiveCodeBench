@@ -3,6 +3,7 @@ import json
 import sys
 import faulthandler
 import platform
+import resource
 
 # used for debugging to time steps
 from datetime import datetime
@@ -87,6 +88,9 @@ def run_test(sample, test=None, debug=False, timeout=6):
     """
     # Disable functionalities that can make destructive changes to the test.
     reliability_guard()
+
+    # Disable dumping core files to prevent excessive disk usage in the case of generated code causing a core dump
+    resource.setrlimit(resource.RLIMIT_CORE, (0, 0))
 
     if debug:
         print(f"start = {datetime.now().time()}")
@@ -688,8 +692,6 @@ def reliability_guard(maximum_memory_bytes=None):
     """
 
     if maximum_memory_bytes is not None:
-        import resource
-
         resource.setrlimit(
             resource.RLIMIT_AS, (maximum_memory_bytes, maximum_memory_bytes)
         )
