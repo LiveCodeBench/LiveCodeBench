@@ -42,11 +42,12 @@ def main():
             old_save_results = []
 
         old_save_results = [
-            instance for instance in old_save_results
-            if instance['output_list'] and [x for x in instance['output_list'] if x]
+            instance
+            for instance in old_save_results
+            if instance["output_list"] and [x for x in instance["output_list"] if x]
         ]
         old_save_results_question_ids = [
-            instance["question_id"] for instance in old_save_results 
+            instance["question_id"] for instance in old_save_results
         ]
         remaining_benchmark = [
             instance
@@ -72,7 +73,9 @@ def main():
 
     save_results = [
         instance.insert_output(outputs_list, extracted_list)
-        for instance, (outputs_list, extracted_list) in zip(remaining_benchmark, combined_results)
+        for instance, (outputs_list, extracted_list) in zip(
+            remaining_benchmark, combined_results
+        )
     ]
 
     if args.continue_existing or args.continue_existing_with_eval:
@@ -100,11 +103,12 @@ def main():
                 instance["question_id"] for instance in old_eval_all_results
             ]
             remaining_indices = [
-                idx for idx in range(len(benchmark)) if benchmark[idx].question_id not in old_eval_results_question_ids
+                idx
+                for idx in range(len(benchmark))
+                if benchmark[idx].question_id not in old_eval_results_question_ids
             ]
             benchmark = [benchmark[idx] for idx in remaining_indices]
             combined_results = [combined_results[idx] for idx in remaining_indices]
-
 
             old_eval_size = len(old_eval_results_question_ids)
             new_eval_size = len(benchmark)
@@ -119,11 +123,20 @@ def main():
 
             if old_eval_results:
                 for key in metrics[0]:
-                    if key!="detail":
-                        metrics[0][key] = old_eval_size*old_eval_results[0][key] + new_eval_size*metrics[0][key]
-                        metrics[0][key]/= (old_eval_size+new_eval_size)
-                for key in metrics[0]['detail']:
-                    metrics[0]['detail'][key] = {**metrics[0]['detail'][key], **old_eval_results[0]['detail'][key]}
+                    if key in old_eval_results[0]:
+                        if key != "detail":
+                            metrics[0][key] = (
+                                old_eval_size * old_eval_results[0][key]
+                                + new_eval_size * metrics[0][key]
+                            )
+                            metrics[0][key] /= old_eval_size + new_eval_size
+
+                for key in metrics[0]["detail"]:
+                    if key in old_eval_results[0]["detail"]:
+                        metrics[0]["detail"][key] = {
+                            **metrics[0]["detail"][key],
+                            **old_eval_results[0]["detail"][key],
+                        }
                 metrics[1] = {**metrics[1], **old_eval_results[1]}
             else:
                 print("Old eval file not present, cannot update eval file")
@@ -186,7 +199,7 @@ def main():
                     benchmark, combined_results, graded
                 )
             ]
-        
+
         save_eval_results = old_eval_all_results + save_eval_results
 
         with open(eval_file, "w") as f:

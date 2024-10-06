@@ -94,6 +94,13 @@ def compute_scores(args):
     print(len(results))
     totals = [len(x["graded_list"]) for x in results]
     corrects = [sum(x["graded_list"]) for x in results]
+
+    easy_totals = [len(x["graded_list"]) for x in results if x["difficulty"] == "easy"]
+    med_totals = [len(x["graded_list"]) for x in results if x["difficulty"] == "medium"]
+    hard_totals = [len(x["graded_list"]) for x in results if x["difficulty"] == "hard"]
+    easy_corrects = [sum(x["graded_list"]) for x in results if x["difficulty"] == "easy"]
+    med_corrects = [sum(x["graded_list"]) for x in results if x["difficulty"] == "medium"]
+    hard_corrects = [sum(x["graded_list"]) for x in results if x["difficulty"] == "hard"]
     for k in [1, 5, 10, 25, 50, 100, 150, 200]:
         print(
             f"Pass@{k} = ",
@@ -102,6 +109,19 @@ def compute_scores(args):
             #     [estimate_pass_at_k(t, c, k) for t, c in zip(totals, corrects)]
             # ).mean(),
         )
+        print(
+            f"Easy Pass@{k} = ",
+            estimate_pass_at_k(easy_totals, easy_corrects, k).mean(),
+        )
+        print(
+            f"Medium Pass@{k} = ",
+            estimate_pass_at_k(med_totals, med_corrects, k).mean(),
+        )
+        print(
+            f"Hard Pass@{k} = ",
+            estimate_pass_at_k(hard_totals, hard_corrects, k).mean(),
+        )
+
 
     pass_1_list = [result["pass@1"] for result in results]
     print(f"Pass@1: {sum(pass_1_list) / len(pass_1_list)}")

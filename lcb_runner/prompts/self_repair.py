@@ -140,6 +140,37 @@ def get_phind_question_template_answer(question: str, code, result, metadata):
     prompt += f"### Answer: (use the provided format with backticks)\n\n"
     return prompt
 
+def get_qwen_question_template_answer(question: str, code, result, metadata):
+    from transformers import AutoTokenizer
+
+    tokenizer = AutoTokenizer.from_pretrained(
+        "abacusai/Dracarys-72B-Instruct", padding_side="left", use_fast=False
+    )
+    prompt = f"""### Instruction: You are a helpful programming assistant and an expert Python programmer. You are helping a user write a program to solve a problem. The user has written some code, but it has some errors and is not passing the tests. You will help the user by first giving a concise (at most 2-3 sentences) textual explanation of what is wrong with the code. After you have pointed out what is wrong with the code, you will then generate a fixed version of the program. You must put the entired fixed program within code delimiters only for once., for example:
+    ```python
+    # YOUR CODE HERE
+    ```\n\n
+"""
+    prompt += f"Question:\n{question}\n\n"
+    prompt += f"```python\n{code}\n``` \n\n"
+    prompt += get_check_prompt(question, result, metadata)
+    prompt += f"\n\n### Assistant"
+    prompt += f"### Format: {PromptConstants.FORMATTING_WITHOUT_STARTER_CODE}\n"
+    prompt += "```python\n# YOUR CODE HERE\n```\n\n"
+    prompt += f"### Answer: (use the provided format with backticks)\n\n"
+
+    messages = [
+        {"role": "user", "content": prompt},
+    ]
+
+    prompt = tokenizer.apply_chat_template(
+        messages,
+        tokenize=False,
+        add_generation_prompt=True,
+        truncation=False,
+        padding=False,
+    )
+    return prompt
 
 def format_prompt_self_repair(
     question: str, LanguageModelStyle: LMStyle, code, result, metadata
@@ -237,6 +268,34 @@ def format_prompt_self_repair(
     elif LanguageModelStyle == LMStyle.Phind:
         prompt = f"### System Prompt\n\n{PromptConstants.SYSTEM_MESSAGE_PHIND}\n\n### User Message\n\n{get_phind_question_template_answer(question, code, result,metadata)}"
         return prompt
+    elif LanguageModelStyle == LMStyle.DracarysQwen:
+        prompt = f"{get_qwen_question_template_answer(question, code, result,metadata)}"
+        return prompt
+    elif LanguageModelStyle == LMStyle.DracarysLlama:
+        chat_messages = [
+            {"role": "system", "content": PromptConstants.SYSTEM_MESSAGE_GENERIC},
+        ]
+        chat_messages += [
+            {
+                "role": "user",
+                "content": get_generic_question_template_answer(
+                    question, code, result, metadata
+                ),
+            },
+        ]
+
+        from transformers import AutoTokenizer
+
+        tokenizer = AutoTokenizer.from_pretrained(
+            "abacusai/Dracarys-Llama-3.1-70B-Instruct", padding_side="right", use_fast=False
+        )
+        return tokenizer.apply_chat_template(
+            chat_messages,
+            tokenize=False,
+            add_generation_prompt=True,
+            truncation=False,
+            padding=False,
+        )
     if LanguageModelStyle == LMStyle.Eurusx:
         prompt = "[INST] Write Python code to solve the task:\n"
         prompt += f"{get_wizard_question_template_answer(question, code, result,metadata)}"

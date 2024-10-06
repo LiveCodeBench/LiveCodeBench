@@ -30,6 +30,8 @@ class LMStyle(Enum):
     Smaug2 = "Smaug2"
 
     LLaMa3 = "LLaMa3"
+    DracarysLlama = "DracarysLlama"
+    DracarysQwen = "DracarysQwen"
 
 
 @dataclass
@@ -72,6 +74,48 @@ LanguageModelList: list[LanguageModel] = [
         LMStyle.LLaMa3,
         datetime(2023, 1, 1),
         link="https://huggingface.co/meta-llama/Meta-Llama-3-70B-Instruct",
+    ),
+    LanguageModel(
+        "meta-llama/Meta-Llama-3.1-8B",
+        "LLama3.1-8b-Base",
+        LMStyle.GenericBase,
+        datetime(2023, 1, 1),
+        link="https://huggingface.co/meta-llama/Meta-Llama-3.1-8B",
+    ),
+    LanguageModel(
+        "meta-llama/Meta-Llama-3.1-70B",
+        "LLama3.1-70b-Base",
+        LMStyle.GenericBase,
+        datetime(2023, 1, 1),
+        link="https://huggingface.co/meta-llama/Meta-Llama-3.1-70B",
+    ),
+    LanguageModel(
+        "meta-llama/Meta-Llama-3.1-405B-FP8",
+        "LLama3.1-405b-Base-FP8",
+        LMStyle.LLaMa3,
+        datetime(2023, 1, 1),
+        link="https://huggingface.co/meta-llama/Meta-Llama-3.1-405B-Instruct-FP8",
+    ),
+    LanguageModel(
+        "meta-llama/Meta-Llama-3.1-8B-Instruct",
+        "LLama3.1-8b-Ins",
+        LMStyle.LLaMa3,
+        datetime(2023, 1, 1),
+        link="https://huggingface.co/meta-llama/Meta-Llama-3.1-8B-Instruct",
+    ),
+    LanguageModel(
+        "meta-llama/Meta-Llama-3.1-70B-Instruct",
+        "LLama3.1-70b-Ins",
+        LMStyle.LLaMa3,
+        datetime(2023, 1, 1),
+        link="https://huggingface.co/meta-llama/Meta-Llama-3.1-70B-Instruct",
+    ),
+    LanguageModel(
+        "meta-llama/Meta-Llama-3.1-405B-Instruct-FP8",
+        "LLama3.1-405b-Ins-FP8",
+        LMStyle.LLaMa3,
+        datetime(2023, 1, 1),
+        link="https://huggingface.co/meta-llama/Meta-Llama-3.1-405B-Instruct-FP8",
     ),
     LanguageModel(
         "deepseek-ai/deepseek-coder-33b-base",
@@ -298,6 +342,13 @@ LanguageModelList: list[LanguageModel] = [
         link="https://blog.google/technology/ai/gemini-api-developers-cloud",
     ),
     LanguageModel(
+        "gemini-1.5-pro-exp-0801",
+        "Gemini-Pro-1.5-August-True",
+        LMStyle.Gemini,
+        datetime(2023, 4, 30),
+        link="https://blog.google/technology/ai/gemini-api-developers-cloud",
+    ),
+    LanguageModel(
         "gemini-1.5-flash-latest",
         "Gemini-Flash-1.5-May",
         LMStyle.Gemini,
@@ -373,6 +424,13 @@ LanguageModelList: list[LanguageModel] = [
         LMStyle.MistralWeb,
         datetime(2023, 1, 1),
         link="https://mistral.ai/news/mixtral-8x22b/",
+    ),
+    LanguageModel(
+        "open-mixtral-8x7b",
+        "Mixtral-8x7B-Ins",
+        LMStyle.MistralWeb,
+        datetime(2023, 1, 1),
+        link="https://mistral.ai/news/mixtral-8x7b/",
     ),
     LanguageModel(
         "open-mixtral-8x7b",
@@ -541,6 +599,20 @@ LanguageModelList: list[LanguageModel] = [
         LMStyle.Eurusx,
         datetime(2023, 4, 30),
         link="https://huggingface.co/openbmb/Eurux-8x22b-nca",
+    ),
+    LanguageModel(
+        "abacusai/Dracarys-Llama-3.1-70B-Instruct",
+        "LLama3.1-70b-Ins",
+        LMStyle.DracarysLlama,
+        datetime(2023, 1, 1),
+        link="https://huggingface.co/abacusai/Dracarys-Llama-3.1-70B-Instruct",
+    ),
+    LanguageModel(
+        "abacusai/Dracarys-72B-Instruct",
+        "Qwen2-Ins-72B",
+        LMStyle.DracarysQwen,
+        datetime(2023, 1, 1),
+        link="https://huggingface.co/abacusai/Dracarys-72B-Instruct",
     ),
 ]
 
