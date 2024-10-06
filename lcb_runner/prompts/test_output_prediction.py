@@ -132,6 +132,29 @@ def get_phind_question_template_answer(
     prompt += f"\n\n### Assistant"
     return prompt
 
+def get_qwen_question_template_answer(question: TestOutputPredictionProblem, testcase_input: str):
+    from transformers import AutoTokenizer
+
+    tokenizer = AutoTokenizer.from_pretrained(
+        "abacusai/Dracarys-72B-Instruct", padding_side="left", use_fast=False
+    )
+
+    prompt = f"""### Instruction: {PromptConstants.SYSTEM_MESSAGE_CHAT_GENERIC}\n"""
+    prompt += get_generic_question_template_test_completion(question, testcase_input)
+    prompt += f"### Response:\n"
+
+    messages = [
+        {"role": "user", "content": prompt},
+    ]
+
+    prompt = tokenizer.apply_chat_template(
+        messages,
+        tokenize=False,
+        add_generation_prompt=True,
+        truncation=False,
+        padding=False,
+    )
+    return prompt
 
 def format_prompt_test_output(
     question: TestOutputPredictionProblem, LanguageModelStyle: LMStyle
@@ -250,6 +273,38 @@ def format_prompt_test_output(
             },
         ]
         return chat_messages
+    elif (
+        LanguageModelStyle == LMStyle.DracarysQwen
+    ):
+        prompt = f"{get_qwen_question_template_answer(question, testcase_input)}"
+        return prompt
+    elif LanguageModelStyle == LMStyle.DracarysLlama:
+        chat_messages = [
+            {
+                "role": "system",
+                "content": PromptConstants.SYSTEM_MESSAGE_CHAT_GENERIC,
+            },
+        ]
+        chat_messages += [
+            {
+                "role": "user",
+                "content": get_generic_question_template_test_completion(
+                    question, testcase_input
+                ),
+            },
+        ]
+        from transformers import AutoTokenizer
+
+        tokenizer = AutoTokenizer.from_pretrained(
+            "abacusai/Dracarys-Llama-3.1-70B-Instruct", padding_side="right", use_fast=False
+        )
+        return tokenizer.apply_chat_template(
+            chat_messages,
+            tokenize=False,
+            add_generation_prompt=True,
+            truncation=False,
+            padding=False,
+        )
     else:
         raise NotImplementedError(
             f"LanguageModelStyle {LanguageModelStyle} not implemented"

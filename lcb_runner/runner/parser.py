@@ -22,7 +22,7 @@ def get_args():
     parser.add_argument(
         "--trust_remote_code",
         action="store_true",
-        help="trust_remote_code option used in huggingface models"
+        help="trust_remote_code option used in huggingface models",
     )
     parser.add_argument(
         "--scenario",
@@ -38,7 +38,7 @@ def get_args():
     parser.add_argument(
         "--release_version",
         type=str,
-        default="release_v1",
+        default="release_latest",
         help="whether to use full set of tests (slower and more memory intensive evaluation)",
     )
     parser.add_argument(
@@ -112,10 +112,10 @@ def get_args():
         help="Path to the custom output file used in `custom_evaluator.py`",
     )
     parser.add_argument(
-        '--custom_output_save_name',
+        "--custom_output_save_name",
         type=str,
         default=None,
-        help="Folder name to save the custom output results (output file folder modified if None)"
+        help="Folder name to save the custom output results (output file folder modified if None)",
     )
     parser.add_argument("--dtype", type=str, default="bfloat16", help="Dtype for vllm")
 
