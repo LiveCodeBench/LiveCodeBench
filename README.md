@@ -42,7 +42,7 @@ We provide a benchmark for different code capability scenarios
 
 ### Code Generation
 
-We use `vllm` for inference using open models. By default, we use  `tensor_parallel_size=${num_gpus}` to parallelize inference across all available GPUs. It can be configued using the  `--tensor_parallel_size` flag as required. 
+We use `vllm` for inference using open models. By default, we use  `tensor_parallel_size=${num_gpus}` to parallelize inference across all available GPUs. It can be configured using the  `--tensor_parallel_size` flag as required. 
 
 For running the inference, please provide the `model_name` based on the [./lcb_runner/lm_styles.py](./lcb_runner/lm_styles.py) file.
 The scenario (here `codegeneration`) can be used to specify the scenario for the model.
