@@ -40,6 +40,19 @@ We provide a benchmark for different code capability scenarios
 
 ## Inference and Evaluation
 
+### Dataset Versions
+Since LiveCodeBench is a continuously updated benchmark, we provide different versions of the dataset. Particularly, we provide the following versions of the dataset:
+- `release_v1`: The initial release of the dataset with problems released between May 2023 and Mar 2024 containing 400 problems.
+- `release_v2`: The updated release of the dataset with problems released between May 2023 and May 2024 containing 511 problems.
+- `release_v3`: The updated release of the dataset with problems released between May 2023 and Jul 2024 containing 612 problems.
+- `release_v4`: The updated release of the dataset with problems released between May 2023 and Sep 2024 containing 713 problems.
+
+You can use the `--release_version` flag to specify the dataset version you wish to use. Particularly, you can use the following command to run the evaluation on the `release_v2` dataset. Release version defaults to `release_latest`.
+
+```bash
+python -m lcb_runner.runner.main --model {model_name} --scenario codegeneration --evaluate --release_version release_v2
+```
+
 ### Code Generation
 
 We use `vllm` for inference using open models. By default, we use  `tensor_parallel_size=${num_gpus}` to parallelize inference across all available GPUs. It can be configued using the  `--tensor_parallel_size` flag as required. 
@@ -152,6 +165,8 @@ if LanguageModelStyle == LMStyle.DeepSeekCodeInstruct:
 ## Submit Models to Leaderboard
 To submit models to the leaderboard you can fill out [this form](https://forms.gle/h2abvAHh6UnhWzzd9). You will need to fill out model details and provide the generated evaluation file with model generations and pass@1 scores. We will review the submission and add the model to the leaderboard accordingly.
 
+## ERRATA
+We maintain a list of known issues and updates in the [ERRATA.md](./ERRATA.md) file. Particularly, we document issues regarding erroneous tests and problems not amenable to autograding. We are constantly using this feedback to improve our problem selection heuristics as we update LiveCodeBench.
 
 ## Results
 LiveCodeBench can be used to evaluate performance of LLMs on different time-windows (using problem release date to filter the models). 
