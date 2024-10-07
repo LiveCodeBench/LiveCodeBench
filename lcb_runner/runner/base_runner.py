@@ -50,6 +50,9 @@ class BaseRunner(ABC):
 
         if isinstance(prompt, list):
             prompt_cache = json.dumps(prompt)
+        else:
+            prompt_cache = prompt
+
         if cache is not None and prompt_cache in cache:
             if len(cache[prompt_cache]) == args.n:
                 return cache[prompt_cache]
@@ -92,6 +95,8 @@ class BaseRunner(ABC):
             for prompt, output in zip(prompts, outputs):
                 if isinstance(prompt, list):
                     prompt_cache = json.dumps(prompt)
+                else:
+                    prompt_cache = prompt
                 self.cache[prompt_cache] = output  ## save the output to cache
 
         return outputs
