@@ -6,6 +6,10 @@ def build_runner(args, model: LanguageModel):
         from lcb_runner.runner.oai_runner import OpenAIRunner
 
         return OpenAIRunner(args, model)
+    if model.model_style == LMStyle.OpenAIReason:
+        from lcb_runner.runner.oai_runner import OpenAIRunner
+
+        return OpenAIRunner(args, model)
     if model.model_style == LMStyle.Gemini:
         from lcb_runner.runner.gemini_runner import GeminiRunner
 

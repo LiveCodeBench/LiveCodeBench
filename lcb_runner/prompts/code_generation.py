@@ -220,6 +220,16 @@ def format_prompt_generation(
             },
         ]
         return chat_messages
+    elif LanguageModelStyle == LMStyle.OpenAIReason:
+        chat_messages = [
+            {
+                "role": "user",
+                "content": PromptConstants.SYSTEM_MESSAGE_GENERIC
+                + "\n\n"
+                + get_generic_question_template_answer(question),
+            },
+        ]
+        return chat_messages
 
     if LanguageModelStyle == LMStyle.LLaMa3:
         chat_messages = [
@@ -353,7 +363,7 @@ def format_prompt_generation(
     if LanguageModelStyle == LMStyle.GenericBase:
         prompt = get_base_model_question_template_answer(question)
         return prompt
-    
+
     if LanguageModelStyle == LMStyle.DracarysQwen:
         prompt = f"{PromptConstants.SYSTEM_MESSAGE_CODEQWEN}\n\n"
         prompt += f"{get_codeqwen_question_template_answer(question)}"
@@ -375,7 +385,9 @@ def format_prompt_generation(
         from transformers import AutoTokenizer
 
         tokenizer = AutoTokenizer.from_pretrained(
-            "abacusai/Dracarys-Llama-3.1-70B-Instruct", padding_side="right", use_fast=False
+            "abacusai/Dracarys-Llama-3.1-70B-Instruct",
+            padding_side="right",
+            use_fast=False,
         )
 
         return tokenizer.apply_chat_template(
