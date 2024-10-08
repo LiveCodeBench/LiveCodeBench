@@ -81,7 +81,11 @@ def evaluate_generations_by_problem(args):
             if debug:
                 print(f"Compilation failed, test framework exception = {repr(e)}{e}\n")
             # break
-            curr_metadata = {}
+            curr_metadata = {
+                "error": repr(e),
+                "error_code": -5,
+                "error_message": "TestRunnerError",
+            }
         finally:
             assert isinstance(curr_res, list)
             assert isinstance(curr_metadata, dict)
