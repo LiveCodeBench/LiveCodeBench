@@ -154,7 +154,27 @@ def format_prompt_execution_base(
         ]
         return chat_messages
     elif LanguageModelStyle == LMStyle.DracarysLlama:
-        return prompt
+        chat_messages = [
+            {
+                "role": "system",
+                "content": system_message,
+            },
+        ]
+        chat_messages += [
+            {"role": "user", "content": prompt},
+        ]
+        from transformers import AutoTokenizer
+
+        tokenizer = AutoTokenizer.from_pretrained(
+            "abacusai/Dracarys-Llama-3.1-70B-Instruct", padding_side="right", use_fast=False
+        )
+        return tokenizer.apply_chat_template(
+            chat_messages,
+            tokenize=False,
+            add_generation_prompt=True,
+            truncation=False,
+            padding=False,
+        )
     elif LanguageModelStyle == LMStyle.DracarysQwen:
         return prompt
     else:
