@@ -112,6 +112,13 @@ LanguageModelList: list[LanguageModel] = [
         link="https://huggingface.co/meta-llama/Meta-Llama-3.1-70B-Instruct",
     ),
     LanguageModel(
+        "meta-llama/Llama-3.3-70B-Instruct",
+        "LLama3.3-70b-Ins",
+        LMStyle.LLaMa3,
+        datetime(2023, 1, 1),
+        link="https://huggingface.co/meta-llama/Meta-Llama-3.1-70B-Instruct",
+    ),
+    LanguageModel(
         "meta-llama/Meta-Llama-3.1-405B-Instruct-FP8",
         "LLama3.1-405b-Ins-FP8",
         LMStyle.LLaMa3,
@@ -147,6 +154,13 @@ LanguageModelList: list[LanguageModel] = [
         link="https://huggingface.co/deepseek-ai/deepseek-coder-33b-instruct",
     ),
     LanguageModel(
+        "01-ai/Yi-Coder-9B-Chat",
+        "Yi-Coder-9B-Chat",
+        LMStyle.DeepSeekAPI,
+        datetime(2023, 8, 1),
+        link="https://huggingface.co/01-ai/Yi-Coder-9B-Chat",
+    ),
+    LanguageModel(
         "deepseek-ai/deepseek-coder-6.7b-instruct",
         "DSCoder-6.7b-Ins",
         LMStyle.DeepSeekCodeInstruct,
@@ -162,10 +176,10 @@ LanguageModelList: list[LanguageModel] = [
     ),
     LanguageModel(
         "deepseek-chat",
-        "DeepSeek-V2",
+        "DeepSeek-V3",
         LMStyle.DeepSeekAPI,
         datetime(2023, 8, 1),
-        link="https://huggingface.co/deepseek-ai/DeepSeek-V2",
+        link="https://huggingface.co/deepseek-ai/DeepSeek-V3",
     ),
     LanguageModel(
         "deepseek-coder",
@@ -336,6 +350,13 @@ LanguageModelList: list[LanguageModel] = [
         link="https://openai.com/index/spring-update",
     ),
     LanguageModel(
+        "o1-2024-12-17",
+        "O1-2024-12-17 (N=1)",
+        LMStyle.OpenAIReason,
+        datetime(2023, 4, 30),
+        link="https://openai.com/index/spring-update",
+    ),
+    LanguageModel(
         "o1-preview-2024-09-12",
         "O1-Preview-2024-09-12 (N=1)",
         LMStyle.OpenAIReason,
@@ -404,6 +425,27 @@ LanguageModelList: list[LanguageModel] = [
         LMStyle.Gemini,
         datetime(2023, 4, 30),
         link="https://blog.google/technology/ai/gemini-api-developers-cloud",
+    ),
+    LanguageModel(
+        "gemini-exp-1206",
+        "Gemini-Exp-1206",
+        LMStyle.Gemini,
+        datetime(2023, 4, 30),
+        link="https://ai.google.dev/gemini-api/docs/models/experimental-models",
+    ),
+    LanguageModel(
+        "gemini-2.0-flash-thinking-exp-1219",
+        "Gemini-Flash-2.0-Thinking",
+        LMStyle.Gemini,
+        datetime(2023, 4, 30),
+        link="https://ai.google.dev/gemini-api/docs/models/experimental-models",
+    ),
+    LanguageModel(
+        "gemini-2.0-flash-exp",
+        "Gemini-Flash-2.0",
+        LMStyle.Gemini,
+        datetime(2023, 4, 30),
+        link="https://ai.google.dev/gemini-api/docs/models/experimental-models",
     ),
     LanguageModel(
         "databricks-dbrx-instruct",

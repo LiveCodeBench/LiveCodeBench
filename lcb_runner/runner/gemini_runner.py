@@ -70,7 +70,7 @@ class GeminiRunner(BaseRunner):
         new_outputs = []
         for output in outputs:
             try:
-                new_outputs.append(output.text)
+                new_outputs.append(output.parts[-1].text)
             except Exception as e:
                 print("Cannot extract text exception: ", repr(e))
                 print(output.__dict__)

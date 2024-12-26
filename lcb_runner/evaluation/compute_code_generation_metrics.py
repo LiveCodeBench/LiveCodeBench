@@ -208,3 +208,26 @@ def codegen_metrics(
         ), f"{len(final_metadata[i])=}"
 
     return [metrics, results, final_metadata]
+
+
+if __name__ == "__main__":
+    print(
+        check_correctness(
+            {
+                "input_output": json.dumps(
+                    {
+                        "inputs": [
+                            json.dumps([1] * 100000)
+                            + "\n"
+                            + json.dumps([100000, -100000] * (100000 // 2))
+                        ],
+                        "outputs": [json.dumps([100000, 0] * (100000 // 2))],
+                        "fn_name": "mostFrequentIDs",
+                    }
+                )
+            },
+            "class Solution:\n    def mostFrequentIDs(self, nums: List[int], freq: List[int]) -> List[int]:\n        from collections import defaultdict\n        \n        # Count of each ID\n        count = defaultdict(int)\n        # How many IDs exist for a given frequency\n        freq_of_count = defaultdict(int)\n        \n        max_freq = 0\n        ans = []\n        \n        for i in range(len(nums)):\n            x = nums[i]\n            change = freq[i]\n            \n            old_freq = count[x]\n            new_freq = old_freq + change\n            \n            # If there was an old frequency, decrease its usage\n            if old_freq > 0:\n                freq_of_count[old_freq] -= 1\n                if freq_of_count[old_freq] == 0:\n                    del freq_of_count[old_freq]\n            \n            # Update with the new frequency\n            count[x] = new_freq\n            freq_of_count[new_freq] += 1\n            \n            # Update max_freq if needed\n            if new_freq > max_freq:\n                max_freq = new_freq\n            \n            # If the collection at max_freq is empty, reduce max_freq until we find a non-empty bin\n            while max_freq > 0 and max_freq not in freq_of_count:\n                max_freq -= 1\n            \n            # If the collection is empty, max_freq will be 0\n            ans.append(max_freq)\n        \n        return ans",
+            6,
+            debug=True,
+        )
+    )
