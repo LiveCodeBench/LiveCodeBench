@@ -18,10 +18,19 @@ class OpenAIRunner(BaseRunner):
 
     def __init__(self, args, model):
         super().__init__(args, model)
-        if model.model_style == LMStyle.OpenAIReason:
+        if model.model_style == LMStyle.OpenAIReasonPreview:
             self.client_kwargs: dict[str | str] = {
                 "model": args.model,
                 "max_completion_tokens": 25000,
+            }
+        elif model.model_style == LMStyle.OpenAIReason:
+            assert (
+                "__" in args.model
+            ), f"Model {args.model} is not a valid OpenAI Reasoning model as we require reasoning effort in model name."
+            model, reasoning_effort = args.model.split("__")
+            self.client_kwargs: dict[str | str] = {
+                "model": model,
+                "reasoning_effort": reasoning_effort,
             }
         else:
             self.client_kwargs: dict[str | str] = {
