@@ -1,33 +1,21 @@
-[tool.poetry]
+[project]
 name = "livecodebench"
 version = "0.1.0"
-description = "Official Repository for Evaluation of LiveCodeBench"
-authors = ["Naman Jain <naman1205jain@gmail.com>"]
+description = "LiveCodeBench"
 readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "annotated-types>=0.7.0",
+    "anthropic>=0.42.0",
+    "cohere>=5.13.6",
+    "datasets>=3.2.0",
+    "google-generativeai>=0.8.3",
+    "mistralai>=1.2.6",
+    "openai>=1.59.6",
+    "pebble>=5.1.0",
+    "torch>=2.3.0",
+    "vllm>=0.5.0.post1",
+]
 
-[[tool.poetry.source]]
-name = 'pypi_'  # needed until python-poetry/poetry#3456 is resolved.
-url = 'https://pypi.org/simple'
-priority = 'primary'
-
-[tool.poetry.dependencies]
-python = ">=3.10 <4"
-pebble = "^5.0.7"
-datasets = "^2.18.0"
-google-generativeai = "^0.5.0"
-anthropic = "^0.25.1"
-openai = "^1.17.1"
-mistralai = "^0.1.8"
-pyext = "0.7"
-annotated-types = "^0.7.0"
-cohere = "^5.5.4"
-
-[tool.poetry.group.with-gpu]
-optional = true
-
-[tool.poetry.group.with-gpu.dependencies]
-vllm = "^0.4.0.post1"
-
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+[tool.setuptools]
+packages = ["lcb_runner"]
