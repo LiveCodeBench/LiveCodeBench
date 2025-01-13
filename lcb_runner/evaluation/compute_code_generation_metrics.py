@@ -2,6 +2,9 @@
 # https://github.com/Naman-ntc/codescratch/blob/main/evaluation/bigcode-evaluation-harness/lm_eval/tasks/custom_metrics/apps_custom_metrics/utils.py
 
 import os
+import sys
+
+sys.set_int_max_str_digits(50000)
 
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
 import json
@@ -87,8 +90,8 @@ def evaluate_generations_by_problem(args):
                 "error_message": "TestRunnerError",
             }
         finally:
-            assert isinstance(curr_res, list)
-            assert isinstance(curr_metadata, dict)
+            assert isinstance(curr_res, list), curr_res
+            assert isinstance(curr_metadata, dict), curr_metadata
             res.append(curr_res)
             metadata.append(curr_metadata)
     if debug:
@@ -118,7 +121,6 @@ def evaluate_generations(
 
     Returns:
         results: dictionary of results, key is the problem index, value is a list of results for each generation
-        [-2] = compile error, [-1] = runtime error [False] = failed test case [True] = passed test case
     """
 
     # generations are code generations in the same order of the dataset
