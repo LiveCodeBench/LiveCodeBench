@@ -46,8 +46,9 @@ Since LiveCodeBench is a continuously updated benchmark, we provide different ve
 - `release_v2`: The updated release of the dataset with problems released between May 2023 and May 2024 containing 511 problems.
 - `release_v3`: The updated release of the dataset with problems released between May 2023 and Jul 2024 containing 612 problems.
 - `release_v4`: The updated release of the dataset with problems released between May 2023 and Sep 2024 containing 713 problems.
+- `release_v5`: The updated release of the dataset with problems released between May 2023 and Jan 2025 containing 880 problems.
 
-You can use the `--release_version` flag to specify the dataset version you wish to use. Particularly, you can use the following command to run the evaluation on the `release_v2` dataset. Release version defaults to `release_latest`.
+You can use the `--release_version` flag to specify the dataset version you wish to use. Particularly, you can use the following command to run the evaluation on the `release_v2` dataset. Release version defaults to `release_latest`. Additionally, we have introduced fine-grained release versions such as `v1`, `v2`, `v1_v3`, `v4_v5` for specific versions of the dataset.
 
 ```bash
 python -m lcb_runner.runner.main --model {model_name} --scenario codegeneration --evaluate --release_version release_v2
