@@ -164,7 +164,7 @@ if LanguageModelStyle == LMStyle.DeepSeekCodeInstruct:
 ```
 
 ## Submit Models to Leaderboard
-To submit models to the leaderboard you can fill out [this form](https://forms.gle/h2abvAHh6UnhWzzd9). You will need to fill out model details and provide the generated evaluation file with model generations and pass@1 scores. We will review the submission and add the model to the leaderboard accordingly.
+We are currently accepting submissions for only the code generation scenario. To submit models you can create a pull request on our [submissions](https://github.com/LiveCodeBench/submissions). Particularly, you can copy your model generations folder from `output` to the `submissions` folder and create a pull request. We will review the submission and add the model to the leaderboard accordingly. 
 
 ## ERRATA
 We maintain a list of known issues and updates in the [ERRATA.md](./ERRATA.md) file. Particularly, we document issues regarding erroneous tests and problems not amenable to autograding. We are constantly using this feedback to improve our problem selection heuristics as we update LiveCodeBench.
