@@ -22,6 +22,7 @@ class LMStyle(Enum):
     CodeLLaMaInstruct = "CodeLLaMaInstruct"
     StarCoderInstruct = "StarCoderInstruct"
     CodeQwenInstruct = "CodeQwenInstruct"
+    QwQ = "QwQ"
 
     LLaMa3 = "LLaMa3"
 
@@ -194,7 +195,7 @@ LanguageModelList: list[LanguageModel] = [
         "deepseek-chat",
         "DeepSeek-V3",
         LMStyle.DeepSeekAPI,
-        datetime(2023, 8, 1),
+        datetime(2023, 6, 30),
         link="https://huggingface.co/deepseek-ai/DeepSeek-V3",
     ),
     ## Deepseek-Coder Latest API (currently DeepSeekCoder-V2.5)
@@ -474,6 +475,14 @@ LanguageModelList: list[LanguageModel] = [
         LMStyle.MistralWeb,
         datetime(2023, 1, 1),
         link="https://mistral.ai/news/codestral/",
+    ),
+    ## QwQ
+    LanguageModel(
+        "Qwen/QwQ-32B-Preview",
+        "QwQ-32B-Preview",
+        LMStyle.QwQ,
+        datetime(2024, 7, 30),
+        link="https://huggingface.co/Qwen/Qwen2-72B-Instruct",
     ),
     ## Qwen 2
     LanguageModel(
