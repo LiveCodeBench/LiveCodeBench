@@ -37,6 +37,15 @@ class LanguageModel:
     def __hash__(self) -> int:
         return hash(self.model_name)
 
+    def to_dict(self) -> dict:
+        return {
+            "model_name": self.model_name,
+            "model_repr": self.model_repr,
+            "model_style": self.model_style.value,
+            "release_date": int(self.release_date.timestamp() * 1000),
+            "link": self.link,
+        }
+
 
 LanguageModelList: list[LanguageModel] = [
     ## LLama3 Base (8B and 70B)
@@ -330,7 +339,7 @@ LanguageModelList: list[LanguageModel] = [
         link="https://www.anthropic.com/news/claude-3-5-sonnet",
     ),
     LanguageModel(
-        "claude-3.5-Sonnet-20241022",
+        "claude-3-5-sonnet-20241022",
         "Claude-3.5-Sonnet-20241022",
         LMStyle.Claude3,
         datetime(2024, 3, 31),
