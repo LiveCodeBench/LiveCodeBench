@@ -159,13 +159,6 @@ LanguageModelList: list[LanguageModel] = [
         link="https://huggingface.co/deepseek-ai/deepseek-coder-33b-instruct",
     ),
     LanguageModel(
-        "01-ai/Yi-Coder-9B-Chat",
-        "Yi-Coder-9B-Chat",
-        LMStyle.DeepSeekAPI,
-        datetime(2023, 8, 1),
-        link="https://huggingface.co/01-ai/Yi-Coder-9B-Chat",
-    ),
-    LanguageModel(
         "deepseek-ai/deepseek-coder-6.7b-instruct",
         "DSCoder-6.7b-Ins",
         LMStyle.DeepSeekCodeInstruct,
@@ -178,6 +171,14 @@ LanguageModelList: list[LanguageModel] = [
         LMStyle.DeepSeekCodeInstruct,
         datetime(2023, 8, 1),
         link="https://huggingface.co/deepseek-ai/deepseek-coder-1.3b-instruct",
+    ),
+    ##
+    LanguageModel(
+        "01-ai/Yi-Coder-9B-Chat",
+        "Yi-Coder-9B-Chat",
+        LMStyle.DeepSeekAPI,
+        datetime(2023, 8, 1),
+        link="https://huggingface.co/01-ai/Yi-Coder-9B-Chat",
     ),
     ## Deepseek-Chat Latest API (currently DeepSeek-V3)
     LanguageModel(
@@ -323,7 +324,14 @@ LanguageModelList: list[LanguageModel] = [
     ),
     LanguageModel(
         "claude-3-5-sonnet-20240620",
-        "Claude-3.5-Sonnet",
+        "Claude-3.5-Sonnet-20240620",
+        LMStyle.Claude3,
+        datetime(2024, 3, 31),
+        link="https://www.anthropic.com/news/claude-3-5-sonnet",
+    ),
+    LanguageModel(
+        "claude-3.5-Sonnet-20241022",
+        "Claude-3.5-Sonnet-20241022",
         LMStyle.Claude3,
         datetime(2024, 3, 31),
         link="https://www.anthropic.com/news/claude-3-5-sonnet",
