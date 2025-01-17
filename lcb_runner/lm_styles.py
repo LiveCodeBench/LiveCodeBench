@@ -196,14 +196,14 @@ LanguageModelList: list[LanguageModel] = [
         "DeepSeek-R1-Preview",
         LMStyle.DeepSeekAPI,
         datetime(2024, 6, 30),
-        link="https://huggingface.co/deepseek-ai/DeepSeek-V3",
+        link="https://api-docs.deepseek.com/news/news1120",
     ),
     LanguageModel(
         "deepseek-r1-lite-preview",
         "DeepSeek-R1-Lite-Preview",
         LMStyle.DeepSeekAPI,
         datetime(2024, 6, 30),
-        link="https://huggingface.co/deepseek-ai/DeepSeek-V3",
+        link="https://api-docs.deepseek.com/news/news1120",
     ),
     LanguageModel(
         "deepseek-chat",
@@ -211,7 +211,7 @@ LanguageModelList: list[LanguageModel] = [
         LMStyle.DeepSeekAPI,
         datetime(2024, 6, 30),
         link="https://huggingface.co/deepseek-ai/DeepSeek-V3",
-    ),    
+    ),
     ## Deepseek-Coder Latest API (currently DeepSeekCoder-V2.5)
     LanguageModel(
         "deepseek-coder",
