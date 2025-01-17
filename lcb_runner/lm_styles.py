@@ -398,7 +398,7 @@ LanguageModelList: list[LanguageModel] = [
     ),
     LanguageModel(
         "gemini-2.0-flash-exp",
-        "Gemini-Flash-2.0",
+        "Gemini-Flash-2.0-Exp",
         LMStyle.Gemini,
         datetime(2023, 4, 30),
         link="https://ai.google.dev/gemini-api/docs/models/experimental-models",
@@ -533,14 +533,14 @@ LanguageModelList: list[LanguageModel] = [
         "Qwen/Qwen2.5-Coder-7B-Instruct",
         "Qwen2.5-Coder-Ins-7B",
         LMStyle.CodeQwenInstruct,
-        datetime(2023, 8, 30),
+        datetime(2024, 6, 30),
         link="https://huggingface.co/Qwen/Qwen2.5-Coder-7B-Instruct",
     ),
     LanguageModel(
         "Qwen/Qwen2.5-Coder-32B-Instruct",
         "Qwen2.5-Coder-Ins-32B",
         LMStyle.CodeQwenInstruct,
-        datetime(2023, 8, 30),
+        datetime(2024, 6, 30),
         link="https://huggingface.co/Qwen/Qwen2.5-Coder-32B-Instruct",
     ),
 ]
