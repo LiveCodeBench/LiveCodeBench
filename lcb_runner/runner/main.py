@@ -44,7 +44,8 @@ def main():
         old_save_results = [
             instance
             for instance in old_save_results
-            if instance["output_list"] and [x for x in instance["output_list"] if x]
+            if instance["output_list"]
+            # and [x for x in instance["output_list"] if x]
         ]
         old_save_results_question_ids = [
             instance["question_id"] for instance in old_save_results
