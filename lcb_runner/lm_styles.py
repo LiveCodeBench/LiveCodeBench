@@ -192,12 +192,26 @@ LanguageModelList: list[LanguageModel] = [
     ),
     ## Deepseek-Chat Latest API (currently DeepSeek-V3)
     LanguageModel(
+        "deepseek-r1-preview",
+        "DeepSeek-R1-Preview",
+        LMStyle.DeepSeekAPI,
+        datetime(2024, 6, 30),
+        link="https://huggingface.co/deepseek-ai/DeepSeek-V3",
+    ),
+    LanguageModel(
+        "deepseek-r1-lite-preview",
+        "DeepSeek-R1-Lite-Preview",
+        LMStyle.DeepSeekAPI,
+        datetime(2024, 6, 30),
+        link="https://huggingface.co/deepseek-ai/DeepSeek-V3",
+    ),
+    LanguageModel(
         "deepseek-chat",
         "DeepSeek-V3",
         LMStyle.DeepSeekAPI,
-        datetime(2023, 6, 30),
+        datetime(2024, 6, 30),
         link="https://huggingface.co/deepseek-ai/DeepSeek-V3",
-    ),
+    ),    
     ## Deepseek-Coder Latest API (currently DeepSeekCoder-V2.5)
     LanguageModel(
         "deepseek-coder",
@@ -271,14 +285,14 @@ LanguageModelList: list[LanguageModel] = [
         "O1-Preview-2024-09-12 (N=1)",
         LMStyle.OpenAIReasonPreview,
         datetime(2023, 4, 30),
-        link="https://openai.com/index/spring-update",
+        link="https://platform.openai.com/docs/guides/reasoning",
     ),
     LanguageModel(
         "o1-mini-2024-09-12",
         "O1-Mini-2024-09-12 (N=1)",
         LMStyle.OpenAIReasonPreview,
         datetime(2023, 4, 30),
-        link="https://openai.com/index/spring-update",
+        link="https://platform.openai.com/docs/guides/reasoning",
     ),
     ## O1 (reasoning models)
     LanguageModel(
@@ -286,21 +300,21 @@ LanguageModelList: list[LanguageModel] = [
         "O1-2024-12-17 (N=1) (Low)",
         LMStyle.OpenAIReason,
         datetime(2023, 4, 30),
-        link="https://openai.com/index/spring-update",
+        link="https://platform.openai.com/docs/api-reference/chat/create#chat-create-reasoning_effort",
     ),
     LanguageModel(
         "o1-2024-12-17__medium",
         "O1-2024-12-17 (N=1) (Med)",
         LMStyle.OpenAIReason,
         datetime(2023, 4, 30),
-        link="https://openai.com/index/spring-update",
+        link="htthttps://platform.openai.com/docs/api-reference/chat/create#chat-create-reasoning_effort",
     ),
     LanguageModel(
         "o1-2024-12-17__high",
         "O1-2024-12-17 (N=1) (High)",
         LMStyle.OpenAIReason,
         datetime(2023, 4, 30),
-        link="https://openai.com/index/spring-update",
+        link="https://platform.openai.com/docs/api-reference/chat/create#chat-create-reasoning_effort",
     ),
     ## Claude and Claude 2
     LanguageModel(
@@ -479,10 +493,10 @@ LanguageModelList: list[LanguageModel] = [
     ## QwQ
     LanguageModel(
         "Qwen/QwQ-32B-Preview",
-        "QwQ-32B-Preview",
+        "QwQ-32B-Preview (N=1)",
         LMStyle.QwQ,
-        datetime(2024, 7, 30),
-        link="https://huggingface.co/Qwen/Qwen2-72B-Instruct",
+        datetime(2024, 6, 30),
+        link="https://huggingface.co/Qwen/QwQ-32B-Preview",
     ),
     ## Qwen 2
     LanguageModel(

@@ -25,3 +25,5 @@ While we have tries to ensure the correctness of the benchmark in terms of test 
 1 problem has been identified with erroneous test cases during scraping. This problem cannot be solved correctly with the current test cases. Note that these problems will not affect model comparison results since no model can solve these problems.
 
 1. abc350_c - Erroneous test cases
+2. apply-operations-to-make-string-empty - Erroneous test case of empty string
+3. most-frequent-ids - Adversarian input not following constraints
