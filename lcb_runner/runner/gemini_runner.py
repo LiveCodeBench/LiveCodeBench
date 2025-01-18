@@ -70,7 +70,6 @@ class GeminiRunner(BaseRunner):
         new_outputs = []
         for output in outputs:
             try:
-                print(len(output.parts))
                 texts = [part.text for part in output.parts]
                 texts = [
                     "## Part " + str(i) + "\n" + text for i, text in enumerate(texts)
