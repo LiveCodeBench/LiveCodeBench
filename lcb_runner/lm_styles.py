@@ -11,6 +11,8 @@ class LMStyle(Enum):
     Claude = "Claude"  # Claude 1 and Claude 2
     Claude3 = "Claude3"
     Gemini = "Gemini"
+    GeminiThinking = "GeminiThinking"
+
     MistralWeb = "MistralWeb"
     CohereCommand = "CohereCommand"
     DataBricks = "DataBricks"
