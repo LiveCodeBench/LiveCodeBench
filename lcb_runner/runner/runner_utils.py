@@ -10,7 +10,7 @@ def build_runner(args, model: LanguageModel):
         from lcb_runner.runner.oai_runner import OpenAIRunner
 
         return OpenAIRunner(args, model)
-    if model.model_style == LMStyle.Gemini:
+    if model.model_style in [LMStyle.Gemini, LMStyle.GeminiThinking]:
         from lcb_runner.runner.gemini_runner import GeminiRunner
 
         return GeminiRunner(args, model)

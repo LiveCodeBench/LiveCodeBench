@@ -393,8 +393,15 @@ LanguageModelList: list[LanguageModel] = [
     ),
     LanguageModel(
         "gemini-2.0-flash-thinking-exp-1219",
-        "Gemini-Flash-2.0-Thinking",
-        LMStyle.Gemini,
+        "Gemini-Flash-2.0-Thinking-12-19 (N=1)",
+        LMStyle.GeminiThinking,
+        datetime(2023, 4, 30),
+        link="https://ai.google.dev/gemini-api/docs/models/experimental-models",
+    ),
+    LanguageModel(
+        "gemini-2.0-flash-thinking-exp-01-21",
+        "Gemini-Flash-2.0-Thinking-01-21 (N=1)",
+        LMStyle.GeminiThinking,
         datetime(2023, 4, 30),
         link="https://ai.google.dev/gemini-api/docs/models/experimental-models",
     ),

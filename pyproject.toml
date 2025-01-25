@@ -9,7 +9,7 @@ dependencies = [
     "anthropic>=0.42.0",
     "cohere>=5.13.6",
     "datasets>=3.2.0",
-    "google-generativeai>=0.8.3",
+    "google-genai>=0.6.0",
     "mistralai==0.4.2",
     "openai>=1.59.6",
     "pebble>=5.1.0",

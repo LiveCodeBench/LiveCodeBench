@@ -20,17 +20,13 @@ git clone https://github.com/LiveCodeBench/LiveCodeBench.git
 cd LiveCodeBench
 ```
 
-We recommend using poetry for managing dependencies. You can install poetry and the dependencies using the following commands:
+We recommend using uv for managing dependencies. You can install uv and the dependencies using the following commands:
 
 ```bash
-pip install poetry
-poetry install
-```
+uv venv --python 3.11
+source .venv/bin/activate
 
-The default setup does not install [`vllm`](https://vllm.ai/). To install `vllm` as well you can use:
-
-```bash
-poetry install --with with-gpu
+uv pip install -e .
 ```
 
 ## Data
