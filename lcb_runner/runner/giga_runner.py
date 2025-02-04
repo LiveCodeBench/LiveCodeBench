@@ -5,8 +5,6 @@ try:
 except ImportError as e:
     pass
 
-from requests.exceptions import RequestException
-
 from lcb_runner.runner.base_runner import BaseRunner
 
 
@@ -15,6 +13,7 @@ class GigaRunner(BaseRunner):
 
     def __init__(self, args, model):
         super().__init__(args, model)
+        
         self.client_kwargs: dict[str | str] = {
             "model": args.model,
             "temperature": args.temperature,
@@ -25,19 +24,27 @@ class GigaRunner(BaseRunner):
     def _run_single(self, prompt: list[dict[str, str]]) -> list[str]:
         assert isinstance(prompt, list)
 
+        def __run_single(counter: int) -> str:
+            try:
+                response = self.client.chat(
+                    messages=prompt, **self.client_kwargs
+                )
+                return response["choices"][0]["message"]["content"]
+            except Exception as e:
+                print("Exception: ", repr(e), "Sleeping for 20 seconds...")
+                sleep(20 * (11 - counter))
+                counter = counter - 1
+                if counter == 0:
+                    print(f"Failed to run model for {prompt}!")
+                    print("Exception: ", repr(e))
+                    raise e
+                return __run_single(counter)
+
+        outputs = []
         try:
-            response = GigaRunner.client.chat(
-                messages=prompt,
-                **self.client_kwargs,
-            )
-        except RequestException as e:
-            print("Exception: ", repr(e))
-            print("Sleeping for 30 seconds...")
-            print("Consider reducing the number of parallel processes.")
-            sleep(30)
-            return self._run_single(prompt)
+            for _ in range(self.args.n):
+                outputs.append(__run_single(10))
         except Exception as e:
-            print(f"Failed to run the model for {prompt}!")
-            print("Exception: ", repr(e))
             raise e
-        return [_["message"]["content"] for _ in response["choices"]]
+
+        return outputs

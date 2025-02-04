@@ -578,6 +578,15 @@ LanguageModelList: list[LanguageModel] = [
     ),
 ]
 
+GIGA_MODEL = LanguageModel(
+    "<PLACEHOLDER>",
+    "<PLACEHOLDER>",
+    LMStyle.Giga,
+    datetime.now(),
+    link="https://giga.chat/"
+)
+
+
 LanguageModelStore: dict[str, LanguageModel] = {
     lm.model_name: lm for lm in LanguageModelList
 }
