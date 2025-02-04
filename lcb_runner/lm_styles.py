@@ -28,6 +28,8 @@ class LMStyle(Enum):
 
     LLaMa3 = "LLaMa3"
 
+    Giga = "Giga"
+
 
 @dataclass
 class LanguageModel:

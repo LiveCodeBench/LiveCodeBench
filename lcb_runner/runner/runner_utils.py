@@ -1,4 +1,4 @@
-from lcb_runner.lm_styles import LMStyle, LanguageModel
+from lcb_runner.lm_styles import LanguageModel, LMStyle
 
 
 def build_runner(args, model: LanguageModel):
@@ -34,6 +34,10 @@ def build_runner(args, model: LanguageModel):
         from lcb_runner.runner.deepseek_runner import DeepSeekRunner
 
         return DeepSeekRunner(args, model)
+    if model.model_style == LMStyle.Giga:
+        from lcb_runner.runner.giga_runner import GigaRunner
+
+        return GigaRunner(args, model)
     elif model.model_style in []:
         raise NotImplementedError(
             f"Runner for language model style {model.model_style} not implemented yet"

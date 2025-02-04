@@ -10,7 +10,9 @@ from lcb_runner.runner.base_runner import BaseRunner
 
 
 class Claude3Runner(BaseRunner):
-    client = Anthropic(api_key=os.getenv("ANTHROPIC_KEY"))
+    client = Anthropic(
+        api_key=os.getenv("ANTHROPIC_KEY"), base_url=os.getenv("ANTHROPIC_BASE_URL")
+    )
 
     def __init__(self, args, model):
         super().__init__(args, model)
