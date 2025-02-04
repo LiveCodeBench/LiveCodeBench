@@ -95,7 +95,7 @@ python -m lcb_runner.evaluation.compute_scores --eval_all_file {saved_eval_all_f
 For running self repair, you need to provide an additional `--codegen_n` flag that maps to the number of codes that were generated during code generation. Additionally, the `--temperature` flag is used to resolve the old code generation eval file which must be present in the `output` directory. 
 
 ```bash
-python -m lcb_runner.runner.main --model {model_name --scenario selfrepair --codegen_n {num_codes_codegen} --n 1 # only n=1 supported
+python -m lcb_runner.runner.main --model {model_name} --scenario selfrepair --codegen_n {num_codes_codegen} --n 1 # only n=1 supported
 ```
 
 In case you have results on a smaller subset or version of the benchmark, you can use `--continue_existing` and `--continue_existing_with_eval` flags to reuse the old computations. Particularly, you can run the following command to continue from existing generated solutions.
