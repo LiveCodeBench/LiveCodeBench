@@ -1,12 +1,15 @@
-import os
-import torch
 import argparse
+import os
+
+import torch
 
 from lcb_runner.utils.scenarios import Scenario
 
 
 def get_args():
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter
+    )
     parser.add_argument(
         "--model",
         type=str,
