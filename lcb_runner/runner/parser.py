@@ -118,6 +118,19 @@ def get_args():
         help="Folder name to save the custom output results (output file folder modified if None)",
     )
     parser.add_argument("--dtype", type=str, default="bfloat16", help="Dtype for vllm")
+    # Added to avoid running extra generations (it's slow for reasoning models)
+    parser.add_argument(
+        "--start_date",
+        type=str,
+        default=None,
+        help="Start date for the contest to filter the evaluation file (format - YYYY-MM-DD)",
+    )
+    parser.add_argument(
+        "--end_date",
+        type=str,
+        default=None,
+        help="End date for the contest to filter the evaluation file (format - YYYY-MM-DD)",
+    )
 
     args = parser.parse_args()
 
