@@ -18,8 +18,6 @@ class LMStyle(Enum):
     DataBricks = "DataBricks"
     DeepSeekAPI = "DeepSeekAPI"
 
-    DeepSeekR1 = "DeepSeekR1"
-
     GenericBase = "GenericBase"
 
     DeepSeekCodeInstruct = "DeepSeekCodeInstruct"
@@ -29,6 +27,8 @@ class LMStyle(Enum):
     QwQ = "QwQ"
 
     LLaMa3 = "LLaMa3"
+
+    DeepSeekR1 = "DeepSeekR1"
 
 
 @dataclass
@@ -603,6 +603,49 @@ LanguageModelList: list[LanguageModel] = [
         LMStyle.DeepSeekR1,
         datetime(2024, 6, 30),
         link="https://huggingface.co/deepseek-ai/DeepSeek-R1",
+    ),
+    ## DeepSeek R1 distilled of Qwen/Llama models
+    LanguageModel(
+        "deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B",
+        "DeepSeek-R1-Distill-Qwen-1.5B",
+        LMStyle.DeepSeekR1,
+        datetime(2025, 1, 20),
+        link="https://huggingface.co/deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B",
+    ),
+    LanguageModel(
+        "deepseek-ai/DeepSeek-R1-Distill-Qwen-7B",
+        "DeepSeek-R1-Distill-Qwen-7B",
+        LMStyle.DeepSeekR1,
+        datetime(2025, 1, 20),
+        link="https://huggingface.co/deepseek-ai/DeepSeek-R1-Distill-Qwen-7B",
+    ),
+    LanguageModel(
+        "deepseek-ai/DeepSeek-R1-Distill-Qwen-14B",
+        "DeepSeek-R1-Distill-Qwen-14B",
+        LMStyle.DeepSeekR1,
+        datetime(2025, 1, 20),
+        link="https://huggingface.co/deepseek-ai/DeepSeek-R1-Distill-Qwen-14B",
+    ),
+    LanguageModel(
+        "deepseek-ai/DeepSeek-R1-Distill-Qwen-32B",
+        "DeepSeek-R1-Distill-Qwen-32B",
+        LMStyle.DeepSeekR1,
+        datetime(2025, 1, 20),
+        link="https://huggingface.co/deepseek-ai/DeepSeek-R1-Distill-Qwen-32B",
+    ),
+    LanguageModel(
+        "deepseek-ai/DeepSeek-R1-Distill-Llama-8B",
+        "DeepSeek-R1-Distill-Llama-8B",
+        LMStyle.DeepSeekR1,
+        datetime(2025, 1, 20),
+        link="https://huggingface.co/deepseek-ai/DeepSeek-R1-Distill-Llama-8B",
+    ),
+    LanguageModel(
+        "deepseek-ai/DeepSeek-R1-Distill-Llama-70B",
+        "DeepSeek-R1-Distill-Llama-70B",
+        LMStyle.DeepSeekR1,
+        datetime(2025, 1, 20),
+        link="https://huggingface.co/deepseek-ai/DeepSeek-R1-Distill-Llama-70B",
     ),
 ]
 

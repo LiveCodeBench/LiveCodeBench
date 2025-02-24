@@ -23,6 +23,13 @@ class PromptConstants:
         f"<|im_start|>system\nYou are a helpful assistant.<|im_end|>\n<|im_start|>user"
     )
 
+    SYSTEM_MESSAGE_DEEPSEEK_R1 = (
+        "<｜begin▁of▁sentence｜>A conversation between User and Assistant. "
+        "The user asks a question, and the Assistant solves it. "
+        "The assistant first thinks about the reasoning process in the mind and then provides the user with the answer. "
+        "The reasoning process and answer are enclosed within <think> </think> and <answer> </answer> tags, respectively, i.e., <think> reasoning process here </think> <answer> answer here </answer>.<｜User｜>"
+    )
+
     FORMATTING_MESSAGE_WITH_STARTER_CODE = "You will use the following starter code to write the solution to the problem and enclose your code within delimiters."
 
     FORMATTING_WITHOUT_STARTER_CODE = "Read the inputs from stdin solve the problem and write the answer to stdout (do not directly test on the sample inputs). Enclose your code within delimiters as follows. Ensure that when the python program runs, it reads the inputs, runs the algorithm and writes output to STDOUT."
@@ -127,6 +134,20 @@ def get_codeqwen_question_template_answer(question: CodeGenerationProblem):
         prompt += f"{PromptConstants.FORMATTING_WITHOUT_STARTER_CODE}\n"
         prompt += f"```python\n# YOUR CODE HERE\n```\n\n<|im_end|>\n"
     prompt += f"<|im_start|>assistant\n"
+    return prompt
+
+
+def get_deepseek_r1_question_template_answer(question: CodeGenerationProblem):
+    # Following modifications from: https://github.com/fanqiwan/FuseAI/blob/main/FuseO1-Preview/code_evaluation/lcb_runner_cq/prompts/code_generation.py
+    prompt = "You will be given a question (problem specification) and will generate a correct Python program that matches the specification and passes all tests.\n\n"
+    prompt += f"Question: {question.question_content}\n\n"
+    if question.starter_code:
+        prompt += f"{PromptConstants.FORMATTING_MESSAGE_WITH_STARTER_CODE}\n"
+        prompt += f"```python\n{question.starter_code}\n```\n\n"
+    else:
+        prompt += f"{PromptConstants.FORMATTING_WITHOUT_STARTER_CODE}\n"
+        prompt += f"```python\n# YOUR CODE HERE\n```\n\n"
+    prompt += f"<｜Assistant｜>"
     return prompt
 
 
@@ -282,6 +303,11 @@ def format_prompt_generation(
     if LanguageModelStyle == LMStyle.CodeQwenInstruct:
         prompt = f"{PromptConstants.SYSTEM_MESSAGE_CODEQWEN}\n\n"
         prompt += f"{get_codeqwen_question_template_answer(question)}"
+        return prompt
+
+    if LanguageModelStyle == LMStyle.DeepSeekR1:
+        prompt = f"{PromptConstants.SYSTEM_MESSAGE_DEEPSEEK_R1}"
+        prompt += f"{get_deepseek_r1_question_template_answer(question)}"
         return prompt
 
     if LanguageModelStyle == LMStyle.GenericBase:
