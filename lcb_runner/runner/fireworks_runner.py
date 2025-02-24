@@ -58,7 +58,7 @@ class FireWorksRunner(BaseRunner):
                 print("Sleeping for 30 seconds...")
                 print("Consider reducing the number of parallel processes.")
                 sleep(30)
-                return DeepSeekRunner._run_single(prompt)
+                return FireWorksRunner._run_single(prompt)
             except Exception as e:
                 print(f"Failed to run the model for {prompt}!")
                 print("Exception: ", repr(e))
