@@ -18,6 +18,8 @@ class LMStyle(Enum):
     DataBricks = "DataBricks"
     DeepSeekAPI = "DeepSeekAPI"
 
+    DeepSeekR1 = "DeepSeekR1"
+
     GenericBase = "GenericBase"
 
     DeepSeekCodeInstruct = "DeepSeekCodeInstruct"
@@ -573,6 +575,34 @@ LanguageModelList: list[LanguageModel] = [
         LMStyle.CodeQwenInstruct,
         datetime(2024, 6, 30),
         link="https://huggingface.co/Qwen/Qwen2.5-Coder-32B-Instruct",
+    ),
+    LanguageModel(
+        "azerogpt",
+        "AzeroGPT-64b",
+        LMStyle.CodeQwenInstruct,
+        datetime(2024, 3, 1),
+        "https://azerogpt.soundai.com",
+    ),
+    LanguageModel(
+        "Kimi-k1.5-IOI",
+        "Kimi-k1.5-IOI",
+        LMStyle.CodeQwenInstruct,
+        datetime(2024, 8, 1),
+        "https://kimi.moonshot.cn/",
+    ),
+    LanguageModel(
+        "Qwen/QwQ-Max",
+        "QwQ-Max",
+        LMStyle.QwQ,
+        datetime(2024, 6, 30),
+        link="https://huggingface.co/Qwen/QwQ-Max",
+    ),
+    LanguageModel(
+        "accounts/fireworks/models/deepseek-r1",
+        "DeepSeek-R1 (N=1)",
+        LMStyle.DeepSeekR1,
+        datetime(2024, 6, 30),
+        link="https://huggingface.co/deepseek-ai/DeepSeek-R1",
     ),
 ]
 

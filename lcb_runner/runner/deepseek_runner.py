@@ -12,7 +12,8 @@ from lcb_runner.runner.base_runner import BaseRunner
 
 class DeepSeekRunner(BaseRunner):
     client = OpenAI(
-        api_key=os.getenv("DEEPSEEK_API"), base_url="https://api.deepseek.com"
+        api_key=os.getenv("FIREWORKS_API"),
+        base_url="https://api.fireworks.ai/inference/v1",
     )
 
     def __init__(self, args, model):
