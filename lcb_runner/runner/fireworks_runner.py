@@ -10,10 +10,10 @@ except ImportError as e:
 from lcb_runner.runner.base_runner import BaseRunner
 
 
-class DeepSeekRunner(BaseRunner):
+class FireWorksRunner(BaseRunner):
     client = OpenAI(
         api_key=os.getenv("FIREWORKS_API"),
-        base_url="https://api.deepseek.com",
+        base_url="https://api.fireworks.ai/inference/v1",
     )
 
     def __init__(self, args, model):
@@ -31,7 +31,10 @@ class DeepSeekRunner(BaseRunner):
         }
 
     def _run_single(self, prompt: list[dict[str, str]]) -> list[str]:
-        assert isinstance(prompt, list)
+        if isinstance(prompt, list):
+            pass
+        else:
+            prompt = [{"role": "user", "content": prompt}]
 
         def __run_single(counter):
             try:

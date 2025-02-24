@@ -286,14 +286,14 @@ LanguageModelList: list[LanguageModel] = [
     ## O1-Mini and O1-Preview
     LanguageModel(
         "o1-preview-2024-09-12",
-        "O1-Preview-2024-09-12 (N=1)",
+        "O1-Preview-2024-09-12",
         LMStyle.OpenAIReasonPreview,
         datetime(2023, 4, 30),
         link="https://platform.openai.com/docs/guides/reasoning",
     ),
     LanguageModel(
         "o1-mini-2024-09-12",
-        "O1-Mini-2024-09-12 (N=1)",
+        "O1-Mini-2024-09-12",
         LMStyle.OpenAIReasonPreview,
         datetime(2023, 4, 30),
         link="https://platform.openai.com/docs/guides/reasoning",
@@ -301,21 +301,21 @@ LanguageModelList: list[LanguageModel] = [
     ## O1 (reasoning models)
     LanguageModel(
         "o1-2024-12-17__low",
-        "O1-2024-12-17 (N=1) (Low)",
+        "O1-2024-12-17 (Low)",
         LMStyle.OpenAIReason,
         datetime(2023, 4, 30),
         link="https://platform.openai.com/docs/api-reference/chat/create#chat-create-reasoning_effort",
     ),
     LanguageModel(
         "o1-2024-12-17__medium",
-        "O1-2024-12-17 (N=1) (Med)",
+        "O1-2024-12-17 (Med)",
         LMStyle.OpenAIReason,
         datetime(2023, 4, 30),
         link="htthttps://platform.openai.com/docs/api-reference/chat/create#chat-create-reasoning_effort",
     ),
     LanguageModel(
         "o1-2024-12-17__high",
-        "O1-2024-12-17 (N=1) (High)",
+        "O1-2024-12-17 (High)",
         LMStyle.OpenAIReason,
         datetime(2023, 4, 30),
         link="https://platform.openai.com/docs/api-reference/chat/create#chat-create-reasoning_effort",
@@ -323,21 +323,21 @@ LanguageModelList: list[LanguageModel] = [
     ## O3-Mini
     LanguageModel(
         "o3-mini-2025-01-31__low",
-        "O3-Mini-2025-01-31 (N=1) (Low)",
+        "O3-Mini-2025-01-31 (Low)",
         LMStyle.OpenAIReason,
         datetime(2023, 4, 30),
         link="https://platform.openai.com/docs/api-reference/chat/create#chat-create-reasoning_effort",
     ),
     LanguageModel(
         "o3-mini-2025-01-31__medium",
-        "O3-Mini-2025-01-31 (N=1) (Med)",
+        "O3-Mini-2025-01-31 (Med)",
         LMStyle.OpenAIReason,
         datetime(2023, 4, 30),
         link="https://platform.openai.com/docs/api-reference/chat/create#chat-create-reasoning_effort",
     ),
     LanguageModel(
         "o3-mini-2025-01-31__high",
-        "O3-Mini-2025-01-31 (N=1) (High)",
+        "O3-Mini-2025-01-31 (High)",
         LMStyle.OpenAIReason,
         datetime(2023, 4, 30),
         link="https://platform.openai.com/docs/api-reference/chat/create#chat-create-reasoning_effort",
@@ -417,14 +417,14 @@ LanguageModelList: list[LanguageModel] = [
     ),
     LanguageModel(
         "gemini-2.0-flash-thinking-exp-1219",
-        "Gemini-Flash-2.0-Thinking-12-19 (N=1)",
+        "Gemini-Flash-2.0-Thinking-12-19",
         LMStyle.GeminiThinking,
         datetime(2023, 4, 30),
         link="https://ai.google.dev/gemini-api/docs/models/experimental-models",
     ),
     LanguageModel(
         "gemini-2.0-flash-thinking-exp-01-21",
-        "Gemini-Flash-2.0-Thinking-01-21 (N=1)",
+        "Gemini-Flash-2.0-Thinking-01-21",
         LMStyle.GeminiThinking,
         datetime(2023, 4, 30),
         link="https://ai.google.dev/gemini-api/docs/models/experimental-models",
@@ -526,7 +526,7 @@ LanguageModelList: list[LanguageModel] = [
     ## QwQ
     LanguageModel(
         "Qwen/QwQ-32B-Preview",
-        "QwQ-32B-Preview (N=1)",
+        "QwQ-32B-Preview",
         LMStyle.QwQ,
         datetime(2024, 6, 30),
         link="https://huggingface.co/Qwen/QwQ-32B-Preview",
@@ -591,15 +591,15 @@ LanguageModelList: list[LanguageModel] = [
         "https://kimi.moonshot.cn/",
     ),
     LanguageModel(
-        "Qwen/QwQ-Max",
-        "QwQ-Max",
+        "Qwen/QwQ-Max-Preview",
+        "QwQ-Max-Preview",
         LMStyle.QwQ,
         datetime(2024, 6, 30),
-        link="https://huggingface.co/Qwen/QwQ-Max",
+        link="https://huggingface.co/Qwen/QwQ-Max-Preview",
     ),
     LanguageModel(
         "accounts/fireworks/models/deepseek-r1",
-        "DeepSeek-R1 (N=1)",
+        "DeepSeek-R1",
         LMStyle.DeepSeekR1,
         datetime(2024, 6, 30),
         link="https://huggingface.co/deepseek-ai/DeepSeek-R1",
