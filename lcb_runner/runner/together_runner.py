@@ -2,15 +2,14 @@ import os
 from time import sleep
 
 try:
-    import cohere
+    from together import Together
 except ImportError as e:
     pass
 
 from lcb_runner.runner.base_runner import BaseRunner
 
-
-class CohereRunner(BaseRunner):
-    client = cohere.ClientV2(os.getenv("COHERE_API_KEY"))
+class TogetherAIRunner(BaseRunner):
+    client = Together(api_key=os.getenv("TOGETHER_API_KEY"))
 
     def __init__(self, args, model):
         super().__init__(args, model)
@@ -18,17 +17,21 @@ class CohereRunner(BaseRunner):
             "model": args.model,
             "temperature": args.temperature,
             "max_tokens": args.max_tokens,
-            "p": args.top_p,
+            "top_p": args.top_p,
+            "frequency_penalty": 0,
+            "presence_penalty": 0,
+            "n": 1,
         }
 
     def _run_single(self, prompt: tuple[dict[str,str], str]) -> list[str]:
+
         def __run_single(counter):
             try:
-                response = self.client.chat(
+                response = self.client.chat.completions.create(
                     messages=prompt,
                     **self.client_kwargs,
                 )
-                content = response.message.content[0].text
+                content = response.choices[0].message.content
                 return content
             except Exception as e:
                 print("Exception: ", repr(e), "Sleeping for 20 seconds...")
@@ -39,7 +42,7 @@ class CohereRunner(BaseRunner):
                     print("Exception: ", repr(e))
                     raise e
                 return __run_single(counter)
-
+            
         outputs = []
         try:
             for _ in range(self.args.n):
