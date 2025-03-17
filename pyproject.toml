@@ -15,6 +15,7 @@ dependencies = [
     "pebble>=5.1.0",
     "torch>=2.3.0",
     "vllm>=0.5.0.post1",
+    "together>=0.21.0"
 ]
 
 [tool.setuptools]
