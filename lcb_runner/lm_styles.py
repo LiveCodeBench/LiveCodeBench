@@ -659,7 +659,7 @@ LanguageModelList: list[LanguageModel] = [
         model_name="command-r-08-2024",
         model_repr="command-r-08-2024",
         model_style=LMStyle.CohereCommand,
-        release_date=datetime(2024,8,1)
+        release_date=datetime(2024,8,1),
         link="https://docs.cohere.com/docs/command-r"
     ),
     LanguageModel(
@@ -684,7 +684,7 @@ LanguageModelList: list[LanguageModel] = [
         link="https://docs.together.ai/docs/serverless-models"
     ),
     LanguageModel(
-        model_name="deepseek-ai/DeepSeek-V3" ,
+        model_name="deepseek-ai/DeepSeek-V3",
         model_repr="DeepSeek-V3",
         model_style=LMStyle.TogetherAI,
         release_date=datetime(2024, 12, 26),
