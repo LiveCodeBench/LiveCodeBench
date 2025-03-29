@@ -436,6 +436,13 @@ LanguageModelList: list[LanguageModel] = [
         datetime(2023, 4, 30),
         link="https://ai.google.dev/gemini-api/docs/models/experimental-models",
     ),
+    LanguageModel(
+        "gemini-2.5-pro-exp-03-25",
+        "Gemini-2.5-Pro",
+        LMStyle.GeminiThinking,
+        datetime(2023, 4, 30),
+        link="https://blog.google/technology/google-deepmind/gemini-model-thinking-updates-march-2025/#advanced-coding",
+    ),
     ## Generic Base Models
     LanguageModel(
         "bigcode/starcoder2-3b",
@@ -584,10 +591,17 @@ LanguageModelList: list[LanguageModel] = [
         "https://azerogpt.soundai.com",
     ),
     LanguageModel(
-        "Kimi-k1.5-IOI",
-        "Kimi-k1.5-IOI",
+        "Kimi-k1.6-IOI-high",
+        "Kimi-k1.6-IOI-high",
         LMStyle.CodeQwenInstruct,
-        datetime(2024, 8, 1),
+        datetime(2024, 7, 30),
+        "https://kimi.moonshot.cn/",
+    ),
+    LanguageModel(
+        "Kimi-k1.6-IOI",
+        "Kimi-k1.6-IOI",
+        LMStyle.CodeQwenInstruct,
+        datetime(2024, 7, 30),
         "https://kimi.moonshot.cn/",
     ),
     LanguageModel(
@@ -646,6 +660,13 @@ LanguageModelList: list[LanguageModel] = [
         LMStyle.DeepSeekR1,
         datetime(2025, 1, 20),
         link="https://huggingface.co/deepseek-ai/DeepSeek-R1-Distill-Llama-70B",
+    ),
+    LanguageModel(
+        "MetaStone-L1-7B",
+        "MetaStone-L1-7B",
+        LMStyle.DeepSeekR1,
+        datetime(2025, 3, 12),
+        "https://www.wenxiaobai.com/",
     ),
 ]
 
