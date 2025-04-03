@@ -26,7 +26,7 @@ def get_output_path(model_repr:str, args) -> str:
     n = args.n
     temperature = args.temperature
     cot_suffix = "_cot" if args.cot_code_execution else ""
-    path = f"output/{model_repr}/{scenario}_{n}_{temperature}{cot_suffix}.json"
+    path = f"output/{model_repr}/{scenario}_{n}_{temperature}{cot_suffix}_chnage_prompt.json"
     ensure_dir(path)
     return path
 

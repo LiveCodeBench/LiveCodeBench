@@ -48,12 +48,24 @@ def extract_test_output_code(model_output: str, lmstyle: LMStyle = None):
 
 def extract_execution_code(model_output: str, lmstyle: LMStyle, cot: bool = False):
     if cot:
-        if "[ANSWER]" in model_output:
-            model_output = model_output.split("[ANSWER]")[1].strip()
-    if "==" in model_output:
-        model_output = model_output.split("==")[1].strip()
-    if "[/ANSWER]" in model_output:
-        model_output = model_output.split("[/ANSWER]")[0].strip()
+        if "<answer>" in model_output:
+            model_output = model_output.split("<answer>")[1].strip()
+    # if "==" in model_output:
+    #     model_output = model_output.split("==")[1].strip()
+    if "</answer>" in model_output:
+        model_output = model_output.split("</answer>")[0].strip()
     else:
         model_output = model_output.split("\n")[0].strip()
     return model_output.strip()
+
+# def extract_execution_code(model_output: str, lmstyle: LMStyle, cot: bool = False):
+#     if cot:
+#         if "[ANSWER]" in model_output:
+#             model_output = model_output.split("[ANSWER]")[1].strip()
+#     if "==" in model_output:
+#         model_output = model_output.split("==")[1].strip()
+#     if "[/ANSWER]" in model_output:
+#         model_output = model_output.split("[/ANSWER]")[0].strip()
+#     else:
+#         model_output = model_output.split("\n")[0].strip()
+#     return model_output.strip()
