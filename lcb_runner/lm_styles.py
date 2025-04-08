@@ -517,13 +517,6 @@ LanguageModelList: list[LanguageModel] = [
         link="https://mistral.ai/news/mixtral-8x7b/",
     ),
     LanguageModel(
-        "open-mixtral-8x7b",
-        "Mixtral-8x7B-Ins",
-        LMStyle.MistralWeb,
-        datetime(2023, 1, 1),
-        link="https://mistral.ai/news/mixtral-8x7b/",
-    ),
-    LanguageModel(
         "codestral-latest",
         "Codestral-Latest",
         LMStyle.MistralWeb,
