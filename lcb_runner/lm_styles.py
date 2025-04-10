@@ -677,7 +677,7 @@ LanguageModelList: list[LanguageModel] = [
         link="https://docs.cohere.com/docs/command-r7b"
     ),
     LanguageModel(
-        model_name="command-a-03-2025-quality",
+        model_name="command-a-03-2025",
         model_repr="command-a-03-2025",
         model_style=LMStyle.CohereCommand,
         release_date=datetime(2025,3,13),
