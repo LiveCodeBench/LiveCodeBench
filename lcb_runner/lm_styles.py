@@ -696,7 +696,7 @@ LanguageModelList: list[LanguageModel] = [
         model_style=LMStyle.TogetherAI,
         release_date=datetime(2024, 12, 26),
         link="https://docs.together.ai/docs/serverless-models"
-    )
+    ),
     LanguageModel(
         "MetaStone-L1-7B",
         "MetaStone-L1-7B",
