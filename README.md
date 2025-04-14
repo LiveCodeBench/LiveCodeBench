@@ -127,7 +127,7 @@ python -m lcb_runner.runner.main --model {model_name} --scenario codeexecution -
 ```
 
 ## Custom Evaluation
-Alternatively, you can using [`lcb_runner/runner/custom_evaluator.py`](./lcb_runner/runner/custom_evaluator.py) to directly evaluated model generations in a custom file. The file should contain a list of model outputs, appropirately formatted for evaluation in the order of benchmark problems. 
+Alternatively, you can using [`lcb_runner/runner/custom_evaluator.py`](./lcb_runner/runner/custom_evaluator.py) to directly evaluated model generations in a custom file. The file should contain a list of model outputs, appropriately formatted for evaluation in the order of benchmark problems. 
 
 ```bash
 python -m lcb_runner.runner.custom_evaluator --custom_output_file {path_to_custom_outputs}
@@ -145,7 +145,7 @@ Particularly, arrange the outputs in the following format
 
 ## Adding Support for New Models
 
-To add support for new models, we have implemented an extensible framework to add new models and customize prompts appropirately. 
+To add support for new models, we have implemented an extensible framework to add new models and customize prompts appropriately. 
 
 Step 1: Add a new model to the [./lcb_runner/lm_styles.py](./lcb_runner/lm_styles.py) file. Particularly, extend the `LMStyle` class to add a new model family and extend the model to the `LanguageModelList` array.
 
