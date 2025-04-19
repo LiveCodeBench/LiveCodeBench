@@ -16,6 +16,7 @@ class LMStyle(Enum):
 
     MistralWeb = "MistralWeb"
     CohereCommand = "CohereCommand"
+
     DataBricks = "DataBricks"
     DeepSeekAPI = "DeepSeekAPI"
 
@@ -26,10 +27,10 @@ class LMStyle(Enum):
     StarCoderInstruct = "StarCoderInstruct"
     CodeQwenInstruct = "CodeQwenInstruct"
     QwQ = "QwQ"
-
     LLaMa3 = "LLaMa3"
-
     DeepSeekR1 = "DeepSeekR1"
+    
+    TogetherAI = "TogetherAI"
 
 
 @dataclass
@@ -525,13 +526,6 @@ LanguageModelList: list[LanguageModel] = [
         link="https://mistral.ai/news/mixtral-8x7b/",
     ),
     LanguageModel(
-        "open-mixtral-8x7b",
-        "Mixtral-8x7B-Ins",
-        LMStyle.MistralWeb,
-        datetime(2023, 1, 1),
-        link="https://mistral.ai/news/mixtral-8x7b/",
-    ),
-    LanguageModel(
         "codestral-latest",
         "Codestral-Latest",
         LMStyle.MistralWeb,
@@ -668,6 +662,48 @@ LanguageModelList: list[LanguageModel] = [
         LMStyle.DeepSeekR1,
         datetime(2025, 1, 20),
         link="https://huggingface.co/deepseek-ai/DeepSeek-R1-Distill-Llama-70B",
+    ),
+    LanguageModel(
+        model_name="command-r-plus-08-2024",
+        model_repr="command-r-plus-08-2024",
+        model_style=LMStyle.CohereCommand,
+        release_date=datetime(2024,8,1),
+        link="https://docs.cohere.com/docs/command-r-plus"
+    ),
+    LanguageModel(
+        model_name="command-r-08-2024",
+        model_repr="command-r-08-2024",
+        model_style=LMStyle.CohereCommand,
+        release_date=datetime(2024,8,1),
+        link="https://docs.cohere.com/docs/command-r"
+    ),
+    LanguageModel(
+        model_name="command-r7b-12-2024",
+        model_repr="command-r7b-12-2024",
+        model_style=LMStyle.CohereCommand,
+        release_date=datetime(2024,12,13),
+        link="https://docs.cohere.com/docs/command-r7b"
+    ),
+    LanguageModel(
+        model_name="command-a-03-2025",
+        model_repr="command-a-03-2025",
+        model_style=LMStyle.CohereCommand,
+        release_date=datetime(2025,3,13),
+        link="https://docs.cohere.com/docs/command-a"
+    ),
+    LanguageModel(
+        model_name="Qwen/Qwen2.5-72B-Instruct-Turbo" ,
+        model_repr="Qwen2.5-72B-Instruct-Turbo",
+        model_style=LMStyle.TogetherAI,
+        release_date=datetime(2024, 9, 19),
+        link="https://docs.together.ai/docs/serverless-models"
+    ),
+    LanguageModel(
+        model_name="deepseek-ai/DeepSeek-V3",
+        model_repr="DeepSeek-V3",
+        model_style=LMStyle.TogetherAI,
+        release_date=datetime(2024, 12, 26),
+        link="https://docs.together.ai/docs/serverless-models"
     ),
     LanguageModel(
         "MetaStone-L1-7B",
