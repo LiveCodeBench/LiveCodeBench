@@ -12,6 +12,7 @@ class LMStyle(Enum):
     Claude3 = "Claude3"
     Gemini = "Gemini"
     GeminiThinking = "GeminiThinking"
+    Grok = "Grok"
 
     MistralWeb = "MistralWeb"
     CohereCommand = "CohereCommand"
@@ -443,6 +444,13 @@ LanguageModelList: list[LanguageModel] = [
         datetime(2023, 4, 30),
         link="https://blog.google/technology/google-deepmind/gemini-model-thinking-updates-march-2025/#advanced-coding",
     ),
+    LanguageModel(
+        "gemini-2.5-flash-preview-04-17",
+        "Gemini-2.5-Flash",
+        LMStyle.GeminiThinking,
+        datetime(2023, 4, 30),
+        link="https://developers.googleblog.com/en/start-building-with-gemini-25-flash/",
+    ),
     ## Generic Base Models
     LanguageModel(
         "bigcode/starcoder2-3b",
@@ -667,6 +675,20 @@ LanguageModelList: list[LanguageModel] = [
         LMStyle.DeepSeekR1,
         datetime(2025, 3, 12),
         "https://www.wenxiaobai.com/",
+    ),
+    LanguageModel(
+        "grok-3-mini-beta",
+        "Grok-3-Mini",
+        LMStyle.Grok,
+        datetime(2024, 3, 1),
+        "https://x.com/i/grok",
+    ),
+    LanguageModel(
+        "grok-3-mini-beta_high",
+        "Grok-3-Mini (High)",
+        LMStyle.Grok,
+        datetime(2024, 3, 1),
+        "https://x.com/i/grok",
     ),
 ]
 

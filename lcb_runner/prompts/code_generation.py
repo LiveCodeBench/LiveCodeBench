@@ -208,7 +208,7 @@ def format_prompt_generation(
             },
         ]
         return chat_messages
-    elif LanguageModelStyle == LMStyle.OpenAIReasonPreview:
+    elif LanguageModelStyle in [LMStyle.OpenAIReasonPreview, LMStyle.Grok]:
         chat_messages = [
             {
                 "role": "user",

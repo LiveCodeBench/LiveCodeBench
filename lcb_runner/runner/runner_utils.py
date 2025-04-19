@@ -38,6 +38,10 @@ def build_runner(args, model: LanguageModel):
         from lcb_runner.runner.deepseek_runner import DeepSeekRunner
 
         return DeepSeekRunner(args, model)
+    if model.model_style == LMStyle.Grok:
+        from lcb_runner.runner.grok_runner import GrokRunner
+
+        return GrokRunner(args, model)
     if "/fireworks/" in model.model_name:
         from lcb_runner.runner.fireworks_runner import FireWorksRunner
 
