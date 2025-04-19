@@ -29,7 +29,7 @@ class LMStyle(Enum):
     QwQ = "QwQ"
     LLaMa3 = "LLaMa3"
     DeepSeekR1 = "DeepSeekR1"
-    
+
     TogetherAI = "TogetherAI"
 
 
@@ -667,43 +667,43 @@ LanguageModelList: list[LanguageModel] = [
         model_name="command-r-plus-08-2024",
         model_repr="command-r-plus-08-2024",
         model_style=LMStyle.CohereCommand,
-        release_date=datetime(2024,8,1),
-        link="https://docs.cohere.com/docs/command-r-plus"
+        release_date=datetime(2024, 8, 1),
+        link="https://docs.cohere.com/docs/command-r-plus",
     ),
     LanguageModel(
         model_name="command-r-08-2024",
         model_repr="command-r-08-2024",
         model_style=LMStyle.CohereCommand,
-        release_date=datetime(2024,8,1),
-        link="https://docs.cohere.com/docs/command-r"
+        release_date=datetime(2024, 8, 1),
+        link="https://docs.cohere.com/docs/command-r",
     ),
     LanguageModel(
         model_name="command-r7b-12-2024",
         model_repr="command-r7b-12-2024",
         model_style=LMStyle.CohereCommand,
-        release_date=datetime(2024,12,13),
-        link="https://docs.cohere.com/docs/command-r7b"
+        release_date=datetime(2024, 12, 13),
+        link="https://docs.cohere.com/docs/command-r7b",
     ),
     LanguageModel(
         model_name="command-a-03-2025",
         model_repr="command-a-03-2025",
         model_style=LMStyle.CohereCommand,
-        release_date=datetime(2025,3,13),
-        link="https://docs.cohere.com/docs/command-a"
+        release_date=datetime(2025, 3, 13),
+        link="https://docs.cohere.com/docs/command-a",
     ),
     LanguageModel(
-        model_name="Qwen/Qwen2.5-72B-Instruct-Turbo" ,
+        model_name="Qwen/Qwen2.5-72B-Instruct-Turbo",
         model_repr="Qwen2.5-72B-Instruct-Turbo",
         model_style=LMStyle.TogetherAI,
         release_date=datetime(2024, 9, 19),
-        link="https://docs.together.ai/docs/serverless-models"
+        link="https://docs.together.ai/docs/serverless-models",
     ),
     LanguageModel(
         model_name="deepseek-ai/DeepSeek-V3",
         model_repr="DeepSeek-V3",
         model_style=LMStyle.TogetherAI,
         release_date=datetime(2024, 12, 26),
-        link="https://docs.together.ai/docs/serverless-models"
+        link="https://docs.together.ai/docs/serverless-models",
     ),
     LanguageModel(
         "MetaStone-L1-7B",
@@ -725,6 +725,27 @@ LanguageModelList: list[LanguageModel] = [
         LMStyle.Grok,
         datetime(2024, 3, 1),
         "https://x.com/i/grok",
+    ),
+    LanguageModel(
+        "nvidia/Llama-3_1-Nemotron-Ultra-253B-v1",
+        "Llama-3_1-Nemotron-Ultra-253B-v1",
+        LMStyle.DeepSeekR1,
+        datetime(2024, 4, 1),
+        "https://huggingface.co/nvidia/Llama-3_1-Nemotron-Ultra-253B-v1",
+    ),
+    LanguageModel(
+        "nvidia/Llama-3_1-Nemotron-Nano-8B-v1",
+        "Llama-3_1-Nemotron-Nano-8B-v1",
+        LMStyle.DeepSeekR1,
+        datetime(2024, 4, 1),
+        "https://huggingface.co/nvidia/Llama-3_1-Nemotron-Nano-8B-v1/",
+    ),
+    LanguageModel(
+        "agentica-org/DeepCoder-14B-Preview",
+        "DeepCoder-14B-Preview",
+        LMStyle.DeepSeekR1,
+        datetime(2024, 4, 1),
+        "https://huggingface.co/agentica-org/DeepCoder-14B-Preview",
     ),
 ]
 
