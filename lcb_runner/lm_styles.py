@@ -10,6 +10,8 @@ class LMStyle(Enum):
 
     Claude = "Claude"  # Claude 1 and Claude 2
     Claude3 = "Claude3"
+    Claude3Thinking = "Claude3Thinking"
+
     Gemini = "Gemini"
     GeminiThinking = "GeminiThinking"
     Grok = "Grok"
@@ -344,6 +346,27 @@ LanguageModelList: list[LanguageModel] = [
         datetime(2023, 4, 30),
         link="https://platform.openai.com/docs/api-reference/chat/create#chat-create-reasoning_effort",
     ),
+    LanguageModel(
+        "o4-mini__high",
+        "O4-Mini (High)",
+        LMStyle.OpenAIReason,
+        datetime(2023, 4, 30),
+        link="https://platform.openai.com/docs/api-reference/chat/create#chat-create-reasoning_effort",
+    ),
+    LanguageModel(
+        "o4-mini__medium",
+        "O4-Mini (Medium)",
+        LMStyle.OpenAIReason,
+        datetime(2023, 4, 30),
+        link="https://platform.openai.com/docs/api-reference/chat/create#chat-create-reasoning_effort",
+    ),
+    LanguageModel(
+        "o4-mini__low",
+        "O4-Mini (Low)",
+        LMStyle.OpenAIReason,
+        datetime(2023, 4, 30),
+        link="https://platform.openai.com/docs/api-reference/chat/create#chat-create-reasoning_effort",
+    ),
     ## Claude and Claude 2
     LanguageModel(
         "claude-instant-1",
@@ -387,6 +410,13 @@ LanguageModelList: list[LanguageModel] = [
         LMStyle.Claude3,
         datetime(2024, 3, 31),
         link="https://www.anthropic.com/news/claude-3-5-sonnet",
+    ),
+    LanguageModel(
+        "claude-3-7-sonnet-20250219",
+        "Claude-3.7-Sonnet (Thinking)",
+        LMStyle.Claude3Thinking,
+        datetime(2024, 3, 31),
+        link="https://www.anthropic.com/news/claude-3-7-sonnet",
     ),
     LanguageModel(
         "claude-3-haiku-20240307",
@@ -539,6 +569,13 @@ LanguageModelList: list[LanguageModel] = [
         LMStyle.QwQ,
         datetime(2024, 6, 30),
         link="https://huggingface.co/Qwen/QwQ-32B-Preview",
+    ),
+    LanguageModel(
+        "Qwen/QwQ-32B",
+        "QwQ-32B",
+        LMStyle.QwQ,
+        datetime(2024, 6, 30),
+        link="https://huggingface.co/Qwen/QwQ-32B",
     ),
     ## Qwen 2
     LanguageModel(

@@ -14,7 +14,7 @@ def build_runner(args, model: LanguageModel):
         from lcb_runner.runner.gemini_runner import GeminiRunner
 
         return GeminiRunner(args, model)
-    if model.model_style == LMStyle.Claude3:
+    if model.model_style in [LMStyle.Claude3, LMStyle.Claude3Thinking]:
         from lcb_runner.runner.claude3_runner import Claude3Runner
 
         return Claude3Runner(args, model)

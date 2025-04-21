@@ -194,7 +194,12 @@ def get_base_model_question_template_answer(question: CodeGenerationProblem):
 def format_prompt_generation(
     question: CodeGenerationProblem, LanguageModelStyle: LMStyle
 ) -> str:
-    if LanguageModelStyle in [LMStyle.OpenAIChat, LMStyle.DeepSeekAPI, LMStyle.TogetherAI, LMStyle.CohereCommand]:
+    if LanguageModelStyle in [
+        LMStyle.OpenAIChat,
+        LMStyle.DeepSeekAPI,
+        LMStyle.TogetherAI,
+        LMStyle.CohereCommand,
+    ]:
         chat_messages = [
             {
                 "role": "system",
@@ -262,7 +267,7 @@ def format_prompt_generation(
         prompt += f"{AI_PROMPT}"
         return prompt
 
-    if LanguageModelStyle == LMStyle.Claude3:
+    if LanguageModelStyle in [LMStyle.Claude3, LMStyle.Claude3Thinking]:
         system = PromptConstants.SYSTEM_MESSAGE_GENERIC
         prompt = [
             {
