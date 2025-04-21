@@ -367,6 +367,13 @@ LanguageModelList: list[LanguageModel] = [
         datetime(2023, 4, 30),
         link="https://platform.openai.com/docs/api-reference/chat/create#chat-create-reasoning_effort",
     ),
+    LanguageModel(
+        "o3__high",
+        "O3 (High)",
+        LMStyle.OpenAIReason,
+        datetime(2023, 4, 30),
+        link="https://platform.openai.com/docs/api-reference/chat/create#chat-create-reasoning_effort",
+    ),
     ## Claude and Claude 2
     LanguageModel(
         "claude-instant-1",

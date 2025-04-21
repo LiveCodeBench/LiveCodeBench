@@ -23,6 +23,8 @@ class PromptConstants:
         f"<|im_start|>system\nYou are a helpful assistant.<|im_end|>\n<|im_start|>user"
     )
 
+    SYSTEM_MESSAGE_QWEN_QWQ = f"<|im_start|>system\nYou are a helpful and harmless assistant. You are Qwen developed by Alibaba. You should think step-by-step.<|im_end|>\n<|im_start|>user"
+
     SYSTEM_MESSAGE_DEEPSEEK_R1 = (
         "<｜begin▁of▁sentence｜>A conversation between User and Assistant. "
         "The user asks a question, and the Assistant solves it. "
@@ -126,6 +128,19 @@ def get_qwen_question_template_answer(question: CodeGenerationProblem):
 
 def get_codeqwen_question_template_answer(question: CodeGenerationProblem):
     prompt = "You will be given a question (problem specification) and will generate a correct Python program that matches the specification and passes all tests. You will NOT return anything except for the program.\n\n"
+    prompt += f"Question: {question.question_content}\n\n"
+    if question.starter_code:
+        prompt += f"{PromptConstants.FORMATTING_MESSAGE_WITH_STARTER_CODE}\n"
+        prompt += f"```python\n{question.starter_code}\n```\n\n<|im_end|>\n"
+    else:
+        prompt += f"{PromptConstants.FORMATTING_WITHOUT_STARTER_CODE}\n"
+        prompt += f"```python\n# YOUR CODE HERE\n```\n\n<|im_end|>\n"
+    prompt += f"<|im_start|>assistant\n"
+    return prompt
+
+
+def get_qwen_qwq_question_template_answer(question: CodeGenerationProblem):
+    prompt = "You will be given a question (problem specification) and will generate a correct Python program that matches the specification and passes all tests.\n\n"
     prompt += f"Question: {question.question_content}\n\n"
     if question.starter_code:
         prompt += f"{PromptConstants.FORMATTING_MESSAGE_WITH_STARTER_CODE}\n"
@@ -308,6 +323,11 @@ def format_prompt_generation(
     if LanguageModelStyle == LMStyle.CodeQwenInstruct:
         prompt = f"{PromptConstants.SYSTEM_MESSAGE_CODEQWEN}\n\n"
         prompt += f"{get_codeqwen_question_template_answer(question)}"
+        return prompt
+
+    if LanguageModelStyle == LMStyle.QwQ:
+        prompt = f"{PromptConstants.SYSTEM_MESSAGE_QWEN_QWQ}\n\n"
+        prompt += f"{get_qwen_qwq_question_template_answer(question)}"
         return prompt
 
     if LanguageModelStyle == LMStyle.DeepSeekR1:
