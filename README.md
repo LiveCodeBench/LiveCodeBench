@@ -44,6 +44,7 @@ Since LiveCodeBench is a continuously updated benchmark, we provide different ve
 - `release_v3`: The updated release of the dataset with problems released between May 2023 and Jul 2024 containing 612 problems.
 - `release_v4`: The updated release of the dataset with problems released between May 2023 and Sep 2024 containing 713 problems.
 - `release_v5`: The updated release of the dataset with problems released between May 2023 and Jan 2025 containing 880 problems.
+- `release_v6`: The updated release of the dataset with problems released between May 2023 and Apr 2025 containing 1055 problems.
 
 You can use the `--release_version` flag to specify the dataset version you wish to use. Particularly, you can use the following command to run the evaluation on the `release_v2` dataset. Release version defaults to `release_latest`. Additionally, we have introduced fine-grained release versions such as `v1`, `v2`, `v1_v3`, `v4_v5` for specific versions of the dataset.
 

@@ -12,7 +12,7 @@ from lcb_runner.runner.base_runner import BaseRunner
 
 class DeepSeekRunner(BaseRunner):
     client = OpenAI(
-        api_key=os.getenv("FIREWORKS_API"),
+        api_key=os.getenv("DEEPSEEK_API"),
         base_url="https://api.deepseek.com",
     )
 
