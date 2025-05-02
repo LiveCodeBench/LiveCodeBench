@@ -20,7 +20,17 @@ git clone https://github.com/LiveCodeBench/LiveCodeBench.git
 cd LiveCodeBench
 ```
 
-We recommend using uv for managing dependencies. You can install uv and the dependencies using the following commands:
+We recommend using [uv](https://github.com/astral-sh/uv)
+for managing dependencies, which can be installed a [number of ways](https://github.com/astral-sh/uv?tab=readme-ov-file#installation).
+
+Verify that `uv` is installed on your system by running:
+
+```bash
+uv --version
+```
+
+Once `uv` has been installed, use it to create a virtual environment for
+LiveCodeBench and install its dependencies with the following commands:
 
 ```bash
 uv venv --python 3.11
