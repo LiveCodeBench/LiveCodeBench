@@ -238,8 +238,8 @@ LanguageModelList: list[LanguageModel] = [
         link="https://openai.com/blog/new-models-and-developer-products-announced-at-devday",
     ),
     LanguageModel(
-        "gpt-4o-mini",
-        "GPT-4o-Mini",
+        "gpt-3.5-turbo-0125",
+        "GPT-3.5-Turbo-0125",
         LMStyle.OpenAIChat,
         datetime(2021, 10, 1),
         link="https://openai.com/blog/new-embedding-models-and-api-updates#:~:text=Other%20new%20models%20and%20lower%20pricing",
