@@ -231,8 +231,8 @@ LanguageModelList: list[LanguageModel] = [
     ),
     ## OpenAI GPT-3.5-Turbo
     LanguageModel(
-        "gpt-4.1-mini",
-        "GPT-4.1-Mini",
+        "gpt-3.5-turbo-0301",
+        "GPT-3.5-Turbo-0301",
         LMStyle.OpenAIChat,
         datetime(2021, 10, 1),
         link="https://openai.com/blog/new-models-and-developer-products-announced-at-devday",
