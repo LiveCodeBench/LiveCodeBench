@@ -127,6 +127,10 @@ class BaseRunner(ABC):
         ) as f:
             check_metadata_list = json.load(f)
 
+        # Limit the number of examples if max_examples is set
+        if self.args.max_examples is not None:
+            benchmark = benchmark[:self.args.max_examples]
+
         outputs = [
             [None for _ in range(self.args.codegen_n)]
             for _ in range(len(benchmark))
@@ -173,6 +177,10 @@ class BaseRunner(ABC):
     def run_main(self, benchmark: list, format_prompt: callable) -> list[list[str]]:
         if self.args.scenario == Scenario.selfrepair:
             return self.run_main_repair(benchmark, format_prompt)
+
+        # Limit the number of examples if max_examples is set
+        if self.args.max_examples is not None:
+            benchmark = benchmark[:self.args.max_examples]
 
         prompts = [
             format_prompt(problem, self.model.model_style) for problem in benchmark

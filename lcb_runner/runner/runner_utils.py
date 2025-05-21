@@ -2,7 +2,7 @@ from lcb_runner.lm_styles import LMStyle, LanguageModel
 
 
 def build_runner(args, model: LanguageModel):
-    if model.model_style == LMStyle.OpenAIChat:
+    if model.model_style in [LMStyle.OpenAIChat, LMStyle.OpenAIGeneric]:
         from lcb_runner.runner.oai_runner import OpenAIRunner
 
         return OpenAIRunner(args, model)

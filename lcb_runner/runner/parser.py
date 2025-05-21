@@ -131,6 +131,12 @@ def get_args():
         default=None,
         help="End date for the contest to filter the evaluation file (format - YYYY-MM-DD)",
     )
+    parser.add_argument(
+        "--max_examples",
+        type=int,
+        default=None,
+        help="Maximum number of examples to run (useful for testing with a smaller subset)",
+    )
 
     args = parser.parse_args()
 

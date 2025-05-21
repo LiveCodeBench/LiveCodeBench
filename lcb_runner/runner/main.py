@@ -3,7 +3,7 @@ import json
 
 from lcb_runner.runner.parser import get_args
 from lcb_runner.utils.scenarios import Scenario
-from lcb_runner.lm_styles import LanguageModelStore
+from lcb_runner.lm_styles import LanguageModelStore, LanguageModel, LMStyle
 from lcb_runner.runner.runner_utils import build_runner
 from lcb_runner.utils.path_utils import get_output_path
 from lcb_runner.evaluation import extract_instance_results
@@ -18,8 +18,27 @@ from lcb_runner.runner.scenario_router import (
 def main():
     args = get_args()
 
-    model = LanguageModelStore[args.model]
+    # If OPENAI_BASE_URL is provided, create a custom model entry
+    if os.getenv("OPENAI_BASE_URL"):
+        model = LanguageModel(
+            model_name=args.model,
+            model_repr=args.model,
+            model_style=LMStyle.OpenAIGeneric,
+            release_date=None,
+            link=None
+        )
+    else:
+        model = LanguageModelStore[args.model]
+
     benchmark, format_prompt = build_prompt_benchmark(args)
+    
+    # Log the number of examples being run
+    total_examples = len(benchmark)
+    if args.max_examples is not None:
+        print(f"Running {args.max_examples} examples out of {total_examples} total examples")
+    else:
+        print(f"Running all {total_examples} examples")
+
     if args.debug:
         print(f"Running with {len(benchmark)} instances in debug mode")
         benchmark = benchmark[:15]
@@ -88,20 +107,6 @@ def main():
 
     with open(output_path, "w") as f:
         json.dump(save_results, f, indent=4)
-
-    # for i in range(len(combined_results)):
-    #     for j in range(len(combined_results[i][1])):
-    #         if "def solve()" in combined_results[i][1][j]:
-    #             from lcb_runner.utils.extraction_utils import extract_code, LMStyle
-
-    #             combined_results[i][1][j] = extract_code(
-    #                 combined_results[i][0][j], LMStyle.Gemini
-    #             )
-    #             if "\nsolve()" not in combined_results[i][1][j]:
-    #                 combined_results[i][1][j] += "\n\nsolve()"
-
-    #                 # combined_results[i][1][j] += "\n\nsolve()"
-    #                 print(combined_results[i][1][j])
 
     if args.evaluate:
         if args.continue_existing_with_eval and os.path.exists(eval_all_file):
@@ -222,6 +227,11 @@ def main():
 
         with open(eval_all_file, "w") as f:
             json.dump(save_eval_results, f, indent=4)
+
+        print(f"\nResults have been written to:")
+        print(f"1. Main output: {output_path}")
+        print(f"2. Evaluation results: {eval_file}")
+        print(f"3. Detailed evaluation: {eval_all_file}")
 
 
 if __name__ == "__main__":

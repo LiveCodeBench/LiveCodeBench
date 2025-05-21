@@ -7,6 +7,7 @@ class LMStyle(Enum):
     OpenAIChat = "OpenAIChat"
     OpenAIReasonPreview = "OpenAIReasonPreview"
     OpenAIReason = "OpenAIReason"
+    OpenAIGeneric = "OpenAIGeneric"  # For any OpenAI-compatible endpoint
 
     Claude = "Claude"  # Claude 1 and Claude 2
     Claude3 = "Claude3"
@@ -230,15 +231,15 @@ LanguageModelList: list[LanguageModel] = [
     ),
     ## OpenAI GPT-3.5-Turbo
     LanguageModel(
-        "gpt-3.5-turbo-0301",
-        "GPT-3.5-Turbo-0301",
+        "gpt-4.1-mini",
+        "GPT-4.1-Mini",
         LMStyle.OpenAIChat,
         datetime(2021, 10, 1),
         link="https://openai.com/blog/new-models-and-developer-products-announced-at-devday",
     ),
     LanguageModel(
-        "gpt-3.5-turbo-0125",
-        "GPT-3.5-Turbo-0125",
+        "gpt-4o-mini",
+        "GPT-4o-Mini",
         LMStyle.OpenAIChat,
         datetime(2021, 10, 1),
         link="https://openai.com/blog/new-embedding-models-and-api-updates#:~:text=Other%20new%20models%20and%20lower%20pricing",

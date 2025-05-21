@@ -50,26 +50,27 @@ def build_prompt_benchmark(
     if scenario == Scenario.codegeneration:
         not_fast: bool = args.not_fast
         if not_fast:
-            benchmark = load_code_generation_dataset_not_fast(args.release_version)
+            benchmark = load_code_generation_dataset_not_fast(args.release_version, max_examples=args.max_examples)
         else:
             benchmark = load_code_generation_dataset(
                 args.release_version,
                 start_date=args.start_date,
-                end_date=args.end_date
+                end_date=args.end_date,
+                max_examples=args.max_examples
             )
         benchmark = sorted(benchmark, key=lambda x: x.question_id)
         format_prompt = format_prompt_generation
     elif scenario == Scenario.testoutputprediction:
-        benchmark = load_test_prediction_dataset(args.release_version)
+        benchmark = load_test_prediction_dataset(args.release_version, max_examples=args.max_examples)
         benchmark = sorted(benchmark, key=lambda x: (x.question_id, x.test_id))
         format_prompt = format_prompt_test_output
     elif scenario == Scenario.selfrepair:
-        benchmark = load_code_generation_dataset(args.release_version)
+        benchmark = load_code_generation_dataset(args.release_version, max_examples=args.max_examples)
         benchmark = sorted(benchmark, key=lambda x: x.question_id)
         format_prompt = format_prompt_self_repair
     elif scenario == Scenario.codeexecution:
         cot_code_execution: bool = args.cot_code_execution
-        benchmark = load_code_execution_dataset(args.release_version)
+        benchmark = load_code_execution_dataset(args.release_version, max_examples=args.max_examples)
         benchmark = sorted(benchmark, key=lambda x: int(x.id.split("_")[1]))
         if cot_code_execution:
             format_prompt = format_prompt_execution_cot
