@@ -3,7 +3,7 @@ Official repository for the paper "LiveCodeBench: Holistic and Contamination Fre
 
 <p align="center">
     <a href="https://livecodebench.github.io/">🏠 Home Page</a> •
-    <a href="https://huggingface.co/datasets/livecodebench/">💻 Data </a> •
+    <a href="https://huggingface.co/livecodebench/">💻 Data </a> •
     <a href="https://livecodebench.github.io/leaderboard.html">🏆 Leaderboard</a> •
     <a href="https://livecodebench.github.io/leaderboard.html](https://huggingface.co/spaces/livecodebench/code_generation_samples">🔍 Explorer</a> 
 </p>
@@ -20,7 +20,17 @@ git clone https://github.com/LiveCodeBench/LiveCodeBench.git
 cd LiveCodeBench
 ```
 
-We recommend using uv for managing dependencies. You can install uv and the dependencies using the following commands:
+We recommend using [uv](https://github.com/astral-sh/uv)
+for managing dependencies, which can be installed a [number of ways](https://github.com/astral-sh/uv?tab=readme-ov-file#installation).
+
+Verify that `uv` is installed on your system by running:
+
+```bash
+uv --version
+```
+
+Once `uv` has been installed, use it to create a virtual environment for
+LiveCodeBench and install its dependencies with the following commands:
 
 ```bash
 uv venv --python 3.11
