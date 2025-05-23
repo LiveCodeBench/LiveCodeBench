@@ -476,12 +476,19 @@ LanguageModelList: list[LanguageModel] = [
     #     link="https://ai.google.dev/gemini-api/docs/models/experimental-models",
     # ),
     LanguageModel(
-        "gemini-2.5-pro-exp-03-25",
-        "Gemini-2.5-Pro",
+        "gemini-2.5-pro-preview-05-06",
+        "Gemini-2.5-Pro-05-06",
         LMStyle.GeminiThinking,
         datetime(2023, 4, 30),
         link="https://blog.google/technology/google-deepmind/gemini-model-thinking-updates-march-2025/#advanced-coding",
     ),
+    # LanguageModel(
+    #     "gemini-2.5-pro-exp-03-25",
+    #     "Gemini-2.5-Pro-03-25",
+    #     LMStyle.GeminiThinking,
+    #     datetime(2023, 4, 30),
+    #     link="https://blog.google/technology/google-deepmind/gemini-model-thinking-updates-march-2025/#advanced-coding",
+    # ),
     LanguageModel(
         "gemini-2.5-flash-preview-04-17",
         "Gemini-2.5-Flash-Preview",
@@ -628,6 +635,13 @@ LanguageModelList: list[LanguageModel] = [
         LMStyle.CodeQwenInstruct,
         datetime(2024, 6, 30),
         link="https://huggingface.co/Qwen/Qwen2.5-Coder-32B-Instruct",
+    ),
+    LanguageModel(
+        "Qwen/Qwen3-235B-A22B",
+        "Qwen3-235B-A22B",
+        LMStyle.CodeQwenInstruct,
+        datetime(2024, 6, 30),
+        link="https://huggingface.co/Qwen/Qwen3-235B-A22B",
     ),
     LanguageModel(
         "azerogpt",

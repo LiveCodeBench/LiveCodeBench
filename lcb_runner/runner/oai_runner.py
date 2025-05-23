@@ -45,8 +45,12 @@ class OpenAIRunner(BaseRunner):
                 # "stop": args.stop, --> stop is only used for base models currently
             }
 
-    def _run_single(self, prompt: list[dict[str, str]]) -> list[str]:
+    def _run_single(self, prompt: list[dict[str, str]], n: int = 10) -> list[str]:
         assert isinstance(prompt, list)
+
+        if n == 0:
+            print("Max retries reached. Returning empty response.")
+            return []
 
         try:
             response = OpenAIRunner.client.chat.completions.create(
@@ -67,7 +71,7 @@ class OpenAIRunner(BaseRunner):
             print("Sleeping for 30 seconds...")
             print("Consider reducing the number of parallel processes.")
             sleep(30)
-            return self._run_single(prompt)
+            return self._run_single(prompt, n=n - 1)
         except Exception as e:
             print(f"Failed to run the model for {prompt}!")
             print("Exception: ", repr(e))
