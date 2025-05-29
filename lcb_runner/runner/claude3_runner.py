@@ -17,8 +17,8 @@ class Claude3Runner(BaseRunner):
         if "Thinking" in model.model_style.value:
             self.client_kwargs: dict[str | str] = {
                 "model": args.model,
-                "max_tokens": 40000,
-                "thinking": {"type": "enabled", "budget_tokens": 32000},
+                "max_tokens": 32000,
+                "thinking": {"type": "enabled", "budget_tokens": 24000},
                 "stream": False,
             }
         else:

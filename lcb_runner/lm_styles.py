@@ -432,6 +432,34 @@ LanguageModelList: list[LanguageModel] = [
         datetime(2023, 4, 30),
         link="https://www.anthropic.com/index/claude-3",
     ),
+    LanguageModel(
+        "claude-sonnet-4-20250514",
+        "Claude-Sonnet-4 (Thinking)",
+        LMStyle.Claude3Thinking,
+        datetime(2023, 4, 30),
+        link="https://www.anthropic.com/claude/sonnet",
+    ),
+    LanguageModel(
+        "claude-opus-4-20250514",
+        "Claude-Opus-4 (Thinking)",
+        LMStyle.Claude3Thinking,
+        datetime(2023, 4, 30),
+        link="https://www.anthropic.com/claude/sonnet",
+    ),
+    LanguageModel(
+        "claude-opus-4-20250514_nothink",
+        "Claude-Opus-4",
+        LMStyle.Claude3Thinking,
+        datetime(2023, 4, 30),
+        link="https://www.anthropic.com/claude/sonnet",
+    ),
+    LanguageModel(
+        "claude-sonnet-4-20250514_nothink",
+        "Claude-Sonnet-4",
+        LMStyle.Claude3,
+        datetime(2023, 4, 30),
+        link="https://www.anthropic.com/claude/sonnet",
+    ),
     ## Gemini
     LanguageModel(
         "gemini-1.5-pro-002",
@@ -677,6 +705,13 @@ LanguageModelList: list[LanguageModel] = [
         LMStyle.DeepSeekR1,
         datetime(2024, 6, 30),
         link="https://huggingface.co/deepseek-ai/DeepSeek-R1",
+    ),
+    LanguageModel(
+        "deepseek-reasoner",
+        "DeepSeek-R1-0528",
+        LMStyle.DeepSeekR1,
+        datetime(2024, 6, 30),
+        link="https://huggingface.co/deepseek-ai/DeepSeek-R1-0528",
     ),
     ## DeepSeek R1 distilled of Qwen/Llama models
     LanguageModel(
