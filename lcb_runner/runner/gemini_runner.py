@@ -15,8 +15,8 @@ class GeminiRunner(BaseRunner):
     client = genai.Client(
         # api_key=os.getenv("GOOGLE_API_KEY"), http_options={"api_version": "v1alpha"}
         vertexai=True,
-        project=os.getenv("GOOGLE_PROJECT_ID"),
-        location=os.getenv("GOOGLE_LOCATION"),
+        project=os.getenv("VERTEX_GEMINI_PROJECT"),
+        location=os.getenv("VERTEX_GEMINI_LOCATION"),
     )
     safety_settings = [
         {

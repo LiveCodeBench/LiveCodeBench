@@ -13,6 +13,7 @@ While we have tries to ensure the correctness of the benchmark in terms of test 
 7. find-words-containing-character - Multiple solutions accepted
 8. find-the-peaks - Multiple solutions accepted
 10. generate-binary-strings-without-adjacent-zeros - Multiple solutions accepted
+11. arc185_c - Multiple solutions accepted
 
 
 ## Interactive Problems
@@ -27,3 +28,4 @@ While we have tries to ensure the correctness of the benchmark in terms of test 
 1. abc350_c - Erroneous test cases
 2. apply-operations-to-make-string-empty - Erroneous test case of empty string
 3. most-frequent-ids - Adversarian input not following constraints
+4. arc189_a - Single erroneous test case with incorrect output

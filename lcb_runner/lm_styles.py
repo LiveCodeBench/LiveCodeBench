@@ -504,6 +504,20 @@ LanguageModelList: list[LanguageModel] = [
     #     link="https://ai.google.dev/gemini-api/docs/models/experimental-models",
     # ),
     LanguageModel(
+        "gemini-2.5-pro",
+        "Gemini-2.5-Pro-06-17",
+        LMStyle.GeminiThinking,
+        datetime(2023, 4, 30),
+        link="https://blog.google/technology/google-deepmind/gemini-model-thinking-updates-march-2025/#advanced-coding",
+    ),
+    LanguageModel(
+        "gemini-2.5-pro-preview-06-05",
+        "Gemini-2.5-Pro-06-05",
+        LMStyle.GeminiThinking,
+        datetime(2023, 4, 30),
+        link="https://blog.google/technology/google-deepmind/gemini-model-thinking-updates-march-2025/#advanced-coding",
+    ),
+    LanguageModel(
         "gemini-2.5-pro-preview-05-06",
         "Gemini-2.5-Pro-05-06",
         LMStyle.GeminiThinking,
@@ -519,7 +533,14 @@ LanguageModelList: list[LanguageModel] = [
     # ),
     LanguageModel(
         "gemini-2.5-flash-preview-04-17",
-        "Gemini-2.5-Flash-Preview",
+        "Gemini-2.5-Flash-04-17",
+        LMStyle.GeminiThinking,
+        datetime(2023, 4, 30),
+        link="https://developers.googleblog.com/en/start-building-with-gemini-25-flash/",
+    ),
+    LanguageModel(
+        "gemini-2.5-flash-preview-05-20",
+        "Gemini-2.5-Flash-05-20",
         LMStyle.GeminiThinking,
         datetime(2023, 4, 30),
         link="https://developers.googleblog.com/en/start-building-with-gemini-25-flash/",
