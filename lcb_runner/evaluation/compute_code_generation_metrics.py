@@ -43,7 +43,7 @@ def check_correctness(sample, generation, timeout, debug=True):
         timeout=(timeout + 1) * len(json.loads(sample["input_output"])["inputs"]) + 5
     )
     try:
-        os.kill(p.pid, 9) # Force to kill the process for safety
+        os.kill(p.pid, 9) # Force to kill the process by PID for safety
     except:
         None
     if p.is_alive():
