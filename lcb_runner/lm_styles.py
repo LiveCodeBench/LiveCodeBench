@@ -59,18 +59,18 @@ class LanguageModel:
 LanguageModelList: list[LanguageModel] = [
     ## LLama3 Base (8B and 70B)
     LanguageModel(
-        "meta-llama/Meta-Llama-3-70B",
-        "LLama3-70b-Base",
-        LMStyle.GenericBase,
-        datetime(2023, 1, 1),
-        link="https://huggingface.co/meta-llama/Meta-Llama-3-70B",
-    ),
-    LanguageModel(
         "meta-llama/Meta-Llama-3-8B",
         "LLama3-8b-Base",
         LMStyle.GenericBase,
         datetime(2023, 1, 1),
         link="https://huggingface.co/meta-llama/Meta-Llama-3-8B",
+    ),
+    LanguageModel(
+        "meta-llama/Meta-Llama-3-70B",
+        "LLama3-70b-Base",
+        LMStyle.GenericBase,
+        datetime(2023, 1, 1),
+        link="https://huggingface.co/meta-llama/Meta-Llama-3-70B",
     ),
     ## LLama3 Instruct (8B and 70B)
     LanguageModel(
@@ -89,62 +89,62 @@ LanguageModelList: list[LanguageModel] = [
     ),
     ## LLama3.1 Base (8B, 70B, 405B)
     LanguageModel(
-        "meta-llama/Meta-Llama-3.1-8B",
+        "meta-llama/Llama-3.1-8B",
         "LLama3.1-8b-Base",
         LMStyle.GenericBase,
         datetime(2023, 1, 1),
-        link="https://huggingface.co/meta-llama/Meta-Llama-3.1-8B",
+        link="https://huggingface.co/meta-llama/Llama-3.1-8B",
     ),
     LanguageModel(
-        "meta-llama/Meta-Llama-3.1-70B",
+        "meta-llama/Llama-3.1-70B",
         "LLama3.1-70b-Base",
         LMStyle.GenericBase,
         datetime(2023, 1, 1),
-        link="https://huggingface.co/meta-llama/Meta-Llama-3.1-70B",
+        link="https://huggingface.co/meta-llama/Llama-3.1-70B",
     ),
     LanguageModel(
-        "meta-llama/Meta-Llama-3.1-405B-FP8",
+        "meta-llama/Llama-3.1-405B-FP8",
         "LLama3.1-405b-Base-FP8",
         LMStyle.GenericBase,
         datetime(2023, 1, 1),
-        link="https://huggingface.co/meta-llama/Meta-Llama-3.1-405B-FP8",
+        link="https://huggingface.co/meta-llama/Llama-3.1-405B-FP8",
     ),
     ## LLama3.1 Instruct (8B, 70B, 405B)
     LanguageModel(
-        "meta-llama/Meta-Llama-3.1-8B-Instruct",
+        "meta-llama/Llama-3.1-8B-Instruct",
         "LLama3.1-8b-Ins",
         LMStyle.LLaMa3,
         datetime(2023, 1, 1),
-        link="https://huggingface.co/meta-llama/Meta-Llama-3.1-8B-Instruct",
+        link="https://huggingface.co/meta-llama/Llama-3.1-8B-Instruct",
     ),
     LanguageModel(
-        "meta-llama/Meta-Llama-3.1-70B-Instruct",
+        "meta-llama/Llama-3.1-70B-Instruct",
         "LLama3.1-70b-Ins",
         LMStyle.LLaMa3,
         datetime(2023, 1, 1),
-        link="https://huggingface.co/meta-llama/Meta-Llama-3.1-70B-Instruct",
+        link="https://huggingface.co/meta-llama/Llama-3.1-70B-Instruct",
     ),
     LanguageModel(
-        "meta-llama/Meta-Llama-3.1-405B-Instruct-FP8",
+        "meta-llama/Llama-3.1-405B-Instruct-FP8",
         "LLama3.1-405b-Ins-FP8",
         LMStyle.LLaMa3,
         datetime(2023, 1, 1),
-        link="https://huggingface.co/meta-llama/Meta-Llama-3.1-405B-Instruct-FP8",
+        link="https://huggingface.co/meta-llama/Llama-3.1-405B-Instruct-FP8",
     ),
     ## LLama3.3 Instruct (8B, 70B)
+    # LanguageModel( 
+    #     "meta-llama/Llama-3.3-8B-Instruct", # Has been removed from HuggingFace by meta-llama
+    #     "LLama3.3-8b-Ins",
+    #     LMStyle.LLaMa3,
+    #     datetime(2023, 1, 1),
+    #     link="https://huggingface.co/meta-llama/Llama-3.3-8B-Instruct",
+    # ),
     LanguageModel(
         "meta-llama/Llama-3.3-70B-Instruct",
         "LLama3.3-70b-Ins",
         LMStyle.LLaMa3,
         datetime(2023, 1, 1),
         link="https://huggingface.co/meta-llama/Llama-3.3-70B-Instruct",
-    ),
-    LanguageModel(
-        "meta-llama/Llama-3.3-8B-Instruct",
-        "LLama3.3-8b-Ins",
-        LMStyle.LLaMa3,
-        datetime(2023, 1, 1),
-        link="https://huggingface.co/meta-llama/Llama-3.3-8B-Instruct",
     ),
     ## Deepseek-Coder Base (33B, 6.7B, 1.3B)
     LanguageModel(
