@@ -122,7 +122,7 @@ class CodeGenerationProblem:
 
 
 def load_code_generation_dataset(release_version="release_v1", start_date=None, end_date=None) -> list[CodeGenerationProblem]:
-    dataset = load_dataset("livecodebench/code_generation_lite", split="test", version_tag=release_version, trust_remote_code=True)
+    dataset = load_dataset("livecodebench/code_generation_lite", release_version, split="test")
     dataset = [CodeGenerationProblem(**p) for p in dataset]  # type: ignore
     if start_date is not None:
         p_start_date = datetime.strptime(start_date, "%Y-%m-%d")
