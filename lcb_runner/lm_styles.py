@@ -861,6 +861,13 @@ LanguageModelList: list[LanguageModel] = [
         datetime(2024, 4, 1),
         "https://huggingface.co/agentica-org/DeepCoder-14B-Preview",
     ),
+    LanguageModel(
+        "EpistemeAI/Hercules-Coder-E4B-it",
+        "Hercules-Coder-E4B-it",
+        LMStyle.GenericBase,
+        datetime(2025, 7, 24),
+        link="https://huggingface.co/EpistemeAI/Hercules-Coder-E4B-it",
+    ),
 ]
 
 LanguageModelStore: dict[str, LanguageModel] = {
