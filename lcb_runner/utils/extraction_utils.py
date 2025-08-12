@@ -10,6 +10,25 @@ def extract_code(model_output: str, lmstyle: LMStyle):
     elif lmstyle == LMStyle.GenericBase:
         return model_output.strip()
     else:
+        # First try to extract ```python if not then try ```
+        python_start_indices = [
+            i for i, line in enumerate(outputlines) 
+            if "```python" in line.lower()
+        ]
+        if python_start_indices:
+            # Find the next ``` after the python block start
+            start_idx = python_start_indices[-1]
+            end_indices = [
+                i for i, line in enumerate(outputlines[start_idx+1:], start_idx+1)
+                if "```" in line
+            ]
+            if end_indices:
+                return "\n".join(outputlines[start_idx + 1 : end_indices[0]])
+            else: 
+                # if no end_indices, just return from start_idx
+                return "\n".join(outputlines[start_idx + 1 :])
+
+        # Fallback to original logic
         indexlines = [i for i, line in enumerate(outputlines) if "```" in line]
         if len(indexlines) < 2:
             return ""
