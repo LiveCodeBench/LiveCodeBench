@@ -70,7 +70,7 @@ def get_args():
     )
     parser.add_argument(
         "--stop",
-        default="###",
+        default=None,  # default to None to avoid premature cutoff
         type=str,
         help="Stop token (use `,` to separate multiple tokens)",
     )
@@ -134,7 +134,7 @@ def get_args():
 
     args = parser.parse_args()
 
-    args.stop = args.stop.split(",")
+    args.stop = args.stop.split(",") if args.stop else None # stop flag is default to None
 
     if args.tensor_parallel_size == -1:
         args.tensor_parallel_size = torch.cuda.device_count()
