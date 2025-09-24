@@ -11,17 +11,27 @@ from lcb_runner.runner.base_runner import BaseRunner
 
 class Claude3Runner(BaseRunner):
     client = Anthropic(
-        api_key=os.getenv("ANTHROPIC_KEY"), base_url=os.getenv("ANTHROPIC_BASE_URL")
+        api_key=os.getenv("ANTHROPIC_KEY"), 
+        base_url=os.getenv("ANTHROPIC_BASE_URL"), 
+        timeout=1200
     )
 
     def __init__(self, args, model):
         super().__init__(args, model)
-        self.client_kwargs: dict[str | str] = {
-            "model": args.model,
-            "temperature": args.temperature,
-            "max_tokens": args.max_tokens,
-            "top_p": args.top_p,
-        }
+        if "Thinking" in model.model_style.value:
+            self.client_kwargs: dict[str | str] = {
+                "model": args.model,
+                "max_tokens": 32000,
+                "thinking": {"type": "enabled", "budget_tokens": 24000},
+                "stream": False,
+            }
+        else:
+            self.client_kwargs: dict[str | str] = {
+                "model": args.model,
+                "temperature": args.temperature,
+                "max_tokens": args.max_tokens,
+                "top_p": args.top_p,
+            }
 
     def _run_single(self, prompt: tuple[str, str]) -> list[str]:
 
@@ -32,7 +42,12 @@ class Claude3Runner(BaseRunner):
                     messages=prompt[1],
                     **self.client_kwargs,
                 )
-                content = "\n".join([x.text for x in response.content])
+                content = "\n".join(
+                    [
+                        getattr(x, "text", getattr(x, "thinking", "\nREDACTED\n"))
+                        for x in response.content
+                    ]
+                )
                 return content
             except Exception as e:
                 print("Exception: ", repr(e), "Sleeping for 20 seconds...")

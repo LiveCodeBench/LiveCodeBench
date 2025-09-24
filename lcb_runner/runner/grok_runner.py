@@ -10,25 +10,26 @@ except ImportError as e:
 from lcb_runner.runner.base_runner import BaseRunner
 
 
-class DeepSeekRunner(BaseRunner):
+class GrokRunner(BaseRunner):
     client = OpenAI(
-        api_key=os.getenv("DEEPSEEK_API"),
-        base_url="https://api.deepseek.com",
+        api_key=os.getenv("GROK_API_KEY"),
+        base_url="https://api.x.ai/v1",
     )
 
     def __init__(self, args, model):
         super().__init__(args, model)
+        model_name = args.model.split("_")[0]
         self.client_kwargs: dict[str | str] = {
-            "model": args.model,
+            "model": model_name,
             "temperature": args.temperature,
             "max_tokens": args.max_tokens,
             "top_p": args.top_p,
-            "frequency_penalty": 0,
-            "presence_penalty": 0,
             "n": 1,
-            "timeout": args.openai_timeout,
+            # "timeout": args.openai_timeout,
             # "stop": args.stop, --> stop is only used for base models currently
         }
+        if "_" in args.model:
+            self.client_kwargs["reasoning_effort"] = args.model.split("_")[1]
 
     def _run_single(self, prompt: list[dict[str, str]]) -> list[str]:
         assert isinstance(prompt, list)
@@ -52,10 +53,11 @@ class DeepSeekRunner(BaseRunner):
                 openai.APIConnectionError,
             ) as e:
                 print("Exception: ", repr(e))
+                print(prompt[0]["content"])
                 print("Sleeping for 30 seconds...")
                 print("Consider reducing the number of parallel processes.")
                 sleep(30)
-                return DeepSeekRunner._run_single(prompt)
+                return GrokRunner._run_single(prompt)
             except Exception as e:
                 print(f"Failed to run the model for {prompt}!")
                 print("Exception: ", repr(e))

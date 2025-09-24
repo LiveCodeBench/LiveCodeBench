@@ -3,9 +3,9 @@ Official repository for the paper "LiveCodeBench: Holistic and Contamination Fre
 
 <p align="center">
     <a href="https://livecodebench.github.io/">🏠 Home Page</a> •
-    <a href="https://huggingface.co/datasets/livecodebench/">💻 Data </a> •
+    <a href="https://huggingface.co/livecodebench/">💻 Data </a> •
     <a href="https://livecodebench.github.io/leaderboard.html">🏆 Leaderboard</a> •
-    <a href="https://livecodebench.github.io/leaderboard.html](https://huggingface.co/spaces/livecodebench/code_generation_samples">🔍 Explorer</a> 
+    <a href="https://huggingface.co/spaces/livecodebench/code_generation_samples">🔍 Explorer</a> 
 </p>
 
 ## Introduction
@@ -20,7 +20,17 @@ git clone https://github.com/LiveCodeBench/LiveCodeBench.git
 cd LiveCodeBench
 ```
 
-We recommend using uv for managing dependencies. You can install uv and the dependencies using the following commands:
+We recommend using [uv](https://github.com/astral-sh/uv)
+for managing dependencies, which can be installed a [number of ways](https://github.com/astral-sh/uv?tab=readme-ov-file#installation).
+
+Verify that `uv` is installed on your system by running:
+
+```bash
+uv --version
+```
+
+Once `uv` has been installed, use it to create a virtual environment for
+LiveCodeBench and install its dependencies with the following commands:
 
 ```bash
 uv venv --python 3.11
@@ -44,6 +54,7 @@ Since LiveCodeBench is a continuously updated benchmark, we provide different ve
 - `release_v3`: The updated release of the dataset with problems released between May 2023 and Jul 2024 containing 612 problems.
 - `release_v4`: The updated release of the dataset with problems released between May 2023 and Sep 2024 containing 713 problems.
 - `release_v5`: The updated release of the dataset with problems released between May 2023 and Jan 2025 containing 880 problems.
+- `release_v6`: The updated release of the dataset with problems released between May 2023 and Apr 2025 containing 1055 problems.
 
 You can use the `--release_version` flag to specify the dataset version you wish to use. Particularly, you can use the following command to run the evaluation on the `release_v2` dataset. Release version defaults to `release_latest`. Additionally, we have introduced fine-grained release versions such as `v1`, `v2`, `v1_v3`, `v4_v5` for specific versions of the dataset.
 
@@ -127,7 +138,7 @@ python -m lcb_runner.runner.main --model {model_name} --scenario codeexecution -
 ```
 
 ## Custom Evaluation
-Alternatively, you can using [`lcb_runner/runner/custom_evaluator.py`](./lcb_runner/runner/custom_evaluator.py) to directly evaluated model generations in a custom file. The file should contain a list of model outputs, appropirately formatted for evaluation in the order of benchmark problems. 
+Alternatively, you can using [`lcb_runner/runner/custom_evaluator.py`](./lcb_runner/runner/custom_evaluator.py) to directly evaluated model generations in a custom file. The file should contain a list of model outputs, appropriately formatted for evaluation in the order of benchmark problems. 
 
 ```bash
 python -m lcb_runner.runner.custom_evaluator --custom_output_file {path_to_custom_outputs}
@@ -145,7 +156,7 @@ Particularly, arrange the outputs in the following format
 
 ## Adding Support for New Models
 
-To add support for new models, we have implemented an extensible framework to add new models and customize prompts appropirately. 
+To add support for new models, we have implemented an extensible framework to add new models and customize prompts appropriately. 
 
 Step 1: Add a new model to the [./lcb_runner/lm_styles.py](./lcb_runner/lm_styles.py) file. Particularly, extend the `LMStyle` class to add a new model family and extend the model to the `LanguageModelList` array.
 

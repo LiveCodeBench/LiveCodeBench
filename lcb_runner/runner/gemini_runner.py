@@ -13,7 +13,10 @@ from lcb_runner.lm_styles import LMStyle
 
 class GeminiRunner(BaseRunner):
     client = genai.Client(
-        api_key=os.getenv("GOOGLE_API_KEY"), http_options={"api_version": "v1alpha"}
+        # api_key=os.getenv("GOOGLE_API_KEY"), http_options={"api_version": "v1alpha"}
+        vertexai=True,
+        project=os.getenv("VERTEX_GEMINI_PROJECT"),
+        location=os.getenv("VERTEX_GEMINI_LOCATION"),
     )
     safety_settings = [
         {
@@ -66,10 +69,15 @@ class GeminiRunner(BaseRunner):
                 contents=prompt,
                 config=self.generation_config,
             ).candidates
+
+            if outputs is None:
+                print("No outputs from Gemini")
+                return ["" for _ in range(self.args.n)]
         except Exception as e:
             print("Exception: ", repr(e))
             print("Sleeping for 30 seconds...")
             print("Consider reducing the number of parallel processes.")
+            sleep(30)
             return self._run_single(prompt)
 
         new_outputs = []
