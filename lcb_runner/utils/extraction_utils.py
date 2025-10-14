@@ -12,7 +12,7 @@ def extract_code(model_output: str, lmstyle: LMStyle):
     else:
         indexlines = [i for i, line in enumerate(outputlines) if "```" in line]
         if len(indexlines) < 2:
-            return ""
+            return model_output.strip()
         # return "\n".join(outputlines[indexlines[0] + 1 : indexlines[1]])
         return "\n".join(outputlines[indexlines[-2] + 1 : indexlines[-1]])
 
