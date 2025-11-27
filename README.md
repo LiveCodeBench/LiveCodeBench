@@ -160,11 +160,11 @@ To add support for new models, we have implemented an extensible framework to ad
 
 Step 1: Add a new model to the [./lcb_runner/lm_styles.py](./lcb_runner/lm_styles.py) file. Particularly, extend the `LMStyle` class to add a new model family and extend the model to the `LanguageModelList` array.
 
-Step 2: Since we use instruction tuned models, we allow configuring the instruction for each model. Modify the [./lcb_runner/prompts/generation.py](./lcb_runner/prompts/generation.py) file to add a new prompt for the model in the `format_prompt_generation` function. 
+Step 2: Since we use instruction tuned models, we allow configuring the instruction for each model. Modify the [./lcb_runner/prompts/code_generation.py](./lcb_runner/prompts/code_generation.py) file to add a new prompt for the model in the `format_prompt_generation` function. 
 For example, the prompt for `DeepSeekCodeInstruct` family of models looks as follows
 
 ```python
-# ./lcb_runner/prompts/generation.py
+# ./lcb_runner/prompts/code_generation.py
 if LanguageModelStyle == LMStyle.DeepSeekCodeInstruct:
     prompt = f"{PromptConstants.SYSTEM_MESSAGE_DEEPSEEK}\n\n"
     prompt += f"{get_deepseekcode_question_template_answer(question)}"
