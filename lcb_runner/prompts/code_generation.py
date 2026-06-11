@@ -267,13 +267,16 @@ def format_prompt_generation(
         tokenizer = AutoTokenizer.from_pretrained(
             "meta-llama/Meta-Llama-3-8B-Instruct", padding_side="left", use_fast=False
         )
-        return tokenizer.apply_chat_template(
+        prompt = tokenizer.apply_chat_template(
             chat_messages,
             tokenize=False,
             add_generation_prompt=True,
             truncation=False,
             padding=False,
         )
+        if tokenizer.bos_token and prompt.startswith(tokenizer.bos_token):
+            prompt = prompt[len(tokenizer.bos_token):]
+        return prompt
 
     if LanguageModelStyle == LMStyle.Claude:
         prompt = f"{HUMAN_PROMPT}\n"
