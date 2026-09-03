@@ -1,4 +1,5 @@
 import json
+import os
 
 try:
     from anthropic import HUMAN_PROMPT, AI_PROMPT
@@ -264,8 +265,13 @@ def format_prompt_generation(
         ]
         from transformers import AutoTokenizer
 
+        # The tokenizer is only used to render the Llama 3 chat template. The default repo is gated, so any
+        # Llama 3 family checkpoint the user can access (same chat template) may be substituted via
+        # LCB_LLAMA3_TOKENIZER.
         tokenizer = AutoTokenizer.from_pretrained(
-            "meta-llama/Meta-Llama-3-8B-Instruct", padding_side="left", use_fast=False
+            os.environ.get("LCB_LLAMA3_TOKENIZER", "meta-llama/Meta-Llama-3-8B-Instruct"),
+            padding_side="left",
+            use_fast=False,
         )
         return tokenizer.apply_chat_template(
             chat_messages,
