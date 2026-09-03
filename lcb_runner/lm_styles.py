@@ -31,6 +31,7 @@ class LMStyle(Enum):
     QwQ = "QwQ"
     LLaMa3 = "LLaMa3"
     DeepSeekR1 = "DeepSeekR1"
+    GraniteInstruct = "GraniteInstruct"
 
     TogetherAI = "TogetherAI"
 
@@ -860,6 +861,21 @@ LanguageModelList: list[LanguageModel] = [
         LMStyle.DeepSeekR1,
         datetime(2024, 4, 1),
         "https://huggingface.co/agentica-org/DeepCoder-14B-Preview",
+    ),
+    ## Granite 3.3 Instruct (2B and 8B)
+    LanguageModel(
+        "ibm-granite/granite-3.3-2b-instruct",
+        "Granite-3.3-2B-Ins",
+        LMStyle.GraniteInstruct,
+        datetime(2025, 4, 16),
+        "https://huggingface.co/ibm-granite/granite-3.3-2b-instruct",
+    ),
+    LanguageModel(
+        "ibm-granite/granite-3.3-8b-instruct",
+        "Granite-3.3-8B-Ins",
+        LMStyle.GraniteInstruct,
+        datetime(2025, 4, 16),
+        "https://huggingface.co/ibm-granite/granite-3.3-8b-instruct",
     ),
 ]
 

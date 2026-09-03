@@ -335,6 +335,31 @@ def format_prompt_generation(
         prompt += f"{get_deepseek_r1_question_template_answer(question)}"
         return prompt
 
+    if LanguageModelStyle == LMStyle.GraniteInstruct:
+        chat_messages = [
+            {
+                "role": "system",
+                "content": PromptConstants.SYSTEM_MESSAGE_GENERIC,
+            },
+            {
+                "role": "user",
+                "content": get_generic_question_template_answer(question),
+            },
+        ]
+        from transformers import AutoTokenizer
+
+        # Granite 3.x instruct models share one chat template; only the template is used here.
+        tokenizer = AutoTokenizer.from_pretrained(
+            "ibm-granite/granite-3.3-2b-instruct", padding_side="left"
+        )
+        return tokenizer.apply_chat_template(
+            chat_messages,
+            tokenize=False,
+            add_generation_prompt=True,
+            truncation=False,
+            padding=False,
+        )
+
     if LanguageModelStyle == LMStyle.GenericBase:
         prompt = get_base_model_question_template_answer(question)
         return prompt
