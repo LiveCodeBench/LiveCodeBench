@@ -60,7 +60,7 @@ class TestOutputPredictionProblem:
 
 
 def load_test_prediction_dataset(release_version="release_v1") -> list[TestOutputPredictionProblem]:
-    dataset = load_dataset("livecodebench/test_generation", split="test")  # type: ignore
+    dataset = load_dataset("livecodebench/test_generation", split="test", version_tag=release_version, trust_remote_code=True)  # type: ignore
     dataset = [TestOutputPredictionProblem(**d) for d in dataset]
     print(f"Loaded {len(dataset)} prediction problems")
     return dataset
