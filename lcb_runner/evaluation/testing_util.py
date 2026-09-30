@@ -1,4 +1,5 @@
 import ast
+import codecs
 import json
 import sys
 import faulthandler
@@ -12,7 +13,7 @@ import signal
 
 import numpy as np
 
-from io import StringIO
+from io import BytesIO, TextIOWrapper
 
 # used for testing the code that reads from input
 from unittest.mock import patch, mock_open
@@ -56,51 +57,94 @@ def timeout_handler(signum, frame):
 # used to capture stdout as a list
 # from https://stackoverflow.com/a/16571630/6416660
 # alternative use redirect_stdout() from contextlib
+class _CapturingStream(TextIOWrapper):
+    def close(self):
+        # Solutions may close stdout; keep the captured bytes available.
+        self.flush()
+
+
 class Capturing(list):
     def __enter__(self):
         self._stdout = sys.stdout
-        sys.stdout = self._stringio = StringIO()
-        # Make closing the StringIO a no-op
-        self._stringio.close = lambda x: 1
+        self._buffer = BytesIO()
+        self._stream = _CapturingStream(
+            self._buffer,
+            encoding="utf-8",
+            errors="surrogateescape",
+            newline="\n",
+            write_through=True,
+        )
+        sys.stdout = self._stream
         return self
 
     def __exit__(self, *args):
-        self.append(self._stringio.getvalue())
-        del self._stringio  # free up some memory
-        sys.stdout = self._stdout
+        try:
+            self._stream.flush()
+            self.append(self._buffer.getvalue().decode("utf-8", "surrogateescape"))
+        finally:
+            sys.stdout = self._stdout
+            TextIOWrapper.close(self._stream)
+            del self._stream
+            del self._buffer
 
 
-# Custom mock for sys.stdin that supports buffer attribute
+# Keep text and binary reads on the same cursor without text-wrapper read-ahead.
+class MockBuffer(BytesIO):
+    def __init__(self, inputs: str):
+        super().__init__(inputs.encode("utf-8"))
+
+
 class MockStdinWithBuffer:
     def __init__(self, inputs: str):
-        self.inputs = inputs
-        self._stringio = StringIO(inputs)
         self.buffer = MockBuffer(inputs)
+        self.encoding = "utf-8"
+        self.errors = "strict"
 
-    def read(self, *args):
-        return self.inputs
+    def _read_chars(self, size: int, stop_at_newline: bool = False):
+        decoder = codecs.getincrementaldecoder(self.encoding)(self.errors)
+        chars = []
+        while len(chars) < size:
+            byte = self.buffer.read(1)
+            if not byte:
+                break
+            char = decoder.decode(byte)
+            if char:
+                chars.append(char)
+                if stop_at_newline and char == "\n":
+                    break
+        return "".join(chars)
 
-    def readline(self, *args):
-        return self._stringio.readline(*args)
+    def read(self, size: int = -1):
+        if size is None or size < 0:
+            return self.buffer.read().decode(self.encoding, self.errors)
+        return self._read_chars(size)
 
-    def readlines(self, *args):
-        return self.inputs.split("\n")
+    def readline(self, size: int = -1):
+        if size is None or size < 0:
+            return self.buffer.readline().decode(self.encoding, self.errors)
+        return self._read_chars(size, stop_at_newline=True)
+
+    def readlines(self, hint: int = -1):
+        lines = []
+        total = 0
+        while line := self.readline():
+            lines.append(line)
+            total += len(line)
+            if hint > 0 and total >= hint:
+                break
+        return lines
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        line = self.readline()
+        if not line:
+            raise StopIteration
+        return line
 
     def __getattr__(self, name):
-        # Delegate other attributes to StringIO
-        return getattr(self._stringio, name)
-
-
-class MockBuffer:
-    def __init__(self, inputs: str):
-        self.inputs = inputs.encode("utf-8")  # Convert to bytes
-
-    def read(self, *args):
-        # Return as byte strings that can be split
-        return self.inputs
-
-    def readline(self, *args):
-        return self.inputs.split(b"\n")[0] + b"\n"
+        return getattr(self.buffer, name)
 
 
 def clean_if_name(code: str) -> str:
@@ -156,20 +200,12 @@ def call_method(method, inputs):
     if isinstance(inputs, list):
         inputs = "\n".join(inputs)
 
-    inputs_line_iterator = iter(inputs.split("\n"))
-
-    # Create custom stdin mock with buffer support
     mock_stdin = MockStdinWithBuffer(inputs)
 
     # sys.setrecursionlimit(10000)
 
-    # @patch('builtins.input', side_effect=inputs.split("\n"))
     @patch("builtins.open", mock_open(read_data=inputs))
-    @patch("sys.stdin", mock_stdin)  # Use our custom mock instead of StringIO
-    @patch("sys.stdin.readline", lambda *args: next(inputs_line_iterator))
-    @patch("sys.stdin.readlines", lambda *args: inputs.split("\n"))
-    @patch("sys.stdin.read", lambda *args: inputs)
-    # @patch('sys.stdout.write', print)
+    @patch("sys.stdin", mock_stdin)
     def _inner_call_method(_method):
         try:
             return _method()
