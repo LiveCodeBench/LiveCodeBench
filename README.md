@@ -97,6 +97,35 @@ Particularly, you can provide `--start_date` and `--end_date` flags (using the `
 python -m lcb_runner.evaluation.compute_scores --eval_all_file {saved_eval_all_file} --start_date 2023-09-01
 ```
 
+Add `--bayes_at_n` to this scoring command to report the posterior mean and
+posterior standard deviation of average success probability over the selected
+code-generation questions. `--bayes_output_file posterior.json` also saves the
+overall and nonempty difficulty-group summaries as JSON, with `mean`, `std`,
+`num_questions`, and `samples_per_question`. Existing date and platform filters
+apply before these summaries are computed; the evaluated input file is preserved.
+
+```sh
+python -m lcb_runner.evaluation.compute_scores --eval_all_file results_eval_all.json \
+    --bayes_at_n --bayes_output_file posterior.json
+```
+
+This is the binary, uniform-prior case of
+[Bayes@N](https://arxiv.org/abs/2510.04265). Each question has an independent
+Beta(1, 1) prior. If `c` of its `N` generations pass, its posterior is
+Beta(`c + 1`, `N - c + 1`). The corpus mean averages question posterior means;
+the corpus SD is the square root of the sum of question posterior variances,
+divided by the number of questions. Both use the [0, 1] score scale. SD describes
+uncertainty about success probability on this fixed question set.
+
+Use a complete `codegeneration` evaluation file with independent generations
+under a fixed sampling configuration. The option rejects empty selections,
+missing or duplicate question IDs, missing/nonbinary grades, and unequal positive
+sample counts. It recomputes from `graded_list` after filtering, so a combined
+file from a resumed run is scored as one corpus. The file cannot reveal questions
+omitted entirely. Self-repair, historical evidence, and categorical rubrics are
+outside this option's scope. Runner aggregate files and default score reporting
+are unchanged.
+
 **NOTE: We have pruned a large number of test cases from the original benchmark and created `code_generation_lite` which is set as the default benchmark offering similar performance estimation much faster. If you wish to use the original benchmark, please use the `--not_fast` flag. We are in the process of updating the leaderboard scores with this updated setting.** 
 
 **NOTE: V2 Update: to run the update LiveCodeBench please use `--release_version release_v2`. In addition, if you have existing results from `release_v1` you can add `--continue_existing` or better `--continue_existing_with_eval` flags to reuse the old completions or evaluations respectively.**

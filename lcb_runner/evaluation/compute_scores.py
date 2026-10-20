@@ -2,6 +2,9 @@ import json
 import argparse
 import numpy as np
 from datetime import datetime
+from pathlib import Path
+
+from lcb_runner.evaluation.bayes import bayes_at_n
 
 from lcb_runner.lm_styles import LanguageModelStore
 from lcb_runner.evaluation.pass_k_utils import (
@@ -14,6 +17,14 @@ from lcb_runner.utils.path_utils import get_eval_all_output_path
 
 def get_parser():
     parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--bayes_at_n", action="store_true",
+        help="Report binary Bayes@N posterior mean and standard deviation",
+    )
+    parser.add_argument(
+        "--bayes_output_file", type=str, default=None,
+        help="Save Bayes@N summaries as JSON (requires --bayes_at_n)",
+    )
     parser.add_argument(
         "--model",
         type=str,
@@ -70,6 +81,14 @@ def get_parser():
 
 
 def compute_scores(args):
+    use_bayes = getattr(args, "bayes_at_n", False)
+    posterior_path = getattr(args, "bayes_output_file", None)
+    if posterior_path and not use_bayes:
+        raise ValueError("--bayes_output_file requires --bayes_at_n")
+    if use_bayes and args.scenario != Scenario.codegeneration:
+        raise ValueError("Bayes@N currently supports only codegeneration scores")
+    if posterior_path and Path(posterior_path).resolve() == Path(args.eval_all_file).resolve():
+        raise ValueError("Bayes@N output must differ from the evaluated input file")
     with open(args.eval_all_file, "r") as f:
         results = json.load(f)
 
@@ -90,6 +109,18 @@ def compute_scores(args):
 
     if args.platform is not None:
         results = [result for result in results if result["platform"] == args.platform]
+
+    if use_bayes:
+        posterior = {"overall": bayes_at_n(results)}
+        for difficulty in ("easy", "medium", "hard"):
+            subset = [r for r in results if r.get("difficulty") == difficulty]
+            if subset:
+                posterior[difficulty] = bayes_at_n(subset)
+        for name, moments in posterior.items():
+            print(f"Bayes@N ({name}): mean={moments['mean']:.6f}, std={moments['std']:.6f}")
+        if posterior_path:
+            with open(posterior_path, "w") as f:
+                json.dump(posterior, f, indent=4)
 
     print(len(results))
     totals = [len(x["graded_list"]) for x in results]
