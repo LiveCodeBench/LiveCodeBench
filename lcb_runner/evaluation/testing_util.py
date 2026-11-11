@@ -319,15 +319,6 @@ def grade_stdio(
     ## we wrap the given code inside another function
     code = make_function(code)
 
-    compiled_sol = compile_code(code, timeout)
-    if compiled_sol is None:
-        return
-
-    method = get_function(compiled_sol, "wrapped_function")
-
-    if method is None:
-        return
-
     all_results = []
     total_execution_time = 0
     for idx, (gt_inp, gt_out) in enumerate(zip(all_inputs, all_outputs)):
@@ -337,9 +328,20 @@ def grade_stdio(
         signal.alarm(timeout)
         with Capturing() as captured_output:
             try:
-                start = time.time()
-                call_method(method, gt_inp)
-                total_execution_time += time.time() - start
+                def run_program():
+                    nonlocal total_execution_time
+                    # Imports may bind stdin/stdout aliases at module scope.
+                    # Initialize a fresh program with this case's streams active.
+                    compiled_sol = compile_code(code, timeout)
+                    method = get_function(compiled_sol, "wrapped_function")
+                    if method is None:
+                        raise ValueError("Missing wrapped_function")
+                    signal.alarm(timeout)
+                    start = time.time()
+                    method()
+                    total_execution_time += time.time() - start
+
+                call_method(run_program, gt_inp)
                 # reset the alarm
                 signal.alarm(0)
             except Exception as e:
