@@ -101,6 +101,12 @@ python -m lcb_runner.evaluation.compute_scores --eval_all_file {saved_eval_all_f
 
 **NOTE: V2 Update: to run the update LiveCodeBench please use `--release_version release_v2`. In addition, if you have existing results from `release_v1` you can add `--continue_existing` or better `--continue_existing_with_eval` flags to reuse the old completions or evaluations respectively.**
 
+For a standard-input problem that requires a specific output format, set
+`"stdio_exact_output": true` in its dataset metadata. The grader trims
+leading and trailing whitespace on each line and compares the resulting text
+directly, so required leading and trailing zeros are preserved. Other problems
+continue to accept numerically equivalent output.
+
 
 ### Self Repair
 For running self repair, you need to provide an additional `--codegen_n` flag that maps to the number of codes that were generated during code generation. Additionally, the `--temperature` flag is used to resolve the old code generation eval file which must be present in the `output` directory. 
