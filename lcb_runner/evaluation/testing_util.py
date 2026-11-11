@@ -312,6 +312,8 @@ def grade_stdio(
     all_inputs: list,
     all_outputs: list,
     timeout: int,
+    *,
+    exact_output: bool = False,
 ):
     ## runtime doesn't interact well with __name__ == '__main__'
     code = clean_if_name(code)
@@ -397,6 +399,9 @@ def grade_stdio(
             ## CASE 1: exact match
             if stripped_prediction_line == stripped_gt_out_line:
                 continue
+            if exact_output:
+                all_results.append(-2)
+                return all_results, WA_send_args
 
             ## CASE 2: element-wise comparision
             ## if there are floating elements
@@ -495,6 +500,7 @@ def run_test(sample, test=None, debug=False, timeout=6):
                     all_inputs=in_outs["inputs"],
                     all_outputs=in_outs["outputs"],
                     timeout=timeout,
+                    exact_output=in_outs.get("stdio_exact_output") is True,
                 )
                 return results, metadata
             except Exception as e:

@@ -104,21 +104,18 @@ class CodeGenerationProblem:
         return output
 
     def get_evaluation_sample(self):
-        return {
-            "input_output": json.dumps(
-                {
-                    "inputs": [
-                        t.input
-                        for t in self.public_test_cases + self.private_test_cases
-                    ],
-                    "outputs": [
-                        t.output
-                        for t in self.public_test_cases + self.private_test_cases
-                    ],
-                    "fn_name": self.metadata.get("func_name", None),
-                }
-            ),
+        tests = self.public_test_cases + self.private_test_cases
+        input_output = {
+            "inputs": [t.input for t in tests],
+            "outputs": [t.output for t in tests],
+            "fn_name": self.metadata.get("func_name", None),
         }
+        if (
+            input_output["fn_name"] is None
+            and self.metadata.get("stdio_exact_output") is True
+        ):
+            input_output["stdio_exact_output"] = True
+        return {"input_output": json.dumps(input_output)}
 
 
 def load_code_generation_dataset(release_version="release_v1", start_date=None, end_date=None) -> list[CodeGenerationProblem]:
